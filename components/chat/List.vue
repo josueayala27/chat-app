@@ -1,7 +1,4 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
-import ChatItem from './Item.vue'
-
 interface Message {
   id: number
   name: string
@@ -19,6 +16,6 @@ const messages = ref<Message[]>([
 
 <template>
   <div class="flex flex-col gap-1">
-    <ChatItem v-for="item in messages" :key="item.id" :name="item.name" :message="item.message" />
+    <ChatListItem v-for="item in messages" :key="item.id" :name="item.name" :message="item.message" />
   </div>
 </template>
