@@ -11,7 +11,7 @@ defineProps<Props>()
 
 <template>
   <NuxtLink class="flex rounded-lg p-2 gap-2 items-center cursor-pointer hover:bg-slate-100 group">
-    <div class="size-12 bg-slate-100 rounded-full group-hover:bg-slate-200 shrink-0" />
+    <BaseAvatar />
     <div class="flex flex-col text-sm w-full">
       <div class="flex justify-between items-center">
         <p class="text-slate-900 font-bold">
