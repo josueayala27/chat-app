@@ -12,6 +12,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@nuxt/fonts": "^0.10.3",
     "@nuxt/icon": "^1.10.3",
     "@tailwindcss/vite": "^4.0.9",
     "gsap": "^3.12.7",

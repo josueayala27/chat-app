@@ -1,19 +1,33 @@
+<script lang="ts" setup>
+import { defineProps } from 'vue'
+
+interface Props {
+  name: string
+  message: string
+  isPinned?: boolean
+  isRead?: boolean
+}
+
+defineProps<Props>()
+</script>
+
 <template>
   <div class="flex rounded-lg p-2 gap-2 items-center cursor-pointer hover:bg-slate-100 group">
     <div class="size-12 bg-slate-100 rounded-full group-hover:bg-slate-200 shrink-0" />
     <div class="flex flex-col text-sm w-full">
       <div class="flex justify-between items-center">
         <p class="text-slate-900 font-bold">
-          Josué Ayala
+          {{ name }}
         </p>
-        <Icon name="carbon:checkmark" />
+        <span class="text-xs text-slate-500 font-medium">21:35</span>
+        <Icon v-if="isRead" name="carbon:checkmark" />
       </div>
       <div class="flex justify-between items-center gap-1">
-        <p class="line-clamp-1 text-slate-600">
-          Just finished work, finally some free time!
+        <p class="line-clamp-1 text-slate-500">
+          {{ message }}
         </p>
         <div class="flex gap-2 items-center ">
-          <Icon name="carbon:pin" />
+          <Icon v-if="isPinned" name="carbon:pin" />
           <div class="overflow-hidden place-items-center hidden group-hover:grid">
             <Icon size="16px" name="carbon:chevron-down" />
           </div>
