@@ -16,7 +16,17 @@
     </div>
 
     <aside class="w-95 border-l border-slate-200 flex flex-col overflow-auto">
-      <div class="p-4" />
+      <div class="justify-center py-4 flex flex-col items-center gap-2">
+        <div class="size-35 shrink-0 bg-slate-100 rounded-full" />
+        <div class="flex flex-col items-center">
+          <p class="font-semibold">
+            Ricky Smith
+          </p>
+          <p class="font-medium text-emerald-500 text-xs">
+            Online
+          </p>
+        </div>
+      </div>
 
       <div class="flex flex-col">
         <div class="flex justify-between items-center border-t border-slate-200 p-2 cursor-pointer">
