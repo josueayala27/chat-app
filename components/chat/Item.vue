@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { defineProps } from 'vue'
-
 interface Props {
   name: string
   message: string
@@ -12,7 +10,7 @@ defineProps<Props>()
 </script>
 
 <template>
-  <div class="flex rounded-lg p-2 gap-2 items-center cursor-pointer hover:bg-slate-100 group">
+  <NuxtLink class="flex rounded-lg p-2 gap-2 items-center cursor-pointer hover:bg-slate-100 group">
     <div class="size-12 bg-slate-100 rounded-full group-hover:bg-slate-200 shrink-0" />
     <div class="flex flex-col text-sm w-full">
       <div class="flex justify-between items-center">
@@ -34,5 +32,5 @@ defineProps<Props>()
         </div>
       </div>
     </div>
-  </div>
+  </NuxtLink>
 </template>
