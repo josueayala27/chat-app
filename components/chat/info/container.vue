@@ -1,7 +1,7 @@
 <template>
   <aside class="w-95 flex flex-col overflow-auto">
     <div class="justify-center py-4 flex flex-col items-center gap-2">
-      <div class="size-35 shrink-0 bg-slate-100 rounded-full" />
+      <BaseAvatar size="140" />
       <div class="flex flex-col items-center">
         <p class="font-semibold">
           Ricky Smith
