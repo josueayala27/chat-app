@@ -12,8 +12,8 @@
       Customize Chat...
     </ChatInfoSection>
 
-    <ChatInfoSection title="Media, Files And Links">
-      <ChatInfoMediaFilesAndLinks />
+    <ChatInfoSection title="Shared Media">
+      <ChatInfoSharedMedia />
     </ChatInfoSection>
   </aside>
 </template>

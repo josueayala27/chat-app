@@ -1,12 +1,11 @@
 <template>
   <div class="flex gap-2 items-center text-sm">
-    <span
+    <ChatInfoSharedMediaTag
       v-for="type in ['Media', 'Files', 'Links']"
       :key="type"
-      class="px-3 py-1 rounded-full bg-sky-100 text-sky-600 font-medium cursor-pointer select-none"
     >
       {{ type }}
-    </span>
+    </ChatInfoSharedMediaTag>
   </div>
 
   <div class="grid grid-cols-3 gap-1">
