@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LazyChatInfoSharedMediaFiles, LazyChatInfoSharedMediaLinks, LazyChatInfoSharedMediaPhotos } from '#components'
+import { ChatInfoSharedMediaFiles, ChatInfoSharedMediaLinks, ChatInfoSharedMediaPhotos } from '#components'
 
 interface SharedMediaType {
   id: number
@@ -8,9 +8,9 @@ interface SharedMediaType {
 }
 
 const sharedMediaOptions = ref<SharedMediaType[]>([
-  { id: 1, label: 'Media', component: markRaw(LazyChatInfoSharedMediaPhotos) },
-  { id: 2, label: 'Files', component: markRaw(LazyChatInfoSharedMediaFiles) },
-  { id: 3, label: 'Links', component: markRaw(LazyChatInfoSharedMediaLinks) },
+  { id: 1, label: 'Media', component: markRaw(ChatInfoSharedMediaPhotos) },
+  { id: 2, label: 'Files', component: markRaw(ChatInfoSharedMediaFiles) },
+  { id: 3, label: 'Links', component: markRaw(ChatInfoSharedMediaLinks) },
 ])
 
 const selectedMediaType = ref<SharedMediaType>(sharedMediaOptions.value[0])
