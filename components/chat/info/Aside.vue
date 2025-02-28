@@ -2,7 +2,7 @@
   <aside class="w-95 flex flex-col overflow-auto divide-y divide-slate-200">
     <div class="justify-center py-4 flex flex-col items-center gap-2">
       <BaseAvatar size="140" />
-      <BaseFlex align="center" direction="column">
+      <BaseFlex is="div" align="center" direction="column" :gap="4">
         <BaseFont class="font-semibold" content="Ricky Smith" />
         <BaseFont content=" Online" class="font-medium text-emerald-500 text-xs" />
       </BaseFlex>
