@@ -8,4 +8,9 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
   modules: ['@nuxt/icon', '@nuxt/fonts'],
+  fonts: {
+    experimental: {
+      processCSSVariables: true,
+    },
+  },
 })

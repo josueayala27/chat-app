@@ -1,10 +1,8 @@
 <template>
   <div class="h-screen overflow-hidden flex divide-x divide-slate-200">
     <ChatListAside />
-    <ChatMessagesContainer>
+    <div class="flex-1 flex divide-x divide-slate-200">
       <slot />
-    </ChatMessagesContainer>
-
-    <ChatInfoAside />
+    </div>
   </div>
 </template>
