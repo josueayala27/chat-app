@@ -2,3 +2,9 @@
 @theme {
   --font-sans: "Inter", sans-serif;
 }
+
+@utility scrollbar-hidden {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
