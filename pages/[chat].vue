@@ -1,3 +1,11 @@
+<script lang="ts" setup>
+import { useFloating } from '@floating-ui/vue'
+
+const reference = ref<HTMLDivElement>()
+const floating = ref<HTMLDivElement>()
+const { floatingStyles } = useFloating(reference, floating, { placement: 'top-start' })
+</script>
+
 <template>
   <div class="flex flex-col divide-y divide-slate-200 flex-1">
     <div class="p-2 flex items-center justify-between">
@@ -34,9 +42,14 @@
     </div>
 
     <div class="p-2 flex items-center gap-2">
-      <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer">
+      <div ref="reference" class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer">
         <Icon size="20px" name="carbon:add-large" class="flex shrink-0" />
       </div>
+
+      <div ref="floating" :style="floatingStyles" class="">
+        Hola... cómo estás
+      </div>
+
       <input placeholder="Write something" type="text" class="bg-slate-100 w-full py-2 px-4 rounded-lg outline-none text-sm">
     </div>
   </div>
