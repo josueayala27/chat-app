@@ -16,6 +16,7 @@
         </div>
       </div>
     </div>
+
     <div class="p-2 overflow-auto scrollbar-hidden">
       <div class="flex flex-col gap-2">
         <div v-for="item in 8" :key="item" class="flex gap-2">
@@ -30,6 +31,13 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="p-2 flex items-center gap-2">
+      <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer">
+        <Icon size="20px" name="carbon:add-large" class="flex shrink-0" />
+      </div>
+      <input placeholder="Write something" type="text" class="bg-slate-100 w-full py-2 px-4 rounded-lg outline-none text-sm">
     </div>
   </div>
 
