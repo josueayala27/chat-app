@@ -17,7 +17,7 @@ const isOpen = ref(false)
       />
     </div>
 
-    <div v-if="isOpen" class="px-2 flex flex-col gap-2 overflow-hidden">
+    <div v-if="isOpen" class="flex flex-col gap-2 overflow-hidden">
       <slot />
     </div>
   </div>

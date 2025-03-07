@@ -17,7 +17,7 @@ const selectedMediaType = ref<SharedMediaType>(sharedMediaOptions.value[0])
 </script>
 
 <template>
-  <div class="flex gap-2 items-center text-sm">
+  <div class="flex gap-2 items-center text-sm px-2">
     <ChatInfoSharedMediaTag
       v-for="option in sharedMediaOptions"
       :key="option.id"
