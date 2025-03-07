@@ -4,7 +4,7 @@
       <div class="flex rounded-lg gap-2 items-center cursor-pointergroup">
         <BaseAvatar />
         <div class="flex flex-col text-sm">
-          <BaseFont content="Ricky Smith" class="font-medium" />
+          <BaseFont content="Josué Ayala" class="font-medium" />
         </div>
       </div>
       <div class="flex items-center">

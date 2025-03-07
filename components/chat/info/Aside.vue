@@ -3,7 +3,7 @@
     <div class="justify-center py-4 flex flex-col items-center gap-2">
       <BaseAvatar size="140" />
       <BaseFlex is="div" align="center" direction="column">
-        <BaseFont class="font-semibold" content="Ricky Smith" />
+        <BaseFont class="font-semibold" content="Josué Ayala" />
         <BaseFont content=" Online" class="font-medium text-emerald-500 text-xs" />
       </BaseFlex>
     </div>
