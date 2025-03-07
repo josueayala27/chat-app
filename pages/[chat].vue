@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { useFloating } from '@floating-ui/vue'
+import { offset, useFloating } from '@floating-ui/vue'
 
 const reference = ref<HTMLDivElement>()
 const floating = ref<HTMLDivElement>()
-const { floatingStyles } = useFloating(reference, floating, { placement: 'top-start' })
+const { floatingStyles } = useFloating(reference, floating, { placement: 'top-start', middleware: [offset(5)] })
 </script>
 
 <template>
@@ -46,8 +46,23 @@ const { floatingStyles } = useFloating(reference, floating, { placement: 'top-st
         <Icon size="20px" name="carbon:add-large" class="flex shrink-0" />
       </div>
 
-      <div ref="floating" :style="floatingStyles" class="">
-        Hola... cómo estás
+      <div ref="floating" :style="floatingStyles" class="bg-white/90 rounded-lg p-1 flex flex-col backdrop-blur-[10px] border border-slate-200">
+        <div class="cursor-pointer hover:bg-slate-100 py-2 px-4 rounded-lg text-sm flex items-center gap-2">
+          <Icon size="20px" name="carbon:document-add" />
+          Archivo
+        </div>
+        <div class="cursor-pointer hover:bg-slate-100 py-2 px-4 rounded-lg text-sm flex items-center gap-2">
+          <Icon size="20px" name="carbon:image-copy" />
+          Fotos y vídeos
+        </div>
+        <div class="cursor-pointer hover:bg-slate-100 py-2 px-4 rounded-lg text-sm flex items-center gap-2">
+          <Icon size="20px" name="carbon:text-short-paragraph" />
+          Encuesta
+        </div>
+        <div class="cursor-pointer hover:bg-slate-100 py-2 px-4 rounded-lg text-sm flex items-center gap-2">
+          <Icon size="20px" name="carbon:calendar" />
+          Evento
+        </div>
       </div>
 
       <input placeholder="Write something" type="text" class="bg-slate-100 w-full py-2 px-4 rounded-lg outline-none text-sm">
