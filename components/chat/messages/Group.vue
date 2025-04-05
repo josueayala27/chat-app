@@ -21,10 +21,7 @@ const { root, flex } = ui({ isOwn: props.isOwn })
     <BaseAvatar />
 
     <div :class="flex({ class: 'gap-1' })">
-      <BaseFont
-        class="text-sm text-slate-900 font-medium"
-        :content="isOwn ? 'Tú' : 'Josué Ayala'"
-      />
+      <BaseFont class="text-sm text-slate-900 font-medium" :content="isOwn ? 'Tú' : 'Josué Ayala'" />
 
       <div :class="flex({ class: 'gap-0.5' })">
         <template v-for="(_item, i) in ['text', 'text', 'media', 'text']" :key="i">
