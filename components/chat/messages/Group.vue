@@ -7,6 +7,7 @@
         <template v-for="_item in ['text', 'text', 'media', 'text']" :key="_item">
           <ChatMessagesText v-if="_item.includes('text')" />
           <ChatMessagesMedia v-if="_item.includes('media')" />
+          <ChatMessagesAudio v-if="_item.includes('audio')" />
         </template>
       </div>
     </div>

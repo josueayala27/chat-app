@@ -21,7 +21,8 @@
     "tailwind-variants": "^0.3.1",
     "tailwindcss": "^4.0.9",
     "vue": "latest",
-    "vue-router": "latest"
+    "vue-router": "latest",
+    "wavesurfer.js": "^7.9.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.3.0",
