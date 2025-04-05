@@ -4,29 +4,29 @@ import { tv } from 'tailwind-variants'
 const props = defineProps<{ isOwn: boolean }>()
 
 const ui = tv({
-  slots: { root: 'flex gap-2', container: 'flex flex-col' },
+  slots: { root: 'flex gap-2', flex: 'flex flex-col' },
   variants: {
     isOwn: {
-      true: { root: 'flex-row-reverse', container: 'items-end' },
-      false: { root: 'flex-row', container: 'items-start' },
+      true: { root: 'flex-row-reverse', flex: 'items-end' },
+      false: { root: 'flex-row', flex: 'items-start' },
     },
   },
 })
 
-const { root, container } = ui({ isOwn: props.isOwn })
+const { root, flex } = ui({ isOwn: props.isOwn })
 </script>
 
 <template>
   <div :class="root()">
     <BaseAvatar />
 
-    <div :class="container({ class: 'gap-1' })">
+    <div :class="flex({ class: 'gap-1' })">
       <BaseFont
         class="text-sm text-slate-900 font-medium"
         :content="isOwn ? 'Tú' : 'Josué Ayala'"
       />
 
-      <div :class="container({ class: 'gap-0.5' })">
+      <div :class="flex({ class: 'gap-0.5' })">
         <template v-for="(_item, i) in ['text', 'text', 'media', 'text']" :key="i">
           <ChatMessagesText v-if="_item.includes('text')" :is-own="isOwn" />
           <ChatMessagesMedia v-if="_item.includes('media')" :is-own="isOwn" />
