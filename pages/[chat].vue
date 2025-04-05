@@ -3,8 +3,8 @@
     <ChatMessagesLayoutHeader />
 
     <ChatMessagesLayoutMain>
-      <ChatMessagesGroup v-for="item in 8" :key="item" :is-own="false" />
-      <ChatMessagesGroup v-for="item in 8" :key="item" :is-own="true" />
+      <ChatMessagesGroup v-for="item in 1" :key="item" :is-own="false" />
+      <ChatMessagesGroup v-for="item in 1" :key="item" :is-own="true" />
     </ChatMessagesLayoutMain>
 
     <ChatMessagesLayoutFooter />

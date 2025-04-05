@@ -24,9 +24,10 @@ const { root, flex } = ui({ isOwn: props.isOwn })
       <BaseFont class="text-sm text-slate-900 font-medium" :content="isOwn ? 'Tú' : 'Josué Ayala'" />
 
       <div :class="flex({ class: 'gap-0.5' })">
-        <template v-for="(_item, i) in ['text', 'text', 'media', 'text']" :key="i">
+        <template v-for="(_item, i) in ['text', 'text', 'text', 'poll']" :key="i">
           <ChatMessagesText v-if="_item.includes('text')" :is-own="isOwn" />
           <ChatMessagesMedia v-if="_item.includes('media')" :is-own="isOwn" />
+          <ChatMessagesPoll v-if="_item.includes('poll')" :is-own="isOwn" />
         </template>
       </div>
     </div>
