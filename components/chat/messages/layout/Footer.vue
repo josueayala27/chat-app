@@ -6,6 +6,8 @@ const floating = ref<HTMLDivElement>()
 const { floatingStyles } = useFloating(reference, floating, { placement: 'top-start', middleware: [offset(5)] })
 
 const isOpen = ref<boolean>(false)
+
+onClickOutside(reference, () => isOpen.value = false, { ignore: [floating] })
 </script>
 
 <template>
@@ -18,7 +20,10 @@ const isOpen = ref<boolean>(false)
       <Icon size="20px" name="carbon:add-large" :class="[{ 'rotate-135': isOpen }]" class="flex shrink-0 duration-300" />
     </div>
 
-    <div v-if="isOpen" ref="floating" :style="floatingStyles" class="bg-white/90 rounded-lg p-1 flex flex-col backdrop-blur-[10px] border border-slate-200">
+    <div
+      v-if="isOpen" ref="floating"
+      :style="floatingStyles" class="bg-white/90 rounded-lg p-1 flex flex-col backdrop-blur-[10px] border border-slate-200"
+    >
       <div class="cursor-pointer hover:bg-slate-200/60 py-2 px-4 rounded-lg text-sm flex items-center gap-2">
         <Icon size="20px" name="carbon:document-add" />
         Archivo
