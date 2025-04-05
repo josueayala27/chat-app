@@ -20,23 +20,11 @@ onClickOutside(reference, () => isOpen.value = false, { ignore: [floating] })
       <Icon size="20px" name="carbon:add-large" :class="[{ 'rotate-135': isOpen }]" class="flex shrink-0 duration-300" />
     </div>
 
-    <div
-      v-if="isOpen" ref="floating"
-      :style="floatingStyles" class="bg-white/90 rounded-lg p-1 flex flex-col backdrop-blur-[10px] border border-slate-200"
-    >
-      <div class="cursor-pointer hover:bg-slate-200/60 py-2 px-4 rounded-lg text-sm flex items-center gap-2">
-        <Icon size="20px" name="carbon:document-add" />
-        Archivo
-      </div>
-      <div class="cursor-pointer hover:bg-slate-200/60 py-2 px-4 rounded-lg text-sm flex items-center gap-2">
-        <Icon size="20px" name="carbon:image-copy" />
-        Fotos y vídeos
-      </div>
-      <div class="cursor-pointer hover:bg-slate-200/60 py-2 px-4 rounded-lg text-sm flex items-center gap-2">
-        <Icon size="20px" name="carbon:text-short-paragraph" />
-        Encuesta
-      </div>
-    </div>
+    <BasePopoverContainer v-if="isOpen" ref="floating" :style="floatingStyles">
+      <BasePopoverItem icon="carbon:document-add" label="Archivo" />
+      <BasePopoverItem icon="carbon:image-copy" label="Fotos y vídeos" />
+      <BasePopoverItem icon="carbon:text-short-paragraph" label="Encuesta" />
+    </BasePopoverContainer>
 
     <input placeholder="Write something" type="text" class="bg-slate-100 w-full py-2 px-4 rounded-lg outline-none text-sm">
   </div>
