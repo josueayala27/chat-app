@@ -16,13 +16,13 @@
     "@nuxt/fonts": "^0.10.3",
     "@nuxt/icon": "^1.10.3",
     "@tailwindcss/vite": "^4.0.9",
+    "@vueuse/nuxt": "^13.0.0",
     "gsap": "^3.12.7",
     "nuxt": "^3.15.4",
     "tailwind-variants": "^0.3.1",
     "tailwindcss": "^4.0.9",
     "vue": "latest",
-    "vue-router": "latest",
-    "wavesurfer.js": "^7.9.1"
+    "vue-router": "latest"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.3.0",
