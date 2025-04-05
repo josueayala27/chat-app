@@ -4,20 +4,11 @@ import { tv } from 'tailwind-variants'
 const props = defineProps<{ isOwn: boolean }>()
 
 const ui = tv({
-  slots: {
-    root: 'flex gap-2',
-    content: 'flex flex-col',
-  },
+  slots: { root: 'flex gap-2', content: 'flex flex-col' },
   variants: {
     isOwn: {
-      true: {
-        root: 'flex-row-reverse',
-        content: 'items-end',
-      },
-      false: {
-        root: 'flex-row',
-        content: 'items-start',
-      },
+      true: { root: 'flex-row-reverse', content: 'items-end' },
+      false: { root: 'flex-row', content: 'items-start' },
     },
   },
 })
