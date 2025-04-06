@@ -1,15 +1,27 @@
+<script lang="ts">
+import { tv } from 'tailwind-variants'
+
+const ui = tv({ slots: { root: 'flex flex-col', content: 'flex flex-col overflow-hidden p-2' } })
+
+interface ChatInfoSectionProps {
+  title: string
+  isOpen: boolean
+  ui?: Partial<typeof ui.slots>
+}
+</script>
+
 <script setup lang="ts">
-const props = defineProps<{ title: string, isOpen?: boolean }>()
+const props = defineProps<Partial<ChatInfoSectionProps>>()
 
 const isOpen = ref(props.isOpen)
+
+const { root, content } = ui()
 </script>
 
 <template>
-  <div class="flex flex-col">
+  <div :class="root({ class: props.ui?.root })">
     <div class="flex justify-between items-center cursor-pointer p-2" @click="isOpen = !isOpen">
-      <p class="font-medium text-slate-900 text-sm select-none">
-        {{ title }}
-      </p>
+      <BaseFont class="font-medium text-slate-900 text-sm select-none" :content="title" />
       <Icon
         class="duration-300"
         :class="{ 'rotate-180': isOpen }"
@@ -17,8 +29,7 @@ const isOpen = ref(props.isOpen)
       />
     </div>
 
-    <!-- TODO: Make this with tailwind variants -->
-    <div v-if="isOpen" class="flex flex-col gap-2 overflow-hidden">
+    <div v-if="isOpen" :class="content({ class: props.ui?.content })">
       <slot />
     </div>
   </div>

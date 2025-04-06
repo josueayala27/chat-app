@@ -22,27 +22,27 @@
       <div>
         <div class="flex justify-between items-center p-2">
           <BaseFont class="text-sm text-slate-700" content="Read Receipts" />
-          <BaseToogle />
+          <BaseToggle />
         </div>
         <div class="flex justify-between items-center p-2">
           <BaseFont class="text-sm text-slate-700" content="Last Seen" />
-          <BaseToogle />
+          <BaseToggle />
         </div>
         <div class="flex justify-between items-center p-2">
           <BaseFont class="text-sm text-slate-700" content="Message Forwarding" />
-          <BaseToogle />
+          <BaseToggle />
         </div>
         <div class="flex justify-between items-center p-2">
           <BaseFont class="text-sm text-slate-700" content="Preview Media in Chat" />
-          <BaseToogle />
+          <BaseToggle />
         </div>
         <div class="flex justify-between items-center p-2">
           <BaseFont class="text-sm text-slate-700" content="Message Sounds" />
-          <BaseToogle />
+          <BaseToggle />
         </div>
         <div class="flex justify-between items-center p-2">
           <BaseFont class="text-sm text-slate-700" content="Mute Chat" />
-          <BaseToogle />
+          <BaseToggle />
         </div>
       </div>
     </ChatInfoSection>
