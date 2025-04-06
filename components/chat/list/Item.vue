@@ -1,14 +1,14 @@
 <script lang="ts">
 import type { MessageProps } from './Messages.vue'
 
-interface ItemProps extends MessageProps {
+interface ChatListItemProps extends MessageProps {
   isPinned: boolean
   isRead: boolean
 }
 </script>
 
 <script lang="ts" setup>
-defineProps<Partial<ItemProps>>()
+defineProps<Partial<ChatListItemProps>>()
 </script>
 
 <template>
