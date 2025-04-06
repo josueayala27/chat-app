@@ -9,11 +9,20 @@
     </div>
 
     <ChatInfoSection title="Customize Chat">
-      Customize Chat...
+      <!-- <div class="bg-red-500">
+        <BaseFont content="Notifications" />
+      </div> -->
     </ChatInfoSection>
 
     <ChatInfoSection title="Shared Media">
       <ChatInfoSharedMedia />
+    </ChatInfoSection>
+
+    <ChatInfoSection :is-open="true" title="Chat Settings">
+      <div class="flex justify-between items-center p-2">
+        <BaseFont class="text-sm text-slate-700" content="Notifications" />
+        <BaseToogle />
+      </div>
     </ChatInfoSection>
   </aside>
 </template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-defineProps<{ title: string }>()
+const props = defineProps<{ title: string, isOpen?: boolean }>()
 
-const isOpen = ref(false)
+const isOpen = ref(props.isOpen)
 </script>
 
 <template>
@@ -17,6 +17,7 @@ const isOpen = ref(false)
       />
     </div>
 
+    <!-- TODO: Make this with tailwind variants -->
     <div v-if="isOpen" class="flex flex-col gap-2 overflow-hidden">
       <slot />
     </div>
