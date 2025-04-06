@@ -8,10 +8,19 @@
       </BaseFlex>
     </div>
 
-    <ChatInfoSection title="Customize Chat">
-      <!-- <div class="bg-red-500">
-        <BaseFont content="Notifications" />
-      </div> -->
+    <ChatInfoSection :ui="{ content: 'flex flex-col' }" title="Customize Chat">
+      <ChatInfoSectionItem title="Theme">
+        <button class="py-1 px-2 bg-slate-200/50 hover:bg-slate-200 rounded-lg cursor-pointer duration-200 flex items-center gap-2">
+          <BaseFont class="text-sm text-slate-700" content="Light Blue" />
+          <Icon name="carbon:chevron-down" size="20px" />
+        </button>
+      </ChatInfoSectionItem>
+      <ChatInfoSectionItem title="Theme">
+        <button class="py-1 px-2 bg-slate-200/50 hover:bg-slate-200 rounded-lg cursor-pointer duration-200 flex items-center gap-2">
+          <BaseFont class="text-sm text-slate-700" content="Light Blue" />
+          <Icon name="carbon:chevron-down" size="20px" />
+        </button>
+      </ChatInfoSectionItem>
     </ChatInfoSection>
 
     <ChatInfoSection :ui="{ content: 'flex flex-col gap-2' }" title="Shared Media">
@@ -32,10 +41,16 @@
         <BaseToggle />
       </ChatInfoSectionItem>
       <ChatInfoSectionItem title="Message Sounds">
-        <BaseToggle />
+        <button class="py-1 px-2 bg-slate-200/50 hover:bg-slate-200 rounded-lg cursor-pointer duration-200 flex items-center gap-2">
+          <BaseFont class="text-sm text-slate-700" content="Clamp" />
+          <Icon name="carbon:chevron-down" size="20px" />
+        </button>
       </ChatInfoSectionItem>
       <ChatInfoSectionItem title="Mute Chat">
-        <BaseToggle />
+        <button class="py-1 px-2 bg-slate-200/50 hover:bg-slate-200 rounded-lg cursor-pointer duration-200 flex items-center gap-2">
+          <BaseFont class="text-sm text-slate-700" content="8 Hours" />
+          <Icon name="carbon:chevron-down" size="20px" />
+        </button>
       </ChatInfoSectionItem>
     </ChatInfoSection>
   </aside>

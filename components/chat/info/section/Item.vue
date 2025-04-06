@@ -7,7 +7,7 @@ defineProps<ChatInfoSectionProps>()
 </script>
 
 <template>
-  <div class="flex justify-between items-center p-2">
+  <div class="flex justify-between items-center px-2 h-9">
     <BaseFont class="text-sm text-slate-700" :content="title" />
 
     <!-- Action -->
