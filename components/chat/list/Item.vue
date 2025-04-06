@@ -1,18 +1,21 @@
 <script lang="ts">
-interface ItemProps {
-  name: string
-  message: string
-  isPinned?: boolean
-  isRead?: boolean
+import type { MessageProps } from './Messages.vue'
+
+interface ItemProps extends MessageProps {
+  isPinned: boolean
+  isRead: boolean
 }
 </script>
 
 <script lang="ts" setup>
-defineProps<ItemProps>()
+defineProps<Partial<ItemProps>>()
 </script>
 
 <template>
-  <NuxtLink class="flex rounded-lg p-2 gap-2 items-center cursor-pointer hover:bg-slate-100 group">
+  <NuxtLink
+    :to="{ name: 'chat', params: { chat: uuid } }"
+    class="flex rounded-lg p-2 gap-2 items-center cursor-pointer hover:bg-slate-100 group"
+  >
     <BaseAvatar />
     <div class="flex flex-col text-sm w-full">
       <div class="flex justify-between items-center">
