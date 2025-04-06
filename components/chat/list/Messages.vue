@@ -1,5 +1,5 @@
 <script lang="ts">
-interface Message {
+interface MessageProps {
   id: string
   name: string
   message: string
@@ -7,7 +7,7 @@ interface Message {
 </script>
 
 <script lang="ts" setup>
-const messages = ref<Message[]>([
+const messages = ref<MessageProps[]>([
   { id: '378ae97b-d6c6-4ec4-bf39-2aaae75bd514', name: 'Alice', message: 'Hello there!' },
   { id: '86b765de-b5ef-4334-a040-28bd1a46c5ad', name: 'Bob', message: 'How are you?' },
   { id: '1a7895ee-d744-4f81-9aa9-c16f14463232', name: 'Charlie', message: 'Good morning!' },

@@ -1,12 +1,14 @@
-<script lang="ts" setup>
-interface Props {
+<script lang="ts">
+interface ItemProps {
   name: string
   message: string
   isPinned?: boolean
   isRead?: boolean
 }
+</script>
 
-defineProps<Props>()
+<script lang="ts" setup>
+defineProps<ItemProps>()
 </script>
 
 <template>
