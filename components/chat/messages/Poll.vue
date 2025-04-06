@@ -7,7 +7,7 @@ const ui = tv({
   slots: {
     root: 'rounded-lg flex-col inline-flex w-[20rem]',
     radio: 'size-3 rounded-full shrink-0',
-    bar: 'h-2 rounded-full w-full',
+    bar: 'h-1.5 rounded-full w-full',
     button: 'w-full cursor-pointer p-3 duration-300 font-medium',
   },
   variants: {
@@ -36,14 +36,7 @@ const { root, radio, bar, button } = ui({ isOwn })
     <div class="p-3 flex flex-col gap-4">
       <BaseFont class="text-sm text-inherit font-semibold" content="THIS IS MY POLL" />
 
-      <div v-for="item in 3" :key="item" class="flex flex-col gap-2 cursor-pointer">
-        <div class="flex items-center gap-2">
-          <div :class="radio()" />
-          <BaseFont class="text-sm text-inherit" :content="`This is a poll option ${item + 1}`" />
-        </div>
-
-        <div :class="bar()" />
-      </div>
+      <ChatMessagesTypePollItem v-for="item in 3" :key="item" :ui="{ bar: bar(), radio: radio() }" />
     </div>
 
     <button :class="button()">
