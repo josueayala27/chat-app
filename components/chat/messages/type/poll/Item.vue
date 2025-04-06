@@ -1,5 +1,11 @@
+<script lang="ts">
+export interface PollItemProps {
+  ui: Partial<{ radio: string, bar: string }>
+}
+</script>
+
 <script setup lang="ts">
-defineProps<{ ui: Partial<{ radio: string, bar: string }> }>()
+defineProps<PollItemProps>()
 </script>
 
 <template>
