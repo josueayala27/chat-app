@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-sky-500 text-white rounded-r-lg last:rounded-bl-lg flex-col inline-flex w-[20rem]">
+  <div class="bg-sky-500 text-white rounded-lg flex-col inline-flex w-[20rem]">
     <div class="p-2 flex flex-col gap-4">
       <BaseFont class="text-sm text-inherit font-semibold" content="THIS IS MY POLL" />
 
