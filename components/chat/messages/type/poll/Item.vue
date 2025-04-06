@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{ ui: { radio: string, bar: string } }>()
+defineProps<{ ui: Partial<{ radio: string, bar: string }> }>()
 </script>
 
 <template>
