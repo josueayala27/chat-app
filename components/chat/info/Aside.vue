@@ -14,36 +14,34 @@
       </div> -->
     </ChatInfoSection>
 
-    <ChatInfoSection title="Shared Media">
+    <ChatInfoSection :ui="{ content: 'flex flex-col gap-2' }" title="Shared Media">
       <ChatInfoSharedMedia />
     </ChatInfoSection>
 
-    <ChatInfoSection :is-open="true" title="Chat Settings">
-      <div>
-        <div class="flex justify-between items-center p-2">
-          <BaseFont class="text-sm text-slate-700" content="Read Receipts" />
-          <BaseToggle />
-        </div>
-        <div class="flex justify-between items-center p-2">
-          <BaseFont class="text-sm text-slate-700" content="Last Seen" />
-          <BaseToggle />
-        </div>
-        <div class="flex justify-between items-center p-2">
-          <BaseFont class="text-sm text-slate-700" content="Message Forwarding" />
-          <BaseToggle />
-        </div>
-        <div class="flex justify-between items-center p-2">
-          <BaseFont class="text-sm text-slate-700" content="Preview Media in Chat" />
-          <BaseToggle />
-        </div>
-        <div class="flex justify-between items-center p-2">
-          <BaseFont class="text-sm text-slate-700" content="Message Sounds" />
-          <BaseToggle />
-        </div>
-        <div class="flex justify-between items-center p-2">
-          <BaseFont class="text-sm text-slate-700" content="Mute Chat" />
-          <BaseToggle />
-        </div>
+    <ChatInfoSection :ui="{ content: 'flex flex-col' }" :is-open="true" title="Chat Settings">
+      <div class="flex justify-between items-center p-2">
+        <BaseFont class="text-sm text-slate-700" content="Read Receipts" />
+        <BaseToggle />
+      </div>
+      <div class="flex justify-between items-center p-2">
+        <BaseFont class="text-sm text-slate-700" content="Last Seen" />
+        <BaseToggle />
+      </div>
+      <div class="flex justify-between items-center p-2">
+        <BaseFont class="text-sm text-slate-700" content="Message Forwarding" />
+        <BaseToggle />
+      </div>
+      <div class="flex justify-between items-center p-2">
+        <BaseFont class="text-sm text-slate-700" content="Preview Media in Chat" />
+        <BaseToggle />
+      </div>
+      <div class="flex justify-between items-center p-2">
+        <BaseFont class="text-sm text-slate-700" content="Message Sounds" />
+        <BaseToggle />
+      </div>
+      <div class="flex justify-between items-center p-2">
+        <BaseFont class="text-sm text-slate-700" content="Mute Chat" />
+        <BaseToggle />
       </div>
     </ChatInfoSection>
   </aside>

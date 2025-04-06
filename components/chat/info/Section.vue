@@ -1,7 +1,7 @@
 <script lang="ts">
 import { tv } from 'tailwind-variants'
 
-const ui = tv({ slots: { root: 'flex flex-col', content: 'flex flex-col overflow-hidden p-2' } })
+const ui = tv({ slots: { root: 'flex flex-col', content: 'overflow-hidden' } })
 
 interface ChatInfoSectionProps {
   title: string
