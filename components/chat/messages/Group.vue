@@ -14,6 +14,7 @@ const ui = tv({
 })
 
 const { root, flex } = ui({ isOwn: props.isOwn })
+provide('isOwn', props.isOwn)
 </script>
 
 <template>
@@ -25,9 +26,9 @@ const { root, flex } = ui({ isOwn: props.isOwn })
 
       <div :class="flex({ class: 'gap-0.5' })">
         <template v-for="(_item, i) in ['text', 'text', 'text', 'poll']" :key="i">
-          <ChatMessagesText v-if="_item.includes('text')" :is-own="isOwn" />
-          <ChatMessagesMedia v-if="_item.includes('media')" :is-own="isOwn" />
-          <ChatMessagesPoll v-if="_item.includes('poll')" :is-own="isOwn" />
+          <ChatMessagesText v-if="_item.includes('text')"  />
+          <ChatMessagesMedia v-if="_item.includes('media')"  />
+          <ChatMessagesPoll v-if="_item.includes('poll')" />
         </template>
       </div>
     </div>
