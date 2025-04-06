@@ -19,9 +19,31 @@
     </ChatInfoSection>
 
     <ChatInfoSection :is-open="true" title="Chat Settings">
-      <div class="flex justify-between items-center p-2">
-        <BaseFont class="text-sm text-slate-700" content="Notifications" />
-        <BaseToogle />
+      <div>
+        <div class="flex justify-between items-center p-2">
+          <BaseFont class="text-sm text-slate-700" content="Read Receipts" />
+          <BaseToogle />
+        </div>
+        <div class="flex justify-between items-center p-2">
+          <BaseFont class="text-sm text-slate-700" content="Last Seen" />
+          <BaseToogle />
+        </div>
+        <div class="flex justify-between items-center p-2">
+          <BaseFont class="text-sm text-slate-700" content="Message Forwarding" />
+          <BaseToogle />
+        </div>
+        <div class="flex justify-between items-center p-2">
+          <BaseFont class="text-sm text-slate-700" content="Preview Media in Chat" />
+          <BaseToogle />
+        </div>
+        <div class="flex justify-between items-center p-2">
+          <BaseFont class="text-sm text-slate-700" content="Message Sounds" />
+          <BaseToogle />
+        </div>
+        <div class="flex justify-between items-center p-2">
+          <BaseFont class="text-sm text-slate-700" content="Mute Chat" />
+          <BaseToogle />
+        </div>
       </div>
     </ChatInfoSection>
   </aside>
