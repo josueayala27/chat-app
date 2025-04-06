@@ -8,7 +8,7 @@ const ui = tv({
     root: 'rounded-lg flex-col inline-flex w-[20rem]',
     radio: 'size-3 rounded-full shrink-0',
     bar: 'h-2 rounded-full w-full',
-    button: 'w-full cursor-pointer p-2 duration-300 font-medium',
+    button: 'w-full cursor-pointer p-3 duration-300 font-medium',
   },
   variants: {
     isOwn: {
@@ -33,7 +33,7 @@ const { root, radio, bar, button } = ui({ isOwn })
 
 <template>
   <div :class="root()">
-    <div class="p-2 flex flex-col gap-4">
+    <div class="p-3 flex flex-col gap-4">
       <BaseFont class="text-sm text-inherit font-semibold" content="THIS IS MY POLL" />
 
       <div v-for="item in 3" :key="item" class="flex flex-col gap-2 cursor-pointer">
