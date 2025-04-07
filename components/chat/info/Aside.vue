@@ -1,5 +1,5 @@
 <template>
-  <aside class="w-95 flex flex-col overflow-auto divide-y divide-slate-200">
+  <aside class="w-95 flex flex-col overflow-auto divide-y divide-slate-200 scrollbar-hidden">
     <div class="justify-center py-4 flex flex-col items-center gap-2">
       <BaseAvatar size="140" />
       <BaseFlex is="div" align="center" direction="column">
@@ -8,13 +8,7 @@
       </BaseFlex>
     </div>
 
-    <ChatInfoSection :ui="{ content: 'flex flex-col' }" title="Customize Chat">
-      <ChatInfoSectionItem title="Theme">
-        <button class="py-1 px-2 bg-slate-200/50 hover:bg-slate-200 rounded-lg cursor-pointer duration-200 flex items-center gap-2">
-          <BaseFont class="text-sm text-slate-700" content="Light Blue" />
-          <Icon name="carbon:chevron-down" size="20px" />
-        </button>
-      </ChatInfoSectionItem>
+    <ChatInfoSection :ui="{ content: 'flex flex-col pb-2' }" title="Customize Chat">
       <ChatInfoSectionItem title="Theme">
         <button class="py-1 px-2 bg-slate-200/50 hover:bg-slate-200 rounded-lg cursor-pointer duration-200 flex items-center gap-2">
           <BaseFont class="text-sm text-slate-700" content="Light Blue" />
@@ -23,11 +17,11 @@
       </ChatInfoSectionItem>
     </ChatInfoSection>
 
-    <ChatInfoSection :ui="{ content: 'flex flex-col gap-2' }" title="Shared Media">
+    <ChatInfoSection :ui="{ content: 'flex flex-col gap-2' }" :is-open="true" title="Shared Media">
       <ChatInfoSharedMedia />
     </ChatInfoSection>
 
-    <ChatInfoSection :ui="{ content: 'flex flex-col' }" :is-open="true" title="Chat Settings">
+    <ChatInfoSection :ui="{ content: 'flex flex-col pb-2' }" title="Chat Settings">
       <ChatInfoSectionItem title="Read Receipts">
         <BaseToggle />
       </ChatInfoSectionItem>
