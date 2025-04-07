@@ -4,7 +4,7 @@ import { tv } from 'tailwind-variants'
 const isOwn = inject<boolean>('isOwn')
 
 const ui = tv({
-  slots: { root: '' },
+  slots: { root: 'py-2 px-3 rounded-lg' },
   variants: {
     isOwn: {
       true: { root: 'bg-sky-500 text-white' },
@@ -18,7 +18,7 @@ const { root } = ui({ isOwn })
 
 <template>
   <!-- rounded-r-lg last:rounded-bl-lg -->
-  <div :class="root()" class="p-2 rounded-lg">
+  <div :class="root()">
     <BaseFont class="text-sm text-inherit" content="Hello there!" />
   </div>
 </template>

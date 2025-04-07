@@ -25,9 +25,9 @@ provide('isOwn', props.isOwn)
       <BaseFont class="text-sm text-slate-900 font-medium" :content="isOwn ? 'Tú' : 'Josué Ayala'" />
 
       <div :class="flex({ class: 'gap-0.5' })">
-        <template v-for="(_item, i) in ['text', 'text', 'text', 'poll']" :key="i">
-          <ChatMessagesText v-if="_item.includes('text')"  />
-          <ChatMessagesMedia v-if="_item.includes('media')"  />
+        <template v-for="(_item, i) in ['text', 'text', 'file', 'poll']" :key="i">
+          <ChatMessagesText v-if="_item.includes('text')" />
+          <ChatMessagesFile v-if="_item.includes('file')" />
           <ChatMessagesPoll v-if="_item.includes('poll')" />
         </template>
       </div>
