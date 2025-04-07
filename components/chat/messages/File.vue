@@ -10,7 +10,7 @@ const ui = tv({
   },
   variants: {
     isOwn: {
-      true: { root: 'bg-sky-500 text-white', meta: 'text-white/90' },
+      true: { root: 'bg-sky-500 hover:bg-sky-600/90 text-white', meta: 'text-white/90' },
       false: { root: 'bg-slate-100 hover:bg-slate-200/70', meta: 'text-slate-700' },
     },
   },
