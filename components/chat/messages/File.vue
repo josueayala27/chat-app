@@ -5,13 +5,13 @@ const isOwn = inject<boolean>('isOwn')
 
 const ui = tv({
   slots: {
-    root: 'py-2 px-3 rounded-lg flex items-center gap-2 cursor-pointer max-w-[15rem]',
+    root: 'py-2 px-3 rounded-lg flex items-center gap-2 cursor-pointer max-w-[15rem] duration-200',
     meta: 'text-xs',
   },
   variants: {
     isOwn: {
       true: { root: 'bg-sky-500 text-white', meta: 'text-white/90' },
-      false: { root: 'bg-slate-100', meta: 'text-slate-700' },
+      false: { root: 'bg-slate-100 hover:bg-slate-200/70', meta: 'text-slate-700' },
     },
   },
 })
