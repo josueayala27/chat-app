@@ -50,7 +50,6 @@ export function useWaveform(canvasRef: Ref<HTMLCanvasElement | null>, audioUrl: 
       }
       const adjustedMaxAmplitude = maxAmplitude / (mergedConfig.sensitivity ?? defaultConfig.sensitivity ?? 1)
 
-      // Draw waveform
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       ctx.fillStyle = mergedConfig.barColor || defaultConfig.barColor || '#000'
 
