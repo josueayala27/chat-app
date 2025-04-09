@@ -17,33 +17,7 @@ onClickOutside(reference, () => isOpen.value = false, { ignore: [floating] })
     </div>
 
     <ChatInfoSection :is-open="true" :ui="{ content: 'flex flex-col pb-2 overflow-hidden' }" title="Customize Chat">
-      <ChatInfoSectionItem title="Theme" />
-      <div class="flex items-center gap-2 overflow-auto px-2 scrollbar-hidden">
-        <div
-          v-for="(item, index) in [
-            { color: '--color-sky-400', theme: 'Avacado Alien' },
-            { color: '--color-rose-400', theme: 'Rainbow Candy' },
-            { color: '--color-emerald-400', theme: 'Honedeydew Punch' }]"
-          :key="index"
-          :style="{ '--bg-theme': `var(${item.color})` }"
-          class="aspect-video h-28 flex flex-col divide-y divide-slate-300 border border-slate-300 rounded-lg cursor-pointer"
-        >
-          <div class="flex-1 p-2 flex flex-col overflow-hidden gap-2">
-            <div
-              v-for="_class in ['flex-row', 'flex-row-reverse', 'flex-row']"
-              :key="_class"
-              :class="_class"
-              class="flex items-center gap-2"
-            >
-              <BaseAvatar size="24" />
-              <div :class="_class !== 'flex-row' ? 'bg-slate-200' : 'bg-(--bg-theme)'" class="h-6 w-full rounded-full" />
-            </div>
-          </div>
-          <div class="p-1">
-            <BaseFont class="text-sm" :content="item.theme" />
-          </div>
-        </div>
-      </div>
+      <ChatInfoCustomizeChat />
     </ChatInfoSection>
 
     <ChatInfoSection :ui="{ content: 'flex flex-col gap-2' }" :is-open="true" title="Shared Media">
