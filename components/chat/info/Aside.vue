@@ -1,9 +1,6 @@
 <script lang="ts" setup>
-import { offset, useFloating } from '@floating-ui/vue'
-
 const reference = ref<HTMLDivElement>()
 const floating = ref<HTMLDivElement>()
-const { floatingStyles } = useFloating(reference, floating, { placement: 'bottom-end', middleware: [offset(5)] })
 
 const isOpen = ref<boolean>(false)
 onClickOutside(reference, () => isOpen.value = false, { ignore: [floating] })
@@ -19,22 +16,30 @@ onClickOutside(reference, () => isOpen.value = false, { ignore: [floating] })
       </BaseFlex>
     </div>
 
-    <ChatInfoSection :ui="{ content: 'flex flex-col pb-2 overflow-hidden' }" title="Customize Chat">
-      <ChatInfoSectionItem title="Theme">
-        <button ref="reference" class="py-1 px-2 bg-slate-200/50 hover:bg-slate-200 rounded-lg cursor-pointer duration-200 flex items-center gap-2" @click="isOpen = !isOpen">
-          <BaseFont class="text-sm text-slate-700" content="Light Blue" />
-          <Icon name="carbon:chevron-down" size="20px" />
-        </button>
-
-        <BasePopoverContainer v-if="isOpen" ref="floating" :ui="{ base: 'grid grid-cols-5 gap-1' }" :style="floatingStyles">
-          <div
-            v-for="theme in ['--color-emerald-500', '--color-sky-500']"
-            :key="theme"
-            :style="{ '--bg-color': `var(${theme})` }"
-            class="size-6 rounded-lg cursor-pointer bg-(--bg-color)"
-          />
-        </BasePopoverContainer>
-      </ChatInfoSectionItem>
+    <ChatInfoSection :is-open="true" :ui="{ content: 'flex flex-col pb-2 overflow-hidden' }" title="Customize Chat">
+      <ChatInfoSectionItem title="Theme" />
+      <div class="flex items-center gap-2 overflow-auto px-2 scrollbar-hidden">
+        <div
+          v-for="item in ['Avacado Alien', 'Rainbow Candy', 'Honedeydew Punch']"
+          :key="item"
+          class="aspect-video h-28 flex flex-col divide-y divide-slate-300 border border-slate-300 rounded-lg cursor-pointer"
+        >
+          <div class="flex-1 p-2 flex flex-col overflow-hidden gap-2">
+            <div
+              v-for="_class in ['flex-row', 'flex-row-reverse', 'flex-row']"
+              :key="_class"
+              :class="_class"
+              class="flex items-center gap-2"
+            >
+              <BaseAvatar size="24" />
+              <div class="bg-slate-100 h-6 w-full rounded-full" />
+            </div>
+          </div>
+          <div class="p-1">
+            <BaseFont class="text-sm" :content="item" />
+          </div>
+        </div>
+      </div>
     </ChatInfoSection>
 
     <ChatInfoSection :ui="{ content: 'flex flex-col gap-2' }" :is-open="true" title="Shared Media">
