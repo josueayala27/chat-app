@@ -2,7 +2,6 @@
 
 @theme {
   --font-sans: "Inter", sans-serif;
-  --font-flow-circular: "Flow Circular", sans-serif;
 }
 
 @utility scrollbar-hidden {

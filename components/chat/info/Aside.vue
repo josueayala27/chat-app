@@ -20,8 +20,12 @@ onClickOutside(reference, () => isOpen.value = false, { ignore: [floating] })
       <ChatInfoSectionItem title="Theme" />
       <div class="flex items-center gap-2 overflow-auto px-2 scrollbar-hidden">
         <div
-          v-for="item in ['Avacado Alien', 'Rainbow Candy', 'Honedeydew Punch']"
-          :key="item"
+          v-for="(item, index) in [
+            { color: '--color-sky-400', theme: 'Avacado Alien' },
+            { color: '--color-rose-400', theme: 'Rainbow Candy' },
+            { color: '--color-emerald-400', theme: 'Honedeydew Punch' }]"
+          :key="index"
+          :style="{ '--bg-theme': `var(${item.color})` }"
           class="aspect-video h-28 flex flex-col divide-y divide-slate-300 border border-slate-300 rounded-lg cursor-pointer"
         >
           <div class="flex-1 p-2 flex flex-col overflow-hidden gap-2">
@@ -32,11 +36,11 @@ onClickOutside(reference, () => isOpen.value = false, { ignore: [floating] })
               class="flex items-center gap-2"
             >
               <BaseAvatar size="24" />
-              <div class="bg-slate-100 h-6 w-full rounded-full" />
+              <div :class="_class !== 'flex-row' ? 'bg-slate-200' : 'bg-(--bg-theme)'" class="h-6 w-full rounded-full" />
             </div>
           </div>
           <div class="p-1">
-            <BaseFont class="text-sm" :content="item" />
+            <BaseFont class="text-sm" :content="item.theme" />
           </div>
         </div>
       </div>
