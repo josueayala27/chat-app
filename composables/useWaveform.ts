@@ -27,18 +27,7 @@ const defaultConfig: WaveformConfig = {
   maxVisualHeight: 0.85,
 }
 
-/**
- * A composable function to draw an audio waveform on a canvas element.
- *
- * @param {Ref<HTMLCanvasElement | null>} canvasRef - A Vue ref pointing to the canvas element where the waveform will be drawn.
- * @param {string} audioUrl - The URL of the audio file to visualize.
- * @param {WaveformConfig} [config] - Optional configuration for customizing the waveform visualization.
- * @returns {object} - An object containing reactive properties and methods:
- *   - `isLoading` {Ref<boolean>} - Indicates whether the waveform is currently being loaded.
- *   - `error` {Ref<Error | null>} - Holds any error that occurs during the waveform generation.
- *   - `redraw` {Function} - A function to manually redraw the waveform.
- */
-export function useWaveform(canvasRef: Ref<HTMLCanvasElement | null>, audioUrl: string, config: WaveformConfig = {}): object {
+export function useWaveform(canvasRef: Ref<HTMLCanvasElement | null>, audioUrl: string, config: WaveformConfig = {}) {
   const mergedConfig = { ...defaultConfig, ...config }
   const isLoading = ref(true)
   const error = ref<Error | null>(null)
@@ -49,7 +38,7 @@ export function useWaveform(canvasRef: Ref<HTMLCanvasElement | null>, audioUrl: 
    * @async
    * @returns {Promise<void>}
    */
-  const drawWaveform = async () => {
+  const drawWaveform = async (): Promise<void> => {
     if (!canvasRef.value)
       return
 
@@ -121,12 +110,9 @@ export function useWaveform(canvasRef: Ref<HTMLCanvasElement | null>, audioUrl: 
     }
   }
 
-  // Automatically draw the waveform when the component is mounted
-  onMounted(drawWaveform)
-
   return {
     isLoading,
     error,
-    redraw: drawWaveform,
+    drawWaveform,
   }
 }
