@@ -16,7 +16,7 @@ onClickOutside(reference, () => isOpen.value = false, { ignore: [floating] })
       </BaseFlex>
     </div>
 
-    <ChatInfoSection :is-open="true" :ui="{ content: 'flex flex-col pb-2 overflow-hidden' }" title="Customize Chat">
+    <ChatInfoSection :ui="{ content: 'flex flex-col pb-2 overflow-hidden' }" title="Customize Chat">
       <ChatInfoCustomizeChat />
     </ChatInfoSection>
 
