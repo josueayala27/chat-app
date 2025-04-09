@@ -34,7 +34,6 @@ export function useWaveform(canvasRef: Ref<HTMLCanvasElement | null>, audioUrl: 
     if (!ctx)
       return
 
-    // Ensure proper canvas dimensions
     canvas.width = canvas.clientWidth
     canvas.height = canvas.clientHeight
 
@@ -45,7 +44,6 @@ export function useWaveform(canvasRef: Ref<HTMLCanvasElement | null>, audioUrl: 
       const audioBuffer = await audioContext.decodeAudioData(buffer)
       const data = audioBuffer.getChannelData(0)
 
-      // Calculate max amplitude with sensitivity adjustment
       let maxAmplitude = 0
       for (let i = 0; i < data.length; i++) {
         maxAmplitude = Math.max(maxAmplitude, Math.abs(data[i]))
