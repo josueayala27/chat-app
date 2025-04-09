@@ -25,30 +25,7 @@ onClickOutside(reference, () => isOpen.value = false, { ignore: [floating] })
     </ChatInfoSection>
 
     <ChatInfoSection :ui="{ content: 'flex flex-col pb-2' }" title="Chat Settings">
-      <ChatInfoSectionItem title="Read Receipts">
-        <BaseToggle />
-      </ChatInfoSectionItem>
-      <ChatInfoSectionItem title="Last Seen">
-        <BaseToggle />
-      </ChatInfoSectionItem>
-      <ChatInfoSectionItem title="Message Forwarding">
-        <BaseToggle />
-      </ChatInfoSectionItem>
-      <ChatInfoSectionItem title="Preview Media in Chat">
-        <BaseToggle />
-      </ChatInfoSectionItem>
-      <ChatInfoSectionItem title="Message Sounds">
-        <button class="py-1 px-2 bg-slate-200/50 hover:bg-slate-200 rounded-lg cursor-pointer duration-200 flex items-center gap-2">
-          <BaseFont class="text-sm text-slate-700" content="Clap" />
-          <Icon name="carbon:chevron-down" size="20px" />
-        </button>
-      </ChatInfoSectionItem>
-      <ChatInfoSectionItem title="Mute Chat">
-        <button class="py-1 px-2 bg-slate-200/50 hover:bg-slate-200 rounded-lg cursor-pointer duration-200 flex items-center gap-2">
-          <BaseFont class="text-sm text-slate-700" content="8 Hours" />
-          <Icon name="carbon:chevron-down" size="20px" />
-        </button>
-      </ChatInfoSectionItem>
+      <ChatInfoChatSettings />
     </ChatInfoSection>
   </aside>
 </template>
