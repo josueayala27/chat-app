@@ -17,11 +17,11 @@ const { root } = ui({ isOwn })
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 
-const { drawWaveform } = useWaveform(canvasRef, 'https://res.cloudinary.com/diobzajfw/video/upload/v1744237981/test/jsmsen0pmfip9fkwf9ib.mp3', {
+const { drawWaveform } = useAudio(canvasRef, 'https://res.cloudinary.com/diobzajfw/video/upload/v1744237981/test/jsmsen0pmfip9fkwf9ib.mp3', {
   barColor: isOwn ? 'white' : 'oklch(37.2% 0.044 257.287)',
 })
 
-onMounted(() => {
+onMounted(async () => {
   drawWaveform()
 })
 </script>
