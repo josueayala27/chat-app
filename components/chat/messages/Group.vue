@@ -1,7 +1,15 @@
 <script lang="ts" setup>
 import { tv } from 'tailwind-variants'
+import { resolveComponent } from 'vue'
 
 const props = defineProps<{ isOwn: boolean }>()
+
+const messageComponents = [
+  { type: 'text', component: resolveComponent('ChatMessagesText') },
+  { type: 'audio', component: resolveComponent('ChatMessagesAudio') },
+  { type: 'file', component: resolveComponent('ChatMessagesFile') },
+  { type: 'poll', component: resolveComponent('ChatMessagesPoll') },
+]
 
 const ui = tv({
   slots: { root: 'flex gap-2', flex: 'flex flex-col' },
@@ -25,11 +33,10 @@ provide('isOwn', props.isOwn)
       <BaseFont class="text-sm text-slate-900 font-medium" :content="isOwn ? 'Tú' : 'Josué Ayala'" />
 
       <div :class="flex({ class: 'gap-0.5' })">
-        <template v-for="(_item, i) in ['text', 'audio', 'file', 'poll']" :key="i">
-          <ChatMessagesText v-if="_item.includes('text')" />
-          <ChatMessagesFile v-if="_item.includes('file')" />
-          <ChatMessagesPoll v-if="_item.includes('poll')" />
-          <ChatMessagesAudio v-if="_item.includes('audio')" />
+        <template v-for="(msg, i) in messageComponents" :key="i">
+          <ChatMessagesRoot>
+            <component :is="msg.component" />
+          </ChatMessagesRoot>
         </template>
       </div>
     </div>

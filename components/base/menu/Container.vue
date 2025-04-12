@@ -1,0 +1,22 @@
+<script lang="ts" setup>
+import type { BaseMenuItemProps } from './Item.vue'
+import { tv } from 'tailwind-variants'
+
+const props = defineProps<{ ui?: Partial<typeof ui.slots>, items?: BaseMenuItemProps[] }>()
+
+const ui = tv({
+  slots: {
+    base: 'bg-white/90 rounded-lg p-1 flex flex-col backdrop-blur-[10px] border border-slate-200 z-50',
+  },
+})
+
+const { base } = ui()
+</script>
+
+<template>
+  <div :class="base({ class: props.ui?.base })">
+    <slot>
+      <BaseMenuItem v-for="({ icon, label }, index) in items" :key="index" :icon :label />
+    </slot>
+  </div>
+</template>

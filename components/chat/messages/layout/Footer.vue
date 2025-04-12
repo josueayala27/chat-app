@@ -1,12 +1,5 @@
 <script lang="ts" setup>
-import { offset, useFloating } from '@floating-ui/vue'
-
-const reference = ref<HTMLDivElement>()
-const floating = ref<HTMLDivElement>()
-const { floatingStyles } = useFloating(reference, floating, { placement: 'top-start', middleware: [offset(5)] })
-
-const isOpen = ref<boolean>(false)
-
+const { reference, floating, isOpen, floatingStyles } = useFloating()
 onClickOutside(reference, () => isOpen.value = false, { ignore: [floating] })
 </script>
 
@@ -20,11 +13,16 @@ onClickOutside(reference, () => isOpen.value = false, { ignore: [floating] })
       <Icon size="20px" name="carbon:add-large" :class="[{ 'rotate-135': isOpen }]" class="flex shrink-0 duration-300" />
     </div>
 
-    <BasePopoverContainer v-if="isOpen" ref="floating" :style="floatingStyles">
-      <BasePopoverItem icon="carbon:document-add" label="Archivo" />
-      <BasePopoverItem icon="carbon:image-copy" label="Fotos y vídeos" />
-      <BasePopoverItem icon="carbon:text-short-paragraph" label="Encuesta" />
-    </BasePopoverContainer>
+    <BaseMenuContainer
+      v-if="isOpen"
+      ref="floating"
+      :style="floatingStyles"
+      :items="[
+        { icon: 'carbon:document-add', label: 'Archivo' },
+        { icon: 'carbon:image-copy', label: 'Fotos y vídeos' },
+        { icon: 'carbon:text-short-paragraph', label: 'Encuesta' },
+      ]"
+    />
 
     <input placeholder="Write something" type="text" class="bg-slate-100 w-full py-2 px-4 rounded-lg outline-none text-sm">
   </div>
