@@ -16,7 +16,7 @@ const { base } = ui()
 <template>
   <div :class="base({ class: props.ui?.base })">
     <slot>
-      <BaseMenuItem v-for="({ icon, label }, index) in items" :key="index" :icon :label />
+      <BaseMenuItem v-for="(item, index) in items" :key="index" v-bind="item" />
     </slot>
   </div>
 </template>

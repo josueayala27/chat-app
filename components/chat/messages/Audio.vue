@@ -4,7 +4,7 @@ import { tv } from 'tailwind-variants'
 const isOwn = inject<boolean>('isOwn')
 
 const ui = tv({
-  slots: { root: 'py-2 px-3 rounded-lg max-w-[32rem]' },
+  slots: { root: 'py-2 px-3 rounded-lg flex gap-2 items-center' },
   variants: {
     isOwn: {
       true: { root: 'bg-sky-500 text-white' },
@@ -28,6 +28,10 @@ onMounted(async () => {
 
 <template>
   <div :class="root()">
-    <canvas ref="canvasRef" :width="276" :height="30" />
+    <div class="p-2 rounded-full bg-red-100 grid place-items-center cursor-pointer">
+      <Icon size="20px" name="carbon:play-filled-alt" class="flex shrink-0" />
+    </div>
+    <canvas ref="canvasRef" :width="200" :height="30" />
+    <BaseFont content="0:04" class="text-xs" />
   </div>
 </template>

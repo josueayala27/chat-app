@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ChatInfoSharedMediaFiles, ChatInfoSharedMediaLinks, ChatInfoSharedMediaPhotos } from '#components'
+import { WindowPanelInfoSharedMediaFiles, WindowPanelInfoSharedMediaLinks, WindowPanelInfoSharedMediaPhotos } from '#components'
 
 interface SharedMediaType {
   id: number
@@ -8,9 +8,9 @@ interface SharedMediaType {
 }
 
 const sharedMediaOptions = ref<SharedMediaType[]>([
-  { id: 1, label: 'Media', component: markRaw(ChatInfoSharedMediaPhotos) },
-  { id: 2, label: 'Files', component: markRaw(ChatInfoSharedMediaFiles) },
-  { id: 3, label: 'Links', component: markRaw(ChatInfoSharedMediaLinks) },
+  { id: 1, label: 'Media', component: markRaw(WindowPanelInfoSharedMediaPhotos) },
+  { id: 2, label: 'Files', component: markRaw(WindowPanelInfoSharedMediaFiles) },
+  { id: 3, label: 'Links', component: markRaw(WindowPanelInfoSharedMediaLinks) },
 ])
 
 const selectedMediaType = ref<SharedMediaType>(sharedMediaOptions.value[0])
@@ -18,14 +18,14 @@ const selectedMediaType = ref<SharedMediaType>(sharedMediaOptions.value[0])
 
 <template>
   <div class="flex gap-2 items-center text-sm px-2">
-    <ChatInfoSharedMediaTag
+    <WindowPanelInfoSharedMediaTag
       v-for="option in sharedMediaOptions"
       :key="option.id"
       :active="selectedMediaType.id === option.id"
       @click="selectedMediaType = option"
     >
       {{ option.label }}
-    </ChatInfoSharedMediaTag>
+    </WindowPanelInfoSharedMediaTag>
   </div>
 
   <component :is="selectedMediaType.component" />

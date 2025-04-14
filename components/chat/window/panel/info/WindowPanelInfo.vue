@@ -7,7 +7,7 @@ onClickOutside(reference, () => isOpen.value = false, { ignore: [floating] })
 </script>
 
 <template>
-  <aside class="w-95 flex flex-col overflow-auto divide-y divide-slate-200 scrollbar-hidden">
+  <aside class="flex flex-col divide-y divide-slate-200">
     <div class="justify-center py-4 flex flex-col items-center gap-2">
       <BaseAvatar size="140" />
       <BaseFlex is="div" align="center" direction="column">
@@ -16,16 +16,16 @@ onClickOutside(reference, () => isOpen.value = false, { ignore: [floating] })
       </BaseFlex>
     </div>
 
-    <ChatInfoSection :ui="{ content: 'flex flex-col pb-2 overflow-hidden' }" title="Customize Chat">
-      <ChatInfoCustomizeChat />
-    </ChatInfoSection>
+    <WindowPanelInfoSection :ui="{ content: 'flex flex-col pb-2 overflow-hidden' }" title="Customize Chat">
+      <WindowPanelInfoCustomizeChat />
+    </WindowPanelInfoSection>
 
-    <ChatInfoSection :ui="{ content: 'flex flex-col gap-2' }" :is-open="true" title="Shared Media">
-      <ChatInfoSharedMedia />
-    </ChatInfoSection>
+    <WindowPanelInfoSection :ui="{ content: 'flex flex-col gap-2' }" :is-open="true" title="Shared Media">
+      <WindowPanelInfoSharedMedia />
+    </WindowPanelInfoSection>
 
-    <ChatInfoSection :ui="{ content: 'flex flex-col pb-2' }" title="Chat Settings">
-      <ChatInfoChatSettings />
-    </ChatInfoSection>
+    <WindowPanelInfoSection :ui="{ content: 'flex flex-col pb-2' }" title="Chat Settings">
+      <WindowPanelInfoChatSettings />
+    </WindowPanelInfoSection>
   </aside>
 </template>

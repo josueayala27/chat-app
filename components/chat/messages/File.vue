@@ -1,22 +1,14 @@
 <script lang="ts" setup>
 import { tv } from 'tailwind-variants'
 
-const isOwn = inject<boolean>('isOwn')
-
 const ui = tv({
   slots: {
     root: 'py-2 px-3 rounded-lg flex items-center gap-2 cursor-pointer max-w-[15rem] duration-200',
     meta: 'text-xs',
   },
-  variants: {
-    isOwn: {
-      true: { root: 'bg-sky-500 hover:bg-sky-600/90 text-white', meta: 'text-white/90' },
-      false: { root: 'bg-slate-100 hover:bg-slate-200/70', meta: 'text-slate-700' },
-    },
-  },
 })
 
-const { root, meta } = ui({ isOwn })
+const { root, meta } = ui()
 </script>
 
 <template>

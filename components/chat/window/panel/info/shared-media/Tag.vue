@@ -15,7 +15,7 @@ const tag = tv({
 </script>
 
 <template>
-  <button :class="[tag({ active, class: props.class })]">
+  <span role="button" :class="[tag({ active, class: props.class })]">
     <slot />
-  </button>
+  </span>
 </template>

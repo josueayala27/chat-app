@@ -4,9 +4,11 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
   css: ['@/assets/css/main.css'],
-  vite: {
-    plugins: [tailwindcss()],
-  },
+  vite: { plugins: [tailwindcss()] },
+  components: [
+    { path: '@/components/chat/window', prefix: 'Window' },
+    '@/components',
+  ],
   modules: ['@nuxt/icon', '@nuxt/fonts', '@vueuse/nuxt'],
   fonts: {
     experimental: {

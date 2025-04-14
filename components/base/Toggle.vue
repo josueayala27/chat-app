@@ -14,7 +14,7 @@ const computedDataState = computed(() => {
   >
     <span
       :data-state="computedDataState"
-      class="pointer-events-none rounded-full bg-white shadow-lg ring-0 duration-200 flex items-center justify-center size-4 data-[state=unchecked]:translate-x-0 data-[state=checked]:translate-x-4"
+      class="pointer-events-none rounded-full bg-white shadow-lg ring-0 duration-200 flex items-center justify-center size-4 data-[state=unchecked]:translate-x-0 data-[state=checked]:translate-x-full"
     />
   </button>
 </template>

@@ -2,7 +2,6 @@
 import { tv } from 'tailwind-variants'
 
 const isOwn = inject<boolean>('isOwn')
-const { reference, floating, isOpen, floatingStyles } = useFloating({ placement: isOwn ? 'bottom-end' : 'bottom-start' })
 
 const ui = tv({
   slots: { root: 'relative group rounded-lg' },
@@ -15,36 +14,27 @@ const ui = tv({
 })
 
 const { root } = ui({ isOwn })
-onClickOutside(reference, () => isOpen.value = false, { ignore: [floating] })
-
-const menuItems = computed(() => {
-  const baseItems = [
-    { icon: 'carbon:reply', label: 'Reply' },
-    { icon: 'carbon:copy-file', label: 'Copy' },
-    { icon: 'carbon:text-new-line', label: 'Forward' },
-    { icon: 'carbon:pin', label: 'Pin' },
-    { icon: 'carbon:star', label: 'Star' },
-    { icon: 'carbon:trash-can', label: 'Delete' },
-  ]
-  return isOwn ? [{ icon: 'carbon:information', label: 'Message Info' }, ...baseItems] : baseItems
-})
 </script>
 
 <template>
   <div :class="root()">
-    <div
-      ref="reference"
-      class="rounded-tr-lg absolute top-0 right-0 h-8 aspect-square flex items-center justify-center invisible group-hover:visible cursor-pointer bg-inherit" @click="isOpen = !isOpen"
-    >
-      <Icon name="carbon:chevron-down" />
-    </div>
+    <BasePopover :config="{ placement: isOwn ? 'bottom-end' : 'bottom-start' }">
+      <div class="rounded-tr-lg absolute top-0 right-0 h-8 aspect-square flex items-center justify-center invisible group-hover:visible cursor-pointer bg-inherit">
+        <Icon name="carbon:chevron-down" />
+      </div>
 
-    <BaseMenuContainer
-      v-if="isOpen"
-      ref="floating"
-      :style="floatingStyles"
-      :items="menuItems"
-    />
+      <template #content>
+        <BaseMenuContainer>
+          <BaseMenuItem icon="carbon:information" label="Message Info" />
+          <BaseMenuItem icon="carbon:reply" label="Reply" />
+          <BaseMenuItem icon="carbon:copy-file" label="Copy" />
+          <BaseMenuItem icon="carbon:text-new-line" label="Forward" />
+          <BaseMenuItem icon="carbon:pin" label="Pin" />
+          <BaseMenuItem icon="carbon:star" label="Star" />
+          <BaseMenuItem :ui="{ root: 'text-red-500' }" icon="carbon:trash-can" label="Delete" />
+        </BaseMenuContainer>
+      </template>
+    </BasePopover>
 
     <slot />
   </div>
