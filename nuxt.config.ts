@@ -16,4 +16,11 @@ export default defineNuxtConfig({
       processCSSVariables: true,
     },
   },
+  icon: {
+    mode: 'css',
+    cssLayer: 'base',
+    clientBundle: {
+      scan: true,
+    },
+  },
 })
