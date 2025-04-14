@@ -7,8 +7,8 @@ useHead({ title: ['Charlie', 'Chat App'].join(' • ') })
     <WindowChatHeader />
 
     <WindowChatMain>
-      <ChatMessagesGroup v-for="item in 1" :key="item" :is-own="false" />
-      <ChatMessagesGroup v-for="item in 1" :key="item" :is-own="true" />
+      <WindowMessagesGroup v-for="item in 1" :key="item" :is-own="false" />
+      <WindowMessagesGroup v-for="item in 1" :key="item" :is-own="true" />
     </WindowChatMain>
 
     <WindowChatFooter />

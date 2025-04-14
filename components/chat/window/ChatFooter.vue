@@ -22,12 +22,12 @@ const message = ref<string>()
       </template>
     </BasePopover>
 
-    <input
+    <BaseInput
       v-model="message"
       placeholder="Write something"
       type="text"
       class="bg-slate-100 w-full py-2 px-4 rounded-lg outline-none text-sm"
-    >
+    />
 
     <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer">
       <Icon

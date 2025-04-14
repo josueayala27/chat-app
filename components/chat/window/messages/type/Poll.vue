@@ -36,9 +36,9 @@ const { root, radio, bar, button } = ui({ isOwn })
     <div class="p-3 flex flex-col gap-4">
       <BaseFont class="text-sm text-inherit font-semibold" content="Which season do you vibe with most?" />
 
-      <ChatMessagesTypePollItem content="🌸 Spring" :ui="{ bar: bar(), radio: radio() }" />
-      <ChatMessagesTypePollItem content="☀️ Summer" :ui="{ bar: bar(), radio: radio() }" />
-      <ChatMessagesTypePollItem content="🍂 Fall" :ui="{ bar: bar(), radio: radio() }" />
+      <WindowMessagesTypePollItem content="🌸 Spring" :ui="{ bar: bar(), radio: radio() }" />
+      <WindowMessagesTypePollItem content="☀️ Summer" :ui="{ bar: bar(), radio: radio() }" />
+      <WindowMessagesTypePollItem content="🍂 Fall" :ui="{ bar: bar(), radio: radio() }" />
     </div>
 
     <button :class="button()">

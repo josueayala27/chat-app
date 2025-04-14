@@ -5,10 +5,10 @@ import { resolveComponent } from 'vue'
 const props = defineProps<{ isOwn: boolean }>()
 
 const messageComponents = [
-  { type: 'text', component: resolveComponent('ChatMessagesText') },
-  { type: 'audio', component: resolveComponent('ChatMessagesAudio') },
-  { type: 'file', component: resolveComponent('ChatMessagesFile') },
-  { type: 'poll', component: resolveComponent('ChatMessagesPoll') },
+  { type: 'text', component: resolveComponent('WindowMessagesTypeText') },
+  { type: 'audio', component: resolveComponent('WindowMessagesTypeAudio') },
+  { type: 'file', component: resolveComponent('WindowMessagesTypeFile') },
+  { type: 'poll', component: resolveComponent('WindowMessagesTypePoll') },
 ]
 
 const ui = tv({
@@ -34,9 +34,9 @@ provide('isOwn', props.isOwn)
 
       <div :class="flex({ class: 'gap-0.5' })">
         <template v-for="(msg, i) in messageComponents" :key="i">
-          <ChatMessagesRoot>
+          <WindowMessagesRoot>
             <component :is="msg.component" />
-          </ChatMessagesRoot>
+          </WindowMessagesRoot>
         </template>
       </div>
     </div>
