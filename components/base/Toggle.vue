@@ -9,7 +9,7 @@ const computedDataState = computed(() => {
   <button
     :aria-checked="model"
     :data-state="computedDataState"
-    class="inline-flex items-center cursor-pointer border-2 border-transparent shrink-0 rounded-full duration-200 w-9 data-[state=unchecked]:bg-slate-200 data-[state=checked]:bg-blue-500"
+    class="inline-flex items-center cursor-pointer border-2 border-transparent shrink-0 rounded-full duration-200 w-9 data-[state=unchecked]:bg-slate-200 data-[state=checked]:bg-(--color-sky-500)"
     @click="model = !model"
   >
     <span

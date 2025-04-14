@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { ChatListMessage } from './ChatListPreviews.vue'
+import type { ChatListMessage } from './Previews.vue'
 
 interface ChatListItemProps extends ChatListMessage {
   isPinned: boolean

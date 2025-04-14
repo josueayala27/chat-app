@@ -9,8 +9,9 @@ const themes = ref<ChatInfoCustomizeChatTheme[]>([
 </script>
 
 <template>
-  <ChatInfoSectionItem title="Theme" />
+  <WindowPanelInfoChatSettingsItem title="Theme" />
+
   <div class="flex items-center gap-2 overflow-auto px-2 scrollbar-hidden">
-    <ChatInfoCustomizeChatCard v-for="({ color, theme }, index) in themes" :key="index" :theme :color />
+    <WindowPanelInfoCustomizeChatCard v-for="({ color, theme }, index) in themes" :key="index" :theme :color />
   </div>
 </template>
