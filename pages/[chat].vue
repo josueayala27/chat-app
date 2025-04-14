@@ -15,6 +15,6 @@ useHead({ title: ['Charlie', 'Chat App'].join(' • ') })
   </div>
 
   <WindowPanel>
-    <WindowPanelInfo />
+    <PanelInfo />
   </WindowPanel>
 </template>

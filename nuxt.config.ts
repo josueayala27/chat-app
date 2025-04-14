@@ -7,6 +7,7 @@ export default defineNuxtConfig({
   vite: { plugins: [tailwindcss()] },
   components: [
     { path: '@/components/chat/window', prefix: 'Window' },
+    { path: '@/components/chat/window/panel/info', prefix: 'PanelInfo' },
     '@/components',
   ],
   modules: ['@nuxt/icon', '@nuxt/fonts', '@vueuse/nuxt'],
