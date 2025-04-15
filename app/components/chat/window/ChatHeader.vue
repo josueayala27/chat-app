@@ -8,10 +8,10 @@
     </div>
     <div class="flex items-center">
       <div class="inline-flex p-1 rounded-full hover:bg-slate-100 cursor-pointer">
-        <Icon size="20px" name="ic:baseline-search" />
+        <Icon size="20px" name="carbon:search" />
       </div>
       <div class="inline-flex p-1 rounded-full hover:bg-slate-100 cursor-pointer">
-        <Icon size="20px" name="ic:round-more-horiz" />
+        <Icon size="20px" name="carbon:overflow-menu-horizontal" />
       </div>
     </div>
   </div>

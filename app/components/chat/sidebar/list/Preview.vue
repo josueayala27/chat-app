@@ -1,51 +1,57 @@
 <script lang="ts">
 import type { ChatListMessage } from './Previews.vue'
+import { ChatSidebarChatItem, NuxtLink } from '#components'
 
 interface ChatListItemProps extends ChatListMessage {
   isPinned: boolean
   isRead: boolean
 }
+
+// type NuxtLinkProps = InstanceType<typeof NuxtLink>['$props']
 </script>
 
 <script lang="ts" setup>
 defineProps<Partial<ChatListItemProps>>()
+
+const item = ref<InstanceType<typeof ChatSidebarChatItem> | null>(null)
 </script>
 
 <template>
-  <NuxtLink
+  <ChatSidebarChatItem
+    :is="NuxtLink"
+    ref="item"
     :to="{ name: 'chat', params: { chat: uuid } }"
-    class="flex rounded-lg p-2 gap-2 items-center cursor-pointer hover:bg-slate-100 group"
+    :data="[String(name), String(message)]"
+    :ui="{ header: 'flex items-center justify-between w-full', subheader: 'flex items-center gap-1', content: 'relative' }"
   >
-    <BaseAvatar />
-    <div class="flex flex-col text-sm w-full">
-      <div class="flex justify-between items-center">
-        <BaseFont class="text-slate-900 font-bold" :content="name" />
-        <span class="text-xs text-slate-500 font-medium">21:35</span>
-        <Icon v-if="isRead" name="carbon:checkmark" />
-      </div>
+    <template #header="{ content }">
+      <BaseFont :content="`${content}hello`" />
+      <BaseFont class="text-xs text-neutral-500 font-normal" content="8:10 PM" />
+    </template>
 
-      <div class="flex justify-between items-center gap-1">
-        <BaseFont class="line-clamp-1 text-slate-500" :content="message" />
-        <div class="flex gap-2 items-center ">
-          <Icon v-if="isPinned" name="carbon:pin" />
+    <template #subheader="{ content }">
+      <Icon class="shrink-0" size="20px" name="carbon:checkmark" />
+      <BaseFont :content="content" />
+    </template>
 
-          <BasePopover>
-            <div class="flex items-center justify-center invisible group-hover:visible" @click.prevent>
-              <Icon size="16px" name="carbon:chevron-down" />
-            </div>
-
-            <template #content>
-              <BaseMenuContainer>
-                <BaseMenuItem icon="carbon:pin" label="Pin chat" />
-                <BaseMenuItem icon="carbon:star" label="Add to favorites" />
-                <BaseMenuItem icon="carbon:notification-off" label="Mute" />
-                <BaseMenuItem icon="carbon:locked" label="Block" />
-                <BaseMenuItem :ui="{ root: 'text-red-500' }" icon="carbon:trash-can" label="Delete chat" />
-              </BaseMenuContainer>
-            </template>
-          </BasePopover>
+    <template #extra>
+      <BasePopover>
+        <div class="absolute right-0 top-0 flex items-center h-full bg-slate-100 mask-l-from-60% mask-l-to-90% w-[20%] justify-end invisible group-hover:visible">
+          <div class="p-2 rounded-full bg-slate-300/70 hover:bg-slate-300 place-items-center cursor-pointer" @click.prevent>
+            <Icon size="20px" name="carbon:overflow-menu-horizontal" class="flex shrink-0" />
+          </div>
         </div>
-      </div>
-    </div>
-  </NuxtLink>
+
+        <template #content>
+          <BaseMenuContainer>
+            <BaseMenuItem icon="carbon:pin" label="Pin chat" />
+            <BaseMenuItem icon="carbon:star" label="Add to favorites" />
+            <BaseMenuItem icon="carbon:notification-off" label="Mute" />
+            <BaseMenuItem icon="carbon:locked" label="Block" />
+            <BaseMenuItem :ui="{ root: 'text-red-500' }" icon="carbon:trash-can" label="Delete chat" />
+          </BaseMenuContainer>
+        </template>
+      </BasePopover>
+    </template>
+  </ChatSidebarChatItem>
 </template>
