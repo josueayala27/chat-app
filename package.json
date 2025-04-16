@@ -27,6 +27,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^4.3.0",
     "@iconify-json/carbon": "^1.2.7",
+    "@iconify-json/svg-spinners": "^1.2.2",
     "@vueuse/core": "^13.0.0"
   }
 }

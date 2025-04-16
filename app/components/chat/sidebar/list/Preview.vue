@@ -36,11 +36,18 @@ const item = ref<InstanceType<typeof ChatSidebarChatItem> | null>(null)
 
     <template #extra>
       <BasePopover>
-        <div class="absolute right-0 top-0 flex items-center h-full bg-slate-100 mask-l-from-60% mask-l-to-90% w-[20%] justify-end invisible group-hover:visible">
-          <div class="p-2 rounded-full bg-slate-300/70 hover:bg-slate-300 place-items-center cursor-pointer" @click.prevent>
-            <Icon size="20px" name="carbon:overflow-menu-horizontal" class="flex shrink-0" />
+        <template #default="{ isOpen }">
+          <div
+            :class="{ 'visible not-group-hover:bg-white': isOpen }"
+            class="absolute right-0 top-0 flex items-center h-full bg-slate-100 mask-l-from-60% mask-l-to-90% w-[20%] justify-end invisible group-hover:visible"
+          >
+            <div
+              class="p-2 rounded-full bg-white place-items-center cursor-pointer border border-slate-300" @click.prevent
+            >
+              <Icon size="20px" name="carbon:overflow-menu-horizontal" class="flex shrink-0" />
+            </div>
           </div>
-        </div>
+        </template>
 
         <template #content>
           <BaseMenuContainer>

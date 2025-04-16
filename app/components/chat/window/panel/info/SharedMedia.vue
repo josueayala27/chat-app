@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { PanelInfoSharedMediaFiles, PanelInfoSharedMediaLinks, PanelInfoSharedMediaPhotos } from '#components'
+import type { ConcreteComponent } from 'vue'
 
 interface SharedMediaType {
   id: number
   label: string
-  component: Component
+  component: string | ConcreteComponent
 }
 
-const sharedMediaOptions = ref<SharedMediaType[]>([
-  { id: 1, label: 'Media', component: markRaw(PanelInfoSharedMediaPhotos) },
-  { id: 2, label: 'Files', component: markRaw(PanelInfoSharedMediaFiles) },
-  { id: 3, label: 'Links', component: markRaw(PanelInfoSharedMediaLinks) },
-])
+const sharedMediaOptions = [
+  { id: 1, label: 'Media', component: resolveComponent('PanelInfoSharedMediaPhotos') },
+  { id: 2, label: 'Files', component: resolveComponent('PanelInfoSharedMediaFiles') },
+  { id: 3, label: 'Links', component: resolveComponent('PanelInfoSharedMediaLinks') },
+]
 
-const selectedMediaType = ref<SharedMediaType>(sharedMediaOptions.value[0])
+const selectedMediaType = shallowRef<SharedMediaType>(sharedMediaOptions[0]!)
 </script>
 
 <template>
