@@ -25,7 +25,7 @@ const item = ref<InstanceType<typeof ChatSidebarChatItem> | null>(null)
     :ui="{ header: 'flex items-center justify-between w-full', subheader: 'flex items-center gap-1', content: 'relative' }"
   >
     <template #header="{ content }">
-      <BaseFont :content="`${content}hello`" />
+      <BaseFont :content="`${content}`" />
       <BaseFont class="text-xs text-neutral-500 font-normal" content="8:10 PM" />
     </template>
 
