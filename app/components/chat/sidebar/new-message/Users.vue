@@ -19,13 +19,13 @@ const messages = ref<ChatListMessage[]>([
 </script>
 
 <template>
-  <ChatSidebarListContainer>
-    <ChatSidebarChatItem
+  <SidebarListContainer>
+    <SidebarChatItem
       :is="NuxtLink"
       v-for="{ name, status, uuid } in messages"
       :key="uuid"
       :to="{ name: 'chat', params: { chat: uuid } }"
       :data="[name, status]"
     />
-  </ChatSidebarListContainer>
+  </SidebarListContainer>
 </template>

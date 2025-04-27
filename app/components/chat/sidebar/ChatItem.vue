@@ -3,13 +3,13 @@ import { tv } from 'tailwind-variants'
 </script>
 
 <script setup lang="ts">
-interface ChatSidebarChatItemBaseProps {
+interface SidebarChatItemBaseProps {
   data: [string, string]
   is?: Component
   ui?: Partial<typeof ui.slots>
 }
 
-const props = defineProps<ChatSidebarChatItemBaseProps>()
+const props = defineProps<SidebarChatItemBaseProps>()
 
 const ui = tv({
   slots: {

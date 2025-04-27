@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { ChatListMessage } from './Previews.vue'
-import { ChatSidebarChatItem, NuxtLink } from '#components'
+import { NuxtLink, SidebarChatItem } from '#components'
 
 interface ChatListItemProps extends ChatListMessage {
   isPinned: boolean
@@ -13,11 +13,11 @@ interface ChatListItemProps extends ChatListMessage {
 <script lang="ts" setup>
 defineProps<Partial<ChatListItemProps>>()
 
-const item = ref<InstanceType<typeof ChatSidebarChatItem> | null>(null)
+const item = ref<InstanceType<typeof SidebarChatItem> | null>(null)
 </script>
 
 <template>
-  <ChatSidebarChatItem
+  <SidebarChatItem
     :is="NuxtLink"
     ref="item"
     :to="{ name: 'chat', params: { chat: uuid } }"
@@ -60,5 +60,5 @@ const item = ref<InstanceType<typeof ChatSidebarChatItem> | null>(null)
         </template>
       </BasePopover>
     </template>
-  </ChatSidebarChatItem>
+  </SidebarChatItem>
 </template>

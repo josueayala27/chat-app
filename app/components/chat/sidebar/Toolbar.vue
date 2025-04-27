@@ -26,19 +26,13 @@ function closePopover(): void {
 }
 
 /**
- * Sets the sidebar layout to 'new-friend' and closes the popover.
+ * Change the layout to the one you specify and close the popover.
+ *
+ * @param layout – the layout identifier ('new-friend', 'new-message', …)
  */
-function setNewFriendLayout(): void {
+function setLayout(layout: 'new-friend' | 'new-message'): void {
   closePopover()
-  updateLayout('new-friend')
-}
-
-/**
- * Sets the sidebar layout to 'new-message' and closes the popover.
- */
-function setNewMessageLayout(): void {
-  closePopover()
-  updateLayout('new-message')
+  updateLayout(layout)
 }
 
 function openModal(): void {
@@ -48,41 +42,7 @@ function openModal(): void {
 </script>
 
 <template>
-  <BaseModal
-    v-model="isGroupModalOpen"
-    title="Create group chat"
-    :ui="{
-      container: 'w-[442px]',
-      header: 'flex flex-col gap-2',
-      body: 'items-center justify-center flex flex-col gap-4',
-      footer: 'flex justify-end items-center gap-2',
-    }"
-  >
-    <template #header="{ title }">
-      <BaseFont :content="title" />
-      <BaseFont class="text-sm font-normal text-neutral-700" content="Gather your friends in a vibrant chat. Share moments and ideas in one fun conversation." />
-    </template>
-
-    <BaseAvatar class="border-dashed border border-neutral-200 flex items-center justify-center text-neutral-500 cursor-pointer hover:bg-slate-200 duration-200" size="80">
-      <Icon size="24px" name="carbon:camera" />
-    </BaseAvatar>
-
-    <div class="flex flex-col gap-2 w-full">
-      <label class="text-sm text-neutral-700" for="test_uuid">Group name</label>
-      <div :style="{ '--input-width': '44px' }" class="flex items-center top-0 stick y w-full relative">
-        <input id="test_uuid" type="text" placeholder="Search..." class="w-full px-4 h-11 pr-3 bg-slate-100 border-slate-200 rounded-lg outline-none text-sm">
-      </div>
-    </div>
-
-    <template #footer>
-      <button class="bg-slate-100 hover:bg-slate-200 rounded-lg h-9 px-4 flex items-center justify-center text-slate-700 cursor-pointer text-sm duration-200" @click="isGroupModalOpen = false">
-        Close
-      </button>
-      <button class="bg-sky-500 hover:bg-sky-600 rounded-lg h-9 px-4 flex items-center justify-center text-white cursor-pointer text-sm duration-200">
-        Create group
-      </button>
-    </template>
-  </BaseModal>
+  <SidebarToolbarNewGroupModal v-model="isGroupModalOpen" />
 
   <div class="flex items-center justify-between">
     <BaseAvatar size="40" />
@@ -99,18 +59,16 @@ function openModal(): void {
               v-if="layout !== 'new-friend'"
               icon="carbon:user-follow"
               label="New friend"
-              @click="setNewFriendLayout"
+              @click="setLayout('new-friend')"
             />
-            <BaseMenuItem
-              icon="carbon:user-multiple"
-              label="New group"
-              @click="openModal"
-            />
+
+            <BaseMenuItem icon="carbon:user-multiple" label="New group" @click="openModal" />
+
             <BaseMenuItem
               v-if="layout !== 'new-message'"
               icon="carbon:chat"
               label="New message"
-              @click="setNewMessageLayout"
+              @click="setLayout('new-message')"
             />
           </BaseMenuContainer>
         </template>
@@ -122,11 +80,7 @@ function openModal(): void {
         </div>
 
         <template #content>
-          <BaseMenuContainer
-            :items="[
-              { icon: 'carbon:star', label: 'Starred messages' },
-            ]"
-          />
+          <BaseMenuContainer :items="[{ icon: 'carbon:star', label: 'Starred messages' }]" />
         </template>
       </BasePopover>
     </div>

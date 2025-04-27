@@ -1,4 +1,4 @@
 <template>
-  <ChatSidebarListSearch />
-  <ChatSidebarListPreviews />
+  <SidebarListSearch />
+  <SidebarListPreviews />
 </template>
