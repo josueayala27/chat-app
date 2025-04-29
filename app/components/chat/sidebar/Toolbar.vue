@@ -39,6 +39,14 @@ function openModal(): void {
   closePopover()
   isGroupModalOpen.value = true
 }
+
+const { current } = useMagicKeys()
+
+watch(current, () => {
+  if (current.has('escape')) {
+    closePopover()
+  }
+})
 </script>
 
 <template>
