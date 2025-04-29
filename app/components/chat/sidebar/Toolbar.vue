@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import type { BasePopover } from '#components'
 
+type PopoverInstance = InstanceType<typeof BasePopover>
+
 /**
  * Provides current layout state and a method to update it.
  */
@@ -9,7 +11,7 @@ const { updateLayout, layout } = useSidebar()
 /**
  * Reference to the first `BasePopover` instance.
  */
-const menuPopover = ref<InstanceType<typeof BasePopover> | null>(null)
+const menuPopover = ref<PopoverInstance | null>(null)
 
 /**
  * Controls visibility of the "Create group" modal
@@ -39,14 +41,6 @@ function openModal(): void {
   closePopover()
   isGroupModalOpen.value = true
 }
-
-const { current } = useMagicKeys()
-
-watch(current, () => {
-  if (current.has('escape')) {
-    closePopover()
-  }
-})
 </script>
 
 <template>
