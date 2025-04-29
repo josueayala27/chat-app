@@ -7,7 +7,7 @@ const { friends } = useFriends()
 </script>
 
 <template>
-  <SidebarListContainer>
+  <BaseList>
     <SidebarChatItem
       :is="NuxtLink"
       v-for="{ name, status, uuid } in friends"
@@ -15,5 +15,5 @@ const { friends } = useFriends()
       :to="{ name: 'chat', params: { chat: uuid } }"
       :data="[name, status]"
     />
-  </SidebarListContainer>
+  </BaseList>
 </template>

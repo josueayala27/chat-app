@@ -28,8 +28,8 @@ onMounted(async () => {
 
 <template>
   <div :class="root()">
-    <div class="p-2 rounded-full bg-red-100 grid place-items-center cursor-pointer">
-      <Icon size="20px" name="carbon:play-filled-alt" class="flex shrink-0" />
+    <div class="p-2 rounded-full bg-sky-500 grid place-items-center cursor-pointer">
+      <Icon size="20px" name="carbon:play-filled-alt" class="flex shrink-0 text-white" />
     </div>
     <canvas ref="canvasRef" :width="200" :height="30" />
     <BaseFont content="0:04" class="text-xs" />

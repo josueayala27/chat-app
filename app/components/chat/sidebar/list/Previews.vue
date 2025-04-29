@@ -17,7 +17,13 @@ const messages = ref<ChatListMessage[]>([
 </script>
 
 <template>
-  <SidebarListContainer>
-    <SidebarListPreview v-for="item in messages" :key="item.uuid" :uuid="item.uuid" :name="item.name" :message="item.message" />
-  </SidebarListContainer>
+  <BaseList>
+    <SidebarListPreview
+      v-for="item in messages"
+      :key="item.uuid"
+      :uuid="item.uuid"
+      :name="item.name"
+      :message="item.message"
+    />
+  </BaseList>
 </template>
