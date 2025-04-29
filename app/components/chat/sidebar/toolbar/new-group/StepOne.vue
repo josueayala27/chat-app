@@ -39,12 +39,11 @@ function toggleGroup(friend: FriendItem) {
         @click="toggleGroup(friend)"
       >
         <template #extra>
-          <div
-            :class="groupSet.has(friend) ? 'bg-sky-500' : 'bg-slate-100 group-hover:bg-slate-200'"
-            class="size-6  rounded-full grid place-items-center"
-          >
-            <div v-if="groupSet.has(friend)" class="h-[40%] aspect-square rounded-full bg-white" />
-          </div>
+          <BaseRadio
+            :model-value="groupSet.has(friend)"
+            @update:model-value="toggleGroup(friend)"
+            @click.stop
+          />
         </template>
       </SidebarChatItem>
     </BaseList>
