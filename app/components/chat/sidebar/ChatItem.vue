@@ -13,7 +13,7 @@ const props = defineProps<SidebarChatItemBaseProps>()
 
 const ui = tv({
   slots: {
-    root: 'flex rounded-lg p-2 gap-2 items-center cursor-pointer hover:bg-slate-100 group',
+    root: 'flex rounded-lg p-2 gap-2 items-center cursor-pointer hover:bg-slate-100 group select-none',
     content: 'flex items-center justify-between flex-1',
     header: 'text-slate-900 font-bold',
     subheader: 'text-slate-500 text-sm [&>p]:line-clamp-1',
