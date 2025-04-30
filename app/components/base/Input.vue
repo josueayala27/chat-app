@@ -29,10 +29,14 @@ const input = tv({
         root: '[--height:48px]',
       },
     },
+    icon: {
+      true: { base: 'pl-(--height)' },
+      false: { base: 'pl-3' },
+    },
   },
 })
 
-const { root, base, icon } = input({ size: props.size })
+const { root, base, icon } = input({ size: props.size, icon: !!props.icon })
 </script>
 
 <template>
