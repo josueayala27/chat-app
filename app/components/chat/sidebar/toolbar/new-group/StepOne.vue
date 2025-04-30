@@ -18,7 +18,7 @@ function toggleGroup(friend: FriendItem) {
 
 <template>
   <div class="flex flex-col gap-3">
-    <SidebarListSearch />
+    <!-- <SidebarListSearch /> -->
 
     <div class="flex gap-2 p-2">
       <BaseAvatar v-for="friend in groupSet" :key="friend.uuid">

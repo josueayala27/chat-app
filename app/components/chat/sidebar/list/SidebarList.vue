@@ -1,4 +1,4 @@
 <template>
-  <SidebarListSearch />
+  <BaseInput icon="carbon:search" />
   <SidebarListPreviews />
 </template>
