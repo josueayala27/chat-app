@@ -1,9 +1,25 @@
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
-  future: { compatibilityVersion: 4 },
   compatibilityDate: '2024-11-01',
-  devtools: { enabled: true },
+  nitro: {
+    experimental: {
+      websocket: true,
+    },
+    storage: {
+      test: {
+        driver: 'upstash',
+        base: 'unstorage',
+      },
+    },
+  },
+
+  devtools: {
+    enabled: true,
+  },
+  future: {
+    compatibilityVersion: 4,
+  },
   css: ['@/assets/css/main.css'],
   vite: { plugins: [tailwindcss()] },
   components: [
