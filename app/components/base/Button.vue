@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { tv } from 'tailwind-variants'
 
-const props = defineProps<{ content?: string, ui?: Partial<typeof button.slots> }>()
+const props = defineProps<{ ui?: Partial<typeof button.slots>, content?: string, loading?: boolean }>()
 
 const button = tv({
   slots: {
@@ -14,7 +14,9 @@ const { base } = button()
 
 <template>
   <button :class="[base({ class: props.ui?.base })]">
-    <slot>
+    <Icon v-if="loading" size="20px" name="svg-spinners:90-ring-with-bg" />
+
+    <slot v-else>
       {{ content }}
     </slot>
   </button>
