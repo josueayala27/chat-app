@@ -1,3 +1,35 @@
+<script lang="ts">
+import { object, string } from 'zod'
+
+export interface SignInForm {
+  email: string
+  password: string
+}
+</script>
+
+<script setup lang="ts">
+const messages = {
+  required: (field: string) => `${field} field is required`,
+  email: () => 'Enter a valid email address',
+}
+
+const { validate } = useForm<SignInForm>({
+  name: 'sign-in',
+  validationSchema: toTypedSchema(object({
+    email: string({ required_error: messages.required('Email') }).email({ message: messages.email() }),
+    password: string({ required_error: messages.required('Password') }).nonempty({ message: messages.required('Password') }),
+  })),
+})
+
+async function onSubmit() {
+  const { valid } = await validate()
+
+  if (valid) {
+    console.log('Do something...')
+  }
+}
+</script>
+
 <template>
   <div class="w-[390px] flex flex-col gap-5 p-6 rounded-lg shadow-xl shadow-slate-950/7">
     <div class="flex flex-col">
@@ -6,7 +38,7 @@
     </div>
 
     <div class="flex flex-col gap-3">
-      <BaseFormField label="Email">
+      <BaseFormField name="email" label="Email">
         <BaseInput
           :ui="{ base: 'border border-slate-950/10 focus:border-sky-500' }"
           icon="carbon:user-avatar"
@@ -14,7 +46,7 @@
         />
       </BaseFormField>
 
-      <BaseFormField label="Password">
+      <BaseFormField name="password" label="Password">
         <BaseInput
           :ui="{ base: 'border border-slate-950/10 focus:border-sky-500' }"
           icon="carbon:password"
@@ -29,7 +61,7 @@
         </template>
       </BaseFormField>
 
-      <BaseButton type="submit" content="Sign In" />
+      <BaseButton type="submit" content="Sign In" @click="onSubmit()" />
     </div>
 
     <div class="border-b border-slate-200" />
