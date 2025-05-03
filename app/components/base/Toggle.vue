@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const model = defineModel<boolean>();
+const model = defineModel<boolean>()
 
 const computedDataState = computed(() => {
   return model.value ? 'checked' : 'unchecked'
