@@ -1,6 +1,11 @@
 <script setup lang="ts">
 defineProps<{ label: string, hint?: string }>()
 const slots = defineSlots<{ default: () => any, hint: () => any }>()
+
+const uid = useId()
+provide('name', uid)
+
+const error = useFieldError(uid)
 </script>
 
 <template>
@@ -15,6 +20,6 @@ const slots = defineSlots<{ default: () => any, hint: () => any }>()
 
     <slot />
 
-    <BaseFont class="text-sm text-red-500" content="This field is required." />
+    <BaseFont v-if="error" class="text-sm text-red-500" content="This field is required." />
   </div>
 </template>

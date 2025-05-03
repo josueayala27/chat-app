@@ -27,7 +27,7 @@ export default defineNuxtConfig({
     { path: '@/components/chat/window/panel/info', prefix: 'PanelInfo' },
     '@/components',
   ],
-  modules: ['@nuxt/icon', '@nuxt/fonts', '@vueuse/nuxt'],
+  modules: ['@nuxt/icon', '@nuxt/fonts', '@vueuse/nuxt', '@vee-validate/nuxt'],
   fonts: {
     experimental: {
       processCSSVariables: true,

@@ -9,6 +9,8 @@ const props = withDefaults(defineProps<{
   type?: InputTypeHTMLAttribute
 }>(), { size: 'medium' })
 
+const name = inject<string | undefined>('name', undefined)
+
 const attrs = useAttrs()
 
 const model = defineModel()
@@ -47,6 +49,6 @@ const { root, base, icon } = input({ size: props.size, icon: !!props.icon })
       <Icon :name="props.icon" />
     </div>
 
-    <input v-bind="attrs" v-model="model" :type="type || 'text'" :class="[base({ class: props.ui?.base })]">
+    <input v-bind="attrs" v-model="model" :name="name" :type="type || 'text'" :class="[base({ class: props.ui?.base })]">
   </div>
 </template>
