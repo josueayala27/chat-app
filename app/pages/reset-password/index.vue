@@ -1,12 +1,12 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'auth' })
-useHead({ title: 'Reset Password' })
+useHead({ title: 'Request Password Reset – Chat App' })
 </script>
 
 <template>
   <AuthContainer
-    title="Reset Password"
-    description="Complete the below form to reset your password."
+    title="Request Password Reset"
+    description="Provide your email address to get a password reset link."
   >
     <AuthResetPassword />
   </AuthContainer>

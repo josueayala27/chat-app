@@ -1,12 +1,12 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'auth' })
-useHead({ title: 'Sign In' })
+useHead({ title: 'Set New Password – Chat App' })
 </script>
 
 <template>
   <AuthContainer
-    title="Sign In to Chat App"
-    description="Sign in to securely access your chats and stay connected with your friends and groups."
+    title="Set New Password"
+    description="Create and confirm a new password to secure your account."
   >
     <AuthResetPasswordToken />
   </AuthContainer>

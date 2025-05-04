@@ -31,8 +31,20 @@ async function onSubmit() {
 </script>
 
 <template>
-  <BaseFormField name="email" label="Email">
-    <BaseInput icon="carbon:user-avatar" placeholder="Enter email" />
+  <BaseFormField name="new_password" label="New Password">
+    <BaseInput
+      icon="carbon:password"
+      type="password"
+      placeholder="Enter new password"
+    />
+  </BaseFormField>
+
+  <BaseFormField name="confirm_password" label="Confirm Password">
+    <BaseInput
+      icon="carbon:password"
+      type="password"
+      placeholder="Repeat new password"
+    />
   </BaseFormField>
 
   <BaseButton type="submit" content="Reset Password" @click="onSubmit()" />
