@@ -14,7 +14,7 @@ const messages = {
 }
 
 const { validate } = useForm<SignInForm>({
-  name: 'sign-in',
+  name: 'reset-password',
   validationSchema: toTypedSchema(object({
     email: string({ required_error: messages.required('Email') }).email({ message: messages.email() }),
     password: string({ required_error: messages.required('Password') }).nonempty({ message: messages.required('Password') }),
@@ -32,25 +32,8 @@ async function onSubmit() {
 
 <template>
   <BaseFormField name="email" label="Email">
-    <BaseInput
-      icon="carbon:user-avatar"
-      placeholder="Enter email"
-    />
+    <BaseInput icon="carbon:user-avatar" placeholder="Enter email" />
   </BaseFormField>
 
-  <BaseFormField name="password" label="Password">
-    <BaseInput
-      icon="carbon:password"
-      type="password"
-      placeholder="Enter password"
-    />
-
-    <template #hint>
-      <NuxtLink to="/reset-password" class="text-sm text-sky-500 font-medium">
-        Forgot password?
-      </NuxtLink>
-    </template>
-  </BaseFormField>
-
-  <BaseButton type="submit" content="Sign In" @click="onSubmit()" />
+  <BaseButton type="submit" content="Reset Password" @click="onSubmit()" />
 </template>
