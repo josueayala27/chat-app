@@ -31,37 +31,26 @@ async function onSubmit() {
 </script>
 
 <template>
-  <div class="flex flex-col gap-3">
-    <BaseFormField name="email" label="Email">
-      <BaseInput
-        :ui="{ base: 'border border-slate-950/10 focus:border-sky-500' }"
-        icon="carbon:user-avatar"
-        placeholder="Enter email"
-      />
-    </BaseFormField>
+  <BaseFormField name="email" label="Email">
+    <BaseInput
+      icon="carbon:user-avatar"
+      placeholder="Enter email"
+    />
+  </BaseFormField>
 
-    <BaseFormField name="password" label="Password">
-      <BaseInput
-        :ui="{ base: 'border border-slate-950/10 focus:border-sky-500' }"
-        icon="carbon:password"
-        type="password"
-        placeholder="Enter password"
-      />
+  <BaseFormField name="password" label="Password">
+    <BaseInput
+      icon="carbon:password"
+      type="password"
+      placeholder="Enter password"
+    />
 
-      <template #hint>
-        <NuxtLink to="/forgot-password" class="text-sm text-sky-500 font-medium">
-          Forgot password?
-        </NuxtLink>
-      </template>
-    </BaseFormField>
+    <template #hint>
+      <NuxtLink to="/forgot-password" class="text-sm text-sky-500 font-medium">
+        Forgot password?
+      </NuxtLink>
+    </template>
+  </BaseFormField>
 
-    <BaseButton type="submit" content="Sign In" @click="onSubmit()" />
-  </div>
-
-  <div class="border-b border-slate-200" />
-
-  <BaseButton type="button" :ui="{ base: 'gap-2' }">
-    <Icon size="20px" name="grommet-icons:google" />
-    Continue with Google
-  </BaseButton>
+  <BaseButton type="submit" content="Sign In" @click="onSubmit()" />
 </template>

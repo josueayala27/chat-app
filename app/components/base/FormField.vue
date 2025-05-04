@@ -1,5 +1,13 @@
 <script setup lang="ts">
-const props = defineProps<{ label: string, hint?: string, name?: string }>()
+import { tv } from 'tailwind-variants'
+
+const props = defineProps<{
+  label: string
+  hint?: string
+  name?: string
+  ui?: Partial<typeof formField.slots>
+}>()
+
 const slots = defineSlots<{ default: () => any, hint: () => any }>()
 
 const uid = useId()
@@ -9,10 +17,18 @@ const name = props.name || uid
 const error = useFieldError(name)
 
 provide('name', name)
+
+const formField = tv({
+  slots: {
+    base: 'flex flex-col gap-1',
+  },
+})
+
+const { base } = formField()
 </script>
 
 <template>
-  <div class="flex flex-col gap-1">
+  <div :class="[base({ class: props.ui?.base })]">
     <div class="flex justify-between items-center">
       <label class="text-sm text-slate-700">{{ label }}</label>
 
