@@ -1,5 +1,5 @@
 <script setup lang="ts">
-definePageMeta({ layout: 'get-started' })
+definePageMeta({ layout: 'auth' })
 useHead({ title: 'Sign In' })
 </script>
 

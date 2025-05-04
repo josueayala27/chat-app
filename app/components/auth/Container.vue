@@ -20,7 +20,7 @@ const { body } = container()
       <BaseFont class="text-sm text-slate-700" :content="description" />
     </div>
 
-    <div :class="[body({ class: props.ui?.body })]">
+    <div role="form" :class="[body({ class: props.ui?.body })]">
       <slot />
     </div>
 
