@@ -34,7 +34,7 @@ function goToStep(step: number) {
       <button class="bg-slate-100 hover:bg-slate-200 rounded-lg h-9 px-4 flex items-center justify-center text-slate-700 cursor-pointer text-sm duration-200" @click="isGroupModalOpen = false">
         Close
       </button>
-      <BaseButton @click="goToStep(2)" />
+      <BaseButton content="Continue" @click="goToStep(2)" />
     </template>
   </BaseModal>
 </template>

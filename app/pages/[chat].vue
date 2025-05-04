@@ -1,5 +1,5 @@
 <script setup lang="ts">
-useHead({ title: ['Charlie', 'Chat App'].join(' • ') })
+useHead({ title: 'Charlie' })
 </script>
 
 <template>

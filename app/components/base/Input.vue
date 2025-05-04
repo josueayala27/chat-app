@@ -9,7 +9,8 @@ const props = withDefaults(defineProps<{
   type?: InputTypeHTMLAttribute
 }>(), { size: 'medium' })
 
-const name = inject<string>('name')
+const id = useId()
+const name = inject<string>('name', id)
 
 const attrs = useAttrs()
 
