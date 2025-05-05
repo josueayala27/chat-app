@@ -1,15 +1,24 @@
 export default defineNuxtRouteMiddleware(async () => {
-  console.log('FE: Guest Middleware')
+  if (import.meta.client)
+    return
 
-  const { user } = useAuth()
+  try {
+    console.log('FE: Guest Middleware')
 
-  if (!user.value) {
-    const data = await $fetch('/api/auth/me')
+    const { user } = useAuth()
 
-    user.value = data
+    if (!user.value) {
+      const data = await $fetch('/api/auth/me')
 
-    if (user) {
-      return navigateTo({ name: 'index' })
+      user.value = data
+
+      if (user) {
+        return navigateTo({ name: 'index' })
+      }
     }
+  }
+  catch (error) {
+    console.error('FE: Guest Middleware Error:', error)
+    return true
   }
 })

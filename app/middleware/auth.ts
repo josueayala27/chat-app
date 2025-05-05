@@ -1,15 +1,24 @@
 export default defineNuxtRouteMiddleware(async () => {
-  console.log('FE: Auth Middleware')
+  if (import.meta.client)
+    return
 
-  const { user } = useAuth()
+  try {
+    console.log('FE: Auth Middleware')
 
-  if (!user.value) {
-    const data = await $fetch('/api/auth/me')
+    const { user } = useAuth()
 
-    user.value = data
+    if (!user.value) {
+      const data = await $fetch('/api/auth/me')
+
+      user.value = data
+    }
+
+    if (!user.value) {
+      return navigateTo({ name: 'sign-in' })
+    }
   }
-
-  if (!user.value) {
+  catch (error) {
+    console.error('FE: Auth Middleware Error:', error)
     return navigateTo({ name: 'sign-in' })
   }
 })
