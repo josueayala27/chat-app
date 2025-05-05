@@ -8,6 +8,7 @@ export interface SignInForm {
 </script>
 
 <script setup lang="ts">
+const router = useRouter()
 const messages = {
   required: (field: string) => `${field} field is required`,
   email: () => 'Enter a valid email address',
@@ -25,7 +26,8 @@ async function onSubmit() {
   const { valid } = await validate()
 
   if (valid) {
-    console.log('Do something...')
+    await $fetch('/api/auth/login')
+    router.push({ name: 'index' })
   }
 }
 </script>

@@ -47,7 +47,16 @@ function openModal(): void {
   <SidebarToolbarNewGroupModal v-model="isGroupModalOpen" />
 
   <div class="flex items-center justify-between">
-    <BaseAvatar size="40" />
+    <BasePopover>
+      <BaseAvatar :ui="{ base: 'cursor-pointer' }" size="40" />
+
+      <template #content>
+        <BaseMenuContainer>
+          <BaseMenuItem icon="carbon:settings" label="Settings" />
+          <BaseMenuItem icon="carbon:logout" label="Sign out" />
+        </BaseMenuContainer>
+      </template>
+    </BasePopover>
 
     <div class="flex items-center justify-end">
       <BasePopover ref="menuPopover">

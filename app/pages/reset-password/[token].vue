@@ -1,6 +1,6 @@
 <script setup lang="ts">
-definePageMeta({ layout: 'auth' })
-useHead({ title: 'Set New Password – Chat App' })
+definePageMeta({ layout: 'auth', middleware: ['guest'] })
+useHead({ title: 'Reset Password' })
 </script>
 
 <template>
