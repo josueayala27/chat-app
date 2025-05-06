@@ -10,6 +10,7 @@ export interface SignInForm {
 <script setup lang="ts">
 const { getUser, getUserLoading } = useAuth()
 const router = useRouter()
+
 const messages = {
   required: (field: string) => `${field} field is required`,
   email: () => 'Enter a valid email address',
