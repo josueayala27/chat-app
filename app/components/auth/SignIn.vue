@@ -8,6 +8,7 @@ export interface SignInForm {
 </script>
 
 <script setup lang="ts">
+const { getUser, getUserLoading } = useAuth()
 const router = useRouter()
 const messages = {
   required: (field: string) => `${field} field is required`,
@@ -27,6 +28,7 @@ async function onSubmit() {
 
   if (valid) {
     await $fetch('/api/auth/login', { method: 'POST' })
+    await getUser()
     router.push({ name: 'index' })
   }
 }
@@ -54,5 +56,5 @@ async function onSubmit() {
     </template>
   </BaseFormField>
 
-  <BaseButton type="submit" content="Sign In" @click="onSubmit()" />
+  <BaseButton :loading="getUserLoading" type="submit" content="Sign In" @click="onSubmit()" />
 </template>
