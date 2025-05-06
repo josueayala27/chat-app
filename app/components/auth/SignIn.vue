@@ -26,7 +26,7 @@ async function onSubmit() {
   const { valid } = await validate()
 
   if (valid) {
-    await $fetch('/api/auth/login')
+    await $fetch('/api/auth/login', { method: 'POST' })
     router.push({ name: 'index' })
   }
 }

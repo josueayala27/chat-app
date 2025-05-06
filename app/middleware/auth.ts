@@ -1,25 +1,37 @@
-export default defineNuxtRouteMiddleware(async () => {
+interface MiddlewareMeta {
+  unauthenticatedOnly: boolean
+}
+
+declare module '#app' {
+  interface PageMeta {
+    auth?: MiddlewareMeta
+  }
+}
+
+declare module 'vue-router' {
+  interface RouteMeta {
+    auth?: MiddlewareMeta
+  }
+}
+
+export default defineNuxtRouteMiddleware(async (to) => {
   if (import.meta.client)
     return
 
-  try {
-    console.log('FE: Auth Middleware')
+  console.log('🔒 FE: Auth Middleware')
 
-    const headers = useRequestHeaders(['cookie'])
-    const { user } = useAuth()
+  const { isAuthenticated, getUser, user } = useAuth()
 
-    if (!user.value) {
-      const data = await $fetch('/api/auth/me', { headers })
+  const isGuestMode: boolean = to.meta.auth?.unauthenticatedOnly || false
 
-      user.value = data
+  if (!isAuthenticated.value) {
+    await getUser()
+
+    if (isGuestMode && user.value) {
+      return navigateTo({ name: 'index' })
     }
-
-    if (!user.value) {
+    else if (!isGuestMode && !user.value) {
       return navigateTo({ name: 'sign-in' })
     }
-  }
-  catch (error) {
-    console.error('FE: Auth Middleware Error:', error)
-    return navigateTo({ name: 'sign-in' })
   }
 })
