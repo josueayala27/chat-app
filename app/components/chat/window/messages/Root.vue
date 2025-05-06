@@ -5,7 +5,7 @@ const isOwn = inject<boolean>('isOwn')
 
 const ui = tv({
   slots: {
-    root: 'relative group flex items-center gap-2',
+    root: 'relative group flex items-center gap-2 w-full',
     base: 'rounded-lg',
   },
   variants: {
@@ -20,15 +20,20 @@ const { root, base } = ui({ isOwn })
 </script>
 
 <template>
-  <div :class="[root()]">
+  <div :class="[root({ class: 'bg-fuchsia-500 pl-[calc(48px+8px)]' })]">
     <div :class="[base()]">
       <slot />
     </div>
-    <div class="">
+    <div>
       <BasePopover :config="{ placement: isOwn ? 'bottom-end' : 'bottom-start' }">
-        <div class="p-2 rounded-full bg-slate-100 hover:bg-slate-200 grid place-items-center cursor-pointer">
-          <Icon size="20px" name="carbon:overflow-menu-horizontal" class="flex shrink-0 duration-300" />
-        </div>
+        <template #default="{ isOpen }">
+          <div
+            :class="{ 'visible not-group-hover:bg-white bg-slate-200!': isOpen }"
+            class="p-2 rounded-full bg-slate-100 hover:bg-slate-200 grid place-items-center cursor-pointer invisible group-hover:visible"
+          >
+            <Icon size="20px" name="carbon:overflow-menu-horizontal" class="flex shrink-0" />
+          </div>
+        </template>
 
         <template #content>
           <BaseMenuContainer>
