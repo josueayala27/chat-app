@@ -5,10 +5,11 @@ export default defineNuxtRouteMiddleware(async () => {
   try {
     console.log('FE: Guest Middleware')
 
+    const headers = useRequestHeaders(['cookie'])
     const { user } = useAuth()
 
     if (!user.value) {
-      const data = await $fetch('/api/auth/me')
+      const data = await $fetch('/api/auth/me', { headers })
 
       user.value = data
 

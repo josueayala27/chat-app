@@ -1,5 +1,7 @@
 export default defineEventHandler((event) => {
-  if (!event.path.startsWith('/api'))
+  const pathname = getRequestURL(event).pathname
+
+  if (!isProtected(pathname))
     return
 
   console.log('BE: Auth Middleware')
@@ -10,5 +12,5 @@ export default defineEventHandler((event) => {
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized.' })
   }
 
-  event.context.user = { sid: '' }
+  event.context.user = { sid }
 })
