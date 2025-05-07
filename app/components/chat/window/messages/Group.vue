@@ -14,7 +14,7 @@ const messageComponents = [
 const ui = tv({
   slots: {
     root: 'flex relative',
-    avatar: 'absolute z-40 top-0',
+    avatar: 'absolute z-40 top-0 pointer-events-none',
     title: 'text-sm text-slate-900 font-medium',
     content: 'flex flex-col gap-1 flex-1',
   },
@@ -43,7 +43,7 @@ provide('isOwn', props.isOwn)
     <BaseAvatar :ui="{ base: avatar() }" />
 
     <div :class="content()">
-      <BaseFont :class="title()" :content="isOwn ? 'Tú' : 'Josué Ayala'" />
+      <BaseFont :class="[title()]" :content="isOwn ? 'Tú' : 'Josué Ayala'" />
 
       <div class="flex flex-col gap-0.5 w-full">
         <template v-for="(msg, i) in messageComponents" :key="i">

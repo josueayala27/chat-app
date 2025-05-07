@@ -10,8 +10,14 @@ const ui = tv({
   },
   variants: {
     isOwn: {
-      true: { base: 'bg-sky-500 text-white' },
-      false: { base: 'bg-slate-100' },
+      true: {
+        root: 'pr-[calc(48px+8px)] flex-row-reverse',
+        base: 'bg-sky-500 text-white',
+      },
+      false: {
+        root: 'pl-[calc(48px+8px)]',
+        base: 'bg-slate-100',
+      },
     },
   },
 })
@@ -20,10 +26,13 @@ const { root, base } = ui({ isOwn })
 </script>
 
 <template>
-  <div :class="[root({ class: 'bg-fuchsia-500 pl-[calc(48px+8px)]' })]">
+  <div :class="[root()]">
+    <!-- Message -->
     <div :class="[base()]">
       <slot />
     </div>
+
+    <!-- Actions -->
     <div>
       <BasePopover :config="{ placement: isOwn ? 'bottom-end' : 'bottom-start' }">
         <template #default="{ isOpen }">
