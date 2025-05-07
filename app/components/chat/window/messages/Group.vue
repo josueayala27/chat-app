@@ -14,21 +14,19 @@ const messageComponents = [
 const ui = tv({
   slots: {
     root: 'flex relative',
-    flex: 'flex flex-col',
     avatar: 'absolute z-40 top-0',
     title: 'text-sm text-slate-900 font-medium',
+    content: 'flex flex-col gap-1 flex-1',
   },
   variants: {
     isOwn: {
       true: {
-        root: 'flex-row-reverse',
-        flex: 'items-end',
+        content: 'items-end',
         avatar: 'right-0',
         title: 'pr-[calc(48px+8px)]',
       },
       false: {
-        root: 'flex-row',
-        flex: 'items-start',
+        content: 'items-start',
         avatar: 'left-0',
         title: 'pl-[calc(48px+8px)]',
       },
@@ -36,7 +34,7 @@ const ui = tv({
   },
 })
 
-const { root, flex, avatar, title } = ui({ isOwn: props.isOwn })
+const { root, content, avatar, title } = ui({ isOwn: props.isOwn })
 provide('isOwn', props.isOwn)
 </script>
 
@@ -44,10 +42,10 @@ provide('isOwn', props.isOwn)
   <div :class="[root()]">
     <BaseAvatar :ui="{ base: avatar() }" />
 
-    <div :class="flex({ class: 'gap-1 flex-1' })">
+    <div :class="content()">
       <BaseFont :class="title()" :content="isOwn ? 'Tú' : 'Josué Ayala'" />
 
-      <div :class="flex({ class: 'gap-0.5 bg-orange-400 w-full' })">
+      <div class="flex flex-col gap-0.5 w-full">
         <template v-for="(msg, i) in messageComponents" :key="i">
           <WindowMessagesRoot>
             <component :is="msg.component" />
