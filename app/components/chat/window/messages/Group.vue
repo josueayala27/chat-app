@@ -13,7 +13,7 @@ const messageComponents = [
 
 const ui = tv({
   slots: {
-    root: 'flex relative',
+    root: 'flex relative max-w-[950px] mx-auto w-full',
     avatar: 'absolute z-40 top-0 pointer-events-none',
     title: 'text-sm text-slate-900 font-medium',
     content: 'flex flex-col gap-1 flex-1',
