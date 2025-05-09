@@ -1,30 +1,26 @@
-<script setup lang="ts">
-import { tv } from 'tailwind-variants'
+<script lang="ts">
+import theme from '@/theme/form-field'
 
-const props = defineProps<{
+export interface BaseFormFieldProps {
   label: string
   hint?: string
   name?: string
-  ui?: Partial<typeof formField.slots>
-}>()
+  ui?: Partial<typeof theme.slots>
+}
+</script>
+
+<script setup lang="ts">
+const props = defineProps<BaseFormFieldProps>()
 
 const slots = defineSlots<{ default: () => any, hint: () => any }>()
 
 const uid = useId()
-
 const name = props.name || uid
-
 const error = useFieldError(name)
 
 provide('name', name)
 
-const formField = tv({
-  slots: {
-    base: 'flex flex-col gap-1',
-  },
-})
-
-const { base } = formField()
+const { base } = theme()
 </script>
 
 <template>

@@ -1,52 +1,29 @@
-<script lang="ts" setup>
+<script lang="ts">
 import type { InputTypeHTMLAttribute } from 'vue'
-import { tv } from 'tailwind-variants'
+import theme from '@/theme/input'
 
-const props = withDefaults(defineProps<{
+interface BaseInputProps {
   icon?: string
-  size?: keyof Partial<typeof input.variants.size>
-  ui?: Partial<typeof input.slots>
+  size?: keyof typeof theme.variants.size
+  ui?: Partial<typeof theme.slots>
   type?: InputTypeHTMLAttribute
-}>(), { size: 'medium' })
+}
+</script>
+
+<script lang="ts" setup>
+const props = withDefaults(defineProps<BaseInputProps>(), { size: 'medium' })
+const attrs = useAttrs()
 
 const id = useId()
 const name = inject<string>('name', id)
+const { root, base, icon } = theme({ size: props.size, icon: !!props.icon })
 
-const attrs = useAttrs()
-
-const input = tv({
-  slots: {
-    root: 'flex items-center top-0 sticky text-slate-400',
-    base: 'w-full pl-(--height) h-(--height) pr-3 bg-slate-100 border-slate-200 rounded-lg outline-none text-sm placeholder:text-slate-400 font-normal text-slate-900 duration-200',
-    icon: 'absolute top-0 left-0 h-full aspect-square grid place-items-center pointer-events-none',
-  },
-  variants: {
-    size: {
-      small: {
-        root: '[--height:32px]',
-      },
-      medium: {
-        root: '[--height:40px]',
-      },
-      large: {
-        root: '[--height:48px]',
-      },
-    },
-    icon: {
-      true: { base: 'pl-(--height)' },
-      false: { base: 'pl-3' },
-    },
-  },
-})
-
-const { root, base, icon } = input({ size: props.size, icon: !!props.icon })
-
-const { value } = useField(name!)
+const { value } = useField(name)
 </script>
 
 <template>
-  <div :class="[root({ class: props.ui?.root })]">
-    <div v-if="props.icon" :class="[icon({ class: props.ui?.icon })]">
+  <div :class="[root({ class: ui?.root })]">
+    <div v-if="icon" :class="[icon({ class: ui?.icon })]">
       <Icon :name="props.icon" />
     </div>
 
