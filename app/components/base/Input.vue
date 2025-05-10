@@ -15,18 +15,18 @@ const props = withDefaults(defineProps<BaseInputProps>(), { size: 'medium' })
 const attrs = useAttrs()
 
 const id = useId()
-const name = inject<string>('name', id)
+const name = inject<string>('name')
 const { root, base, icon } = theme({ size: props.size, icon: !!props.icon })
 
-const { value } = useField(name)
+const { value } = useField(name || id)
 </script>
 
 <template>
   <div :class="[root({ class: ui?.root })]">
-    <div v-if="icon" :class="[icon({ class: ui?.icon })]">
+    <div v-if="props.icon" :class="[icon({ class: ui?.icon })]">
       <Icon :name="props.icon" />
     </div>
 
-    <input v-bind="attrs" v-model="value" :name="name" :type="type || 'text'" :class="[base({ class: props.ui?.base })]">
+    <input v-bind="attrs" v-model="value" :name="name" :type="type || 'text'" :class="[base({ class: ui?.base })]">
   </div>
 </template>
