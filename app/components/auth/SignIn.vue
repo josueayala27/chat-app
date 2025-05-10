@@ -8,6 +8,9 @@ export interface SignInForm {
 </script>
 
 <script setup lang="ts">
+const { getUser, getUserLoading } = useAuth()
+const router = useRouter()
+
 const messages = {
   required: (field: string) => `${field} field is required`,
   email: () => 'Enter a valid email address',
@@ -25,7 +28,9 @@ async function onSubmit() {
   const { valid } = await validate()
 
   if (valid) {
-    console.log('Do something...')
+    await $fetch('/api/auth/login', { method: 'POST' })
+    await getUser()
+    router.push({ name: 'index' })
   }
 }
 </script>
@@ -46,11 +51,11 @@ async function onSubmit() {
     />
 
     <template #hint>
-      <NuxtLink to="/forgot-password" class="text-sm text-sky-500 font-medium">
+      <NuxtLink to="/reset-password" class="text-sm text-sky-500 font-medium">
         Forgot password?
       </NuxtLink>
     </template>
   </BaseFormField>
 
-  <BaseButton type="submit" content="Sign In" @click="onSubmit()" />
+  <BaseButton :loading="getUserLoading" type="submit" content="Sign In" @click="onSubmit()" />
 </template>

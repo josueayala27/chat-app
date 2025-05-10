@@ -14,7 +14,7 @@ const messages = {
 }
 
 const { validate } = useForm<SignInForm>({
-  name: 'sign-up',
+  name: 'reset-password',
   validationSchema: toTypedSchema(object({
     email: string({ required_error: messages.required('Email') }).email({ message: messages.email() }),
     password: string({ required_error: messages.required('Password') }).nonempty({ message: messages.required('Password') }),
@@ -31,29 +31,9 @@ async function onSubmit() {
 </script>
 
 <template>
-  <BaseFormField name="first_name" label="First name">
-    <BaseInput placeholder="Enter email" />
-  </BaseFormField>
-
-  <BaseFormField name="last_name" label="Last name">
-    <BaseInput placeholder="Enter email" />
-  </BaseFormField>
-
-  <BaseFormField :ui="{ base: 'col-span-2' }" name="user" label="User">
-    <BaseInput placeholder="Enter email" />
-  </BaseFormField>
-
-  <BaseFormField :ui="{ base: 'col-span-2' }" name="email" label="Email">
+  <BaseFormField name="email" label="Email">
     <BaseInput icon="carbon:user-avatar" placeholder="Enter email" />
   </BaseFormField>
 
-  <BaseFormField :ui="{ base: 'col-span-2' }" name="password" label="Password">
-    <BaseInput
-      icon="carbon:password"
-      type="password"
-      placeholder="Enter password"
-    />
-  </BaseFormField>
-
-  <BaseButton :ui="{ base: 'col-span-2' }" type="submit" content="Sign Up" @click="onSubmit()" />
+  <BaseButton type="submit" content="Reset Password" @click="onSubmit()" />
 </template>

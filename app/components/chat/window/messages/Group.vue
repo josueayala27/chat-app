@@ -12,27 +12,40 @@ const messageComponents = [
 ]
 
 const ui = tv({
-  slots: { root: 'flex gap-2', flex: 'flex flex-col' },
+  slots: {
+    root: 'flex relative max-w-[950px] mx-auto w-full',
+    avatar: 'absolute z-40 top-0 pointer-events-none',
+    title: 'text-sm text-slate-900 font-medium',
+    content: 'flex flex-col gap-1 flex-1',
+  },
   variants: {
     isOwn: {
-      true: { root: 'flex-row-reverse', flex: 'items-end' },
-      false: { root: 'flex-row', flex: 'items-start' },
+      true: {
+        content: 'items-end',
+        avatar: 'right-0',
+        title: 'pr-[calc(48px+8px)]',
+      },
+      false: {
+        content: 'items-start',
+        avatar: 'left-0',
+        title: 'pl-[calc(48px+8px)]',
+      },
     },
   },
 })
 
-const { root, flex } = ui({ isOwn: props.isOwn })
+const { root, content, avatar, title } = ui({ isOwn: props.isOwn })
 provide('isOwn', props.isOwn)
 </script>
 
 <template>
-  <div :class="root()">
-    <BaseAvatar />
+  <div :class="[root()]">
+    <BaseAvatar :ui="{ base: avatar() }" />
 
-    <div :class="flex({ class: 'gap-1' })">
-      <BaseFont class="text-sm text-slate-900 font-medium" :content="isOwn ? 'Tú' : 'Josué Ayala'" />
+    <div :class="content()">
+      <BaseFont :class="[title()]" :content="isOwn ? 'Tú' : 'Josué Ayala'" />
 
-      <div :class="flex({ class: 'gap-0.5' })">
+      <div class="flex flex-col gap-0.5 w-full">
         <template v-for="(msg, i) in messageComponents" :key="i">
           <WindowMessagesRoot>
             <component :is="msg.component" />
