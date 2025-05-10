@@ -5,6 +5,7 @@ export default function useAuth() {
   const isAuthenticated = computed(() => Boolean(user.value))
 
   const getUserAsync = useAsync(() => $fetch('/api/auth/me', { headers }))
+
   async function getUser() {
     const data = await getUserAsync.execute()
     user.value = data
