@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-const message = ref<string>()
+const { values } = useForm<{ content: string }>({
+  name: 'chat-footer',
+})
 </script>
 
 <template>
@@ -23,7 +25,7 @@ const message = ref<string>()
     </BasePopover>
 
     <BaseInput
-      v-model="message"
+      name="content"
       :ui="{ root: 'w-full' }"
       placeholder="Write something"
       type="text"
@@ -32,8 +34,8 @@ const message = ref<string>()
     <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer">
       <Icon
         size="20px"
-        :name="message ? 'carbon:send-filled' : 'carbon:microphone'"
-        :class="{ 'text-sky-500': message }"
+        :name="values.content ? 'carbon:send-filled' : 'carbon:microphone'"
+        :class="{ 'text-sky-500': values.content }"
         class="flex shrink-0"
       />
     </div>
