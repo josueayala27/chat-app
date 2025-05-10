@@ -11,14 +11,15 @@ interface BaseInputProps {
 </script>
 
 <script lang="ts" setup>
+defineOptions({ inheritAttrs: false })
 const props = withDefaults(defineProps<BaseInputProps>(), { size: 'medium' })
 const attrs = useAttrs()
 
 const id = useId()
-const name = inject<string>('name')
+const name = inject<string>('name', id)
 const { root, base, icon } = theme({ size: props.size, icon: !!props.icon })
 
-const { value } = useField(name || id)
+const { value } = useField(name)
 </script>
 
 <template>
