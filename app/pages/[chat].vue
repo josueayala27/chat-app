@@ -14,7 +14,7 @@ useHead({ title: 'Charlie' })
     <WindowChatFooter />
   </div>
 
-  <!-- <WindowPanel>
+  <WindowPanel>
     <PanelInfo />
-  </WindowPanel> -->
+  </WindowPanel>
 </template>
