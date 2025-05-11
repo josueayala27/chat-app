@@ -17,12 +17,11 @@
 
         <template #content>
           <BaseMenuContainer>
-            <BaseMenuItem icon="carbon:user-follow" label="Contact info" />
-            <BaseMenuItem icon="carbon:user-multiple" label="Select Messages" />
-            <BaseMenuItem icon="carbon:user-multiple" label="Mute Notifications" />
-            <BaseMenuItem icon="carbon:user-multiple" label="Close Chat" />
-            <BaseMenuItem icon="carbon:user-multiple" label="Block" />
-            <BaseMenuItem icon="carbon:user-multiple" label="Delete Chat" />
+            <BaseMenuItem icon="carbon:information" label="Contact info" />
+            <BaseMenuItem icon="carbon:checkmark-outline" label="Select Messages" />
+            <BaseMenuItem icon="carbon:notification-off" label="Mute" />
+            <BaseMenuItem icon="carbon:locked" label="Block" />
+            <BaseMenuItem :ui="{ root: 'text-red-500' }" icon="carbon:trash-can" label="Delete chat" />
           </BaseMenuContainer>
         </template>
       </BasePopover>
