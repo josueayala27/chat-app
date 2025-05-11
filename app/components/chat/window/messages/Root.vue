@@ -26,6 +26,8 @@ const ui = tv({
 })
 
 const { root, base } = ui({ isOwn })
+
+// const selectedMessages = reactive(new Set<string[]>([]))
 </script>
 
 <template>

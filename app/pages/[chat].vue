@@ -11,14 +11,14 @@ onUnmounted(() => {
 
 <template>
   <div class="flex flex-col divide-y divide-slate-200 flex-1">
-    <WindowChatHeader />
+    <WindowHeader />
 
-    <WindowChatMain>
+    <WindowMain>
       <WindowMessagesGroup v-for="item in 1" :key="item" :is-own="false" />
       <WindowMessagesGroup v-for="item in 1" :key="item" :is-own="true" />
-    </WindowChatMain>
+    </WindowMain>
 
-    <WindowChatFooter />
+    <WindowFooter />
   </div>
 
   <WindowPanel>
