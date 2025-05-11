@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 const { reference, closePopover } = usePopover()
 const route = useRoute()
+
 const isSelectMessagesActive = useState<boolean>(`select-messages-${route.params.chat}`, () => false)
 
 function onSelectMessages() {
