@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-import type { BasePopover } from '#components'
-
-type PopoverInstance = InstanceType<typeof BasePopover>
+const { reference, closePopover } = usePopover()
 
 /**
  * Provides current layout state and a method to update it.
@@ -9,23 +7,9 @@ type PopoverInstance = InstanceType<typeof BasePopover>
 const { updateLayout, layout } = useSidebar()
 
 /**
- * Reference to the first `BasePopover` instance.
- */
-const menuPopover = ref<PopoverInstance | null>(null)
-
-/**
  * Controls visibility of the "Create group" modal
  */
 const isGroupModalOpen = ref<boolean>(false)
-
-/**
- * Closes the popover if it is currently open.
- */
-function closePopover(): void {
-  if (menuPopover.value) {
-    menuPopover.value.isOpen = false
-  }
-}
 
 /**
  * Change the layout to the one you specify and close the popover.
@@ -59,7 +43,7 @@ function openModal(): void {
     </BasePopover>
 
     <div class="flex items-center justify-end">
-      <BasePopover ref="menuPopover">
+      <BasePopover ref="reference">
         <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer">
           <Icon size="20px" name="carbon:add-large" class="flex shrink-0 duration-300" />
         </div>
