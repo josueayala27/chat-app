@@ -40,7 +40,7 @@ const { root, base } = ui({ isOwn })
     </div>
 
     <!-- Actions -->
-    <div>
+    <div v-if="!isSelectMessagesActive">
       <BasePopover :config="{ placement: isOwn ? 'bottom-end' : 'bottom-start' }">
         <template #default="{ isOpen }">
           <div
