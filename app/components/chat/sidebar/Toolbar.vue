@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+const { reference: profilePopoverReference, closePopover: closeProfilePopover } = usePopover()
 const { reference, closePopover } = usePopover()
 
 /**
@@ -10,6 +11,8 @@ const { updateLayout, layout } = useSidebar()
  * Controls visibility of the "Create group" modal
  */
 const isGroupModalOpen = ref<boolean>(false)
+
+const isSettingsModalOpen = ref<boolean>(false)
 
 /**
  * Change the layout to the one you specify and close the popover.
@@ -25,18 +28,24 @@ function openModal(): void {
   closePopover()
   isGroupModalOpen.value = true
 }
+
+function openSettingsModal() {
+  closeProfilePopover()
+  isSettingsModalOpen.value = true
+}
 </script>
 
 <template>
   <SidebarToolbarNewGroupModal v-model="isGroupModalOpen" />
+  <SidebarToolbarSettingsModal v-model="isSettingsModalOpen" />
 
   <div class="flex items-center justify-between">
-    <BasePopover>
+    <BasePopover ref="profilePopoverReference">
       <BaseAvatar :ui="{ base: 'cursor-pointer' }" size="40" />
 
       <template #content>
         <BaseMenuContainer>
-          <BaseMenuItem icon="carbon:settings" label="Settings" />
+          <BaseMenuItem icon="carbon:settings" label="Settings" @click="openSettingsModal()" />
           <BaseMenuItem icon="carbon:logout" label="Sign out" />
         </BaseMenuContainer>
       </template>
@@ -57,7 +66,7 @@ function openModal(): void {
               @click="setLayout('new-friend')"
             />
 
-            <BaseMenuItem icon="carbon:user-multiple" label="New group" @click="openModal" />
+            <BaseMenuItem icon="carbon:user-multiple" label="New group" @click="openModal()" />
 
             <BaseMenuItem
               v-if="layout !== 'new-message'"
