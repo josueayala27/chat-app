@@ -31,7 +31,7 @@ const { root, base } = ui({ isOwn })
 <template>
   <div :class="[root()]">
     <div class="absolute left-0 bottom-0 w-[calc(48px+8px)] flex justify-end pr-3">
-      <BaseRadio v-if="isSelectMessagesActive" />
+      <BaseRadio v-if="isSelectMessagesActive" @click.stop />
     </div>
 
     <!-- Message -->

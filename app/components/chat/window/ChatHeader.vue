@@ -1,24 +1,7 @@
 <script lang="ts" setup>
-import type { BasePopover } from '#components'
-
-type PopoverInstance = InstanceType<typeof BasePopover>
-
+const { reference, closePopover } = usePopover()
 const route = useRoute()
 const isSelectMessagesActive = useState<boolean>(`select-messages-${route.params.chat}`, () => false)
-
-/**
- * Reference to the first `BasePopover` instance.
- */
-const menuPopover = ref<PopoverInstance | null>(null)
-
-/**
- * Closes the popover if it is currently open.
- */
-function closePopover(): void {
-  if (menuPopover.value) {
-    menuPopover.value.isOpen = false
-  }
-}
 
 function onSelectMessages() {
   closePopover()
@@ -38,7 +21,7 @@ function onSelectMessages() {
       <div class="inline-flex p-1 rounded-full hover:bg-slate-100 cursor-pointer">
         <Icon size="20px" name="carbon:search" />
       </div>
-      <BasePopover ref="menuPopover" :config="{ placement: 'bottom-end' }">
+      <BasePopover ref="reference" :config="{ placement: 'bottom-end' }">
         <div class="inline-flex p-1 rounded-full hover:bg-slate-100 cursor-pointer">
           <Icon size="20px" name="carbon:overflow-menu-horizontal" />
         </div>
