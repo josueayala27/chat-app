@@ -3,6 +3,9 @@ import { tv } from 'tailwind-variants'
 
 const isOwn = inject<boolean>('isOwn')
 
+const route = useRoute()
+const isSelectMessagesActive = useState<boolean>(`select-messages-${route.params.chat}`, () => false)
+
 const ui = tv({
   slots: {
     root: 'relative group flex items-center gap-2 w-full',
@@ -28,7 +31,7 @@ const { root, base } = ui({ isOwn })
 <template>
   <div :class="[root()]">
     <div class="absolute left-0 bottom-0 w-[calc(48px+8px)] flex justify-end pr-3">
-      <BaseRadio />
+      <BaseRadio v-if="isSelectMessagesActive" />
     </div>
 
     <!-- Message -->

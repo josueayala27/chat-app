@@ -1,5 +1,8 @@
 <script setup lang="ts">
 useHead({ title: 'Charlie' })
+
+const route = useRoute()
+useState<boolean>(`select-messages-${route.params.chat}`, () => false)
 </script>
 
 <template>
