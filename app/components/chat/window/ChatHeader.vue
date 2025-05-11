@@ -10,9 +10,22 @@
       <div class="inline-flex p-1 rounded-full hover:bg-slate-100 cursor-pointer">
         <Icon size="20px" name="carbon:search" />
       </div>
-      <div class="inline-flex p-1 rounded-full hover:bg-slate-100 cursor-pointer">
-        <Icon size="20px" name="carbon:overflow-menu-horizontal" />
-      </div>
+      <BasePopover :config="{ placement: 'bottom-end' }">
+        <div class="inline-flex p-1 rounded-full hover:bg-slate-100 cursor-pointer">
+          <Icon size="20px" name="carbon:overflow-menu-horizontal" />
+        </div>
+
+        <template #content>
+          <BaseMenuContainer>
+            <BaseMenuItem icon="carbon:user-follow" label="Contact info" />
+            <BaseMenuItem icon="carbon:user-multiple" label="Select Messages" />
+            <BaseMenuItem icon="carbon:user-multiple" label="Mute Notifications" />
+            <BaseMenuItem icon="carbon:user-multiple" label="Close Chat" />
+            <BaseMenuItem icon="carbon:user-multiple" label="Block" />
+            <BaseMenuItem icon="carbon:user-multiple" label="Delete Chat" />
+          </BaseMenuContainer>
+        </template>
+      </BasePopover>
     </div>
   </div>
 </template>
