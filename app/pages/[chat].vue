@@ -2,7 +2,11 @@
 useHead({ title: 'Charlie' })
 
 const route = useRoute()
-useState<boolean>(`select-messages-${route.params.chat}`, () => false)
+const isSelectMessagesActive = useState<boolean>(`select-messages-${route.params.chat}`, () => false)
+
+onUnmounted(() => {
+  isSelectMessagesActive.value = false
+})
 </script>
 
 <template>
