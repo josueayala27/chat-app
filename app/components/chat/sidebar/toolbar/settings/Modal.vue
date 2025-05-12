@@ -8,15 +8,17 @@ const isGroupModalOpen = defineModel<boolean>({ default: false })
     title="Settings"
     :ui="{
       container: 'w-[680px]',
-      body: 'flex',
+      body: 'flex p-0',
       footer: 'flex justify-end items-center gap-2',
     }"
   >
-    <div class="w-[200px]">
-      Sidebar...
+    <div class="w-[200px] p-2 border-r border-slate-200">
+      <div class="p-2 bg-slate-100 rounded-lg cursor-pointer">
+        <BaseFont class="text-sm" content="General" />
+      </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-3">
+    <div class="grid grid-cols-2 gap-3 p-6">
       <BaseFormField name="first_name" label="First name">
         <BaseInput placeholder="Enter email" />
       </BaseFormField>
