@@ -29,7 +29,7 @@ onClickOutside(reference, () => model.value = false)
 <template>
   <Teleport to="body">
     <div v-if="model" :class="ui.base({ class: props.ui?.base })">
-      <div ref="reference" :class="ui.container({ class: props.ui?.container })">
+      <div ref="reference" role="dialog" :class="ui.container({ class: props.ui?.container })">
         <!-- Header... -->
         <div v-if="title || slots.header" :class="ui.header({ class: props.ui?.header })">
           <slot name="header" :title>
