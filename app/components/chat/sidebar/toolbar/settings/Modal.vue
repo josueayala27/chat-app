@@ -1,10 +1,9 @@
 <script lang="ts">
-interface Option { label: string, icon: string, key: string }
+export interface Option { label: string, icon: string, key: string }
 </script>
 
 <script setup lang="ts">
 const isGroupModalOpen = defineModel<boolean>({ default: false })
-
 const options: Option[] = [
   { label: 'Account', icon: 'carbon:user-avatar', key: 'account' },
   { label: 'Privacy', icon: 'carbon:security', key: 'privacy' },
@@ -24,20 +23,15 @@ const selectedOption = ref<Option | undefined>(options[0])
       footer: 'flex justify-end items-center gap-2',
     }"
   >
-    <div class="w-[200px] p-2 border-r border-slate-200 flex flex-col gap-1">
-      <div
+    <SidebarToolbarSettingsMenu>
+      <SidebarToolbarSettingsMenuItem
         v-for="option in options"
         :key="option.key"
-        :class="[
-          { 'bg-slate-100': selectedOption?.key === option.key },
-        ]"
-        class="p-2 hover:bg-slate-100 rounded-lg cursor-pointer flex items-center gap-2 text-slate-900"
+        :option="option"
+        :active="selectedOption?.key === option.key"
         @click="selectedOption = option"
-      >
-        <Icon :name="option.icon" />
-        <BaseFont class="text-sm" :content="option.label" />
-      </div>
-    </div>
+      />
+    </SidebarToolbarSettingsMenu>
 
     <div class="grid grid-cols-2 gap-3 p-6">
       <BaseFormField name="first_name" label="First name">
