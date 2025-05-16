@@ -1,20 +1,20 @@
 <script lang="ts">
-import type { Component } from 'vue'
-import { SidebarToolbarSettingsContentAccount } from '#components'
+// import type { Component } from 'vue'
+// import { SidebarToolbarSettingsContentAccount } from '#components'
 
-export interface Option { label: string, icon: string, key: string, component: Component }
+export interface Option { label: string, icon: string, key: string }
 </script>
 
 <script setup lang="ts">
-const isGroupModalOpen = defineModel<boolean>({ default: false })
+const isGroupModalOpen = defineModel<boolean>()
 
 const options: Option[] = [
-  { label: 'Account', icon: 'carbon:user-avatar', key: 'account', component: SidebarToolbarSettingsContentAccount },
-  { label: 'Privacy', icon: 'carbon:security', key: 'privacy', component: SidebarToolbarSettingsContentAccount },
-  { label: 'Notifications', icon: 'carbon:notification-new', key: 'notifications', component: SidebarToolbarSettingsContentAccount },
-  { label: 'Data and storage', icon: 'carbon:object-storage-alt', key: 'data-and-storage', component: SidebarToolbarSettingsContentAccount },
+  { label: 'Account', icon: 'carbon:user-avatar', key: 'account' },
+  { label: 'Privacy', icon: 'carbon:security', key: 'privacy' },
+  { label: 'Notifications', icon: 'carbon:notification-new', key: 'notifications' },
+  { label: 'Data and storage', icon: 'carbon:object-storage-alt', key: 'data-and-storage' },
 ]
-const selectedOption = ref<Option | undefined>(options[0])
+const selectedOption = shallowRef<Option | undefined>(options[0])
 </script>
 
 <template>
@@ -37,11 +37,11 @@ const selectedOption = ref<Option | undefined>(options[0])
       />
     </SidebarToolbarSettingsMenu>
 
-    <component :is="selectedOption?.component" />
-
+    <!-- <component :is="selectedOption?.component" /> -->
+    <!--
     <template #footer>
       <BaseButton :ui="{ base: 'bg-slate-100 hover:bg-slate-200 text-slate-700' }" content="Cancel" />
       <BaseButton content="Continue" />
-    </template>
+    </template> -->
   </BaseModal>
 </template>
