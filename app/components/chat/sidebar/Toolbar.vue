@@ -37,7 +37,24 @@ function openSettingsModal() {
 
 <template>
   <SidebarToolbarNewGroupModal v-model="isGroupModalOpen" />
-  <SidebarToolbarSettingsModal v-model="isSettingsModalOpen" />
+
+  <BaseModal
+    v-model="isSettingsModalOpen"
+    title="Settings"
+    :ui-attrs="{
+      container:
+        {
+          'aria-label': 'User settings',
+        },
+    }"
+    :ui="{
+      container: 'w-[680px]',
+      body: 'flex p-0',
+      footer: 'flex justify-end items-center gap-2',
+    }"
+  >
+    <SidebarToolbarSettings />
+  </BaseModal>
 
   <div class="flex items-center justify-between">
     <BasePopover ref="profilePopoverReference">

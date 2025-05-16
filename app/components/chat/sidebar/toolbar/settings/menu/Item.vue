@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { Option } from '../Modal.vue'
+import type { Option } from '../Settings.vue'
 
 defineProps<{ option: Option, active: boolean }>()
 </script>
