@@ -11,6 +11,7 @@ const options: Option[] = [
   { label: 'Notifications', icon: 'carbon:notification-new', key: 'notifications' },
   { label: 'Data and storage', icon: 'carbon:object-storage-alt', key: 'data-and-storage' },
 ]
+const selectedOption = ref<Option | undefined>(options[0])
 </script>
 
 <template>
@@ -27,7 +28,11 @@ const options: Option[] = [
       <div
         v-for="option in options"
         :key="option.key"
-        class="p-2 first:bg-slate-100 hover:bg-slate-100 rounded-lg cursor-pointer flex items-center gap-2 text-slate-900"
+        :class="[
+          { 'bg-slate-100': selectedOption?.key === option.key },
+        ]"
+        class="p-2 hover:bg-slate-100 rounded-lg cursor-pointer flex items-center gap-2 text-slate-900"
+        @click="selectedOption = option"
       >
         <Icon :name="option.icon" />
         <BaseFont class="text-sm" :content="option.label" />
