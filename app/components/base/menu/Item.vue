@@ -7,7 +7,7 @@ const props = defineProps<BaseMenuItemProps>()
 
 const ui = tv({
   slots: {
-    root: 'cursor-pointer hover:bg-slate-200/60 py-2 px-4 rounded-lg text-sm flex items-center gap-2 text-neutral-900',
+    root: 'cursor-pointer hover:bg-slate-200/60 py-2 px-4 rounded-lg text-sm flex items-center gap-2 text-slate-900',
   },
 })
 

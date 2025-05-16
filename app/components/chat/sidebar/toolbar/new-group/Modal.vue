@@ -24,7 +24,7 @@ function goToStep(step: number) {
 
         <BaseFont content="Create group chat" />
       </div>
-      <BaseFont class="text-sm font-normal text-neutral-700" content="Gather your friends in a vibrant chat. Share moments and ideas in one fun conversation." />
+      <BaseFont class="text-sm font-normal text-slate-700" content="Gather your friends in a vibrant chat. Share moments and ideas in one fun conversation." />
     </template>
 
     <SidebarToolbarNewGroupStepOne v-if="currentStep === 1" />

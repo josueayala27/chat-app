@@ -2,6 +2,11 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
+  app: {
+    head: {
+      htmlAttrs: { lang: 'en' },
+    },
+  },
   nitro: {
     experimental: {
       websocket: true,
@@ -49,6 +54,7 @@ export default defineNuxtConfig({
   eslint: {
     config: {
       standalone: false,
+      stylistic: true,
     },
   },
 })

@@ -14,7 +14,7 @@ useForm<User>({
 </script>
 
 <template>
-  <div class="grid grid-cols-2 gap-3 p-6">
+  <div class="grid grid-cols-2 gap-3 p-6 w-full">
     <BaseFormField name="first_name" label="First name">
       <BaseInput placeholder="Enter email" />
     </BaseFormField>
@@ -31,13 +31,8 @@ useForm<User>({
       <BaseInput placeholder="Enter email" />
     </BaseFormField>
 
-    <div class="border border-red-200 bg-red-50 rounded-lg p-4 flex gap-4 justify-between items-center col-span-2 mt-3">
-      <div class="flex flex-col text-sm">
-        <BaseFont class="font-semibold" content="Delete account" />
-        <BaseFont content="Once you delete your account, there is no going back." />
-      </div>
-
-      <BaseButton :ui="{ base: 'bg-red-500 hover:bg-red-600' }" content="Delete" />
+    <div class="col-span-2 flex justify-end">
+      <BaseButton content="Save" />
     </div>
   </div>
 </template>
