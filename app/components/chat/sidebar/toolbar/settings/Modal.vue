@@ -1,14 +1,18 @@
 <script lang="ts">
-export interface Option { label: string, icon: string, key: string }
+import type { Component } from 'vue'
+import { SidebarToolbarSettingsContentAccount } from '#components'
+
+export interface Option { label: string, icon: string, key: string, component: Component }
 </script>
 
 <script setup lang="ts">
 const isGroupModalOpen = defineModel<boolean>({ default: false })
+
 const options: Option[] = [
-  { label: 'Account', icon: 'carbon:user-avatar', key: 'account' },
-  { label: 'Privacy', icon: 'carbon:security', key: 'privacy' },
-  { label: 'Notifications', icon: 'carbon:notification-new', key: 'notifications' },
-  { label: 'Data and storage', icon: 'carbon:object-storage-alt', key: 'data-and-storage' },
+  { label: 'Account', icon: 'carbon:user-avatar', key: 'account', component: SidebarToolbarSettingsContentAccount },
+  { label: 'Privacy', icon: 'carbon:security', key: 'privacy', component: SidebarToolbarSettingsContentAccount },
+  { label: 'Notifications', icon: 'carbon:notification-new', key: 'notifications', component: SidebarToolbarSettingsContentAccount },
+  { label: 'Data and storage', icon: 'carbon:object-storage-alt', key: 'data-and-storage', component: SidebarToolbarSettingsContentAccount },
 ]
 const selectedOption = ref<Option | undefined>(options[0])
 </script>
@@ -33,32 +37,7 @@ const selectedOption = ref<Option | undefined>(options[0])
       />
     </SidebarToolbarSettingsMenu>
 
-    <div class="grid grid-cols-2 gap-3 p-6">
-      <BaseFormField name="first_name" label="First name">
-        <BaseInput placeholder="Enter email" />
-      </BaseFormField>
-
-      <BaseFormField name="last_name" label="Last name">
-        <BaseInput placeholder="Enter email" />
-      </BaseFormField>
-
-      <BaseFormField :ui="{ base: 'col-span-2' }" name="user" label="User">
-        <BaseInput placeholder="Enter username" />
-      </BaseFormField>
-
-      <BaseFormField :ui="{ base: 'col-span-2' }" name="email" label="Email">
-        <BaseInput placeholder="Enter email" />
-      </BaseFormField>
-
-      <div class="border border-red-200 bg-red-50 rounded-lg p-4 flex gap-4 justify-between items-center col-span-2 mt-3">
-        <div class="flex flex-col text-sm">
-          <BaseFont class="font-semibold" content="Delete account" />
-          <BaseFont content="Once you delete your account, there is no going back." />
-        </div>
-
-        <BaseButton :ui="{ base: 'bg-red-500 hover:bg-red-600' }" content="Delete" />
-      </div>
-    </div>
+    <component :is="selectedOption?.component" />
 
     <template #footer>
       <BaseButton :ui="{ base: 'bg-slate-100 hover:bg-slate-200 text-slate-700' }" content="Cancel" />
