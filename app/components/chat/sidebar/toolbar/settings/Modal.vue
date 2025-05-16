@@ -28,6 +28,10 @@ const isGroupModalOpen = defineModel<boolean>({ default: false })
       </BaseFormField>
 
       <BaseFormField :ui="{ base: 'col-span-2' }" name="user" label="User">
+        <BaseInput placeholder="Enter username" />
+      </BaseFormField>
+
+      <BaseFormField :ui="{ base: 'col-span-2' }" name="email" label="Email">
         <BaseInput placeholder="Enter email" />
       </BaseFormField>
 
