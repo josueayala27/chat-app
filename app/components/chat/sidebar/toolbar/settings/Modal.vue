@@ -20,9 +20,14 @@ const options: Option[] = [
   { label: 'Data and storage', icon: 'carbon:object-storage-alt', key: 'data-and-storage', component: SidebarToolbarSettingsContentDataAndStorage },
 ]
 const selectedOption = shallowRef<Option | undefined>(options[0])
+
+onMounted(() => {
+  console.log('qué ondas...')
+})
 </script>
 
 <template>
+  <!-- {{ selectedOption }} -->
   <BaseModal
     v-model="isGroupModalOpen"
     title="Settings"

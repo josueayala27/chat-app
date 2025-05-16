@@ -12,7 +12,7 @@ const { updateLayout, layout } = useSidebar()
  */
 const isGroupModalOpen = ref<boolean>(false)
 
-const isSettingsModalOpen = ref<boolean>(true)
+const isSettingsModalOpen = ref<boolean>(false)
 
 /**
  * Change the layout to the one you specify and close the popover.
