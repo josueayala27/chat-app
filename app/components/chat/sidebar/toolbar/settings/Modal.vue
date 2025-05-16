@@ -1,5 +1,16 @@
+<script lang="ts">
+interface Option { label: string, icon: string, key: string }
+</script>
+
 <script setup lang="ts">
 const isGroupModalOpen = defineModel<boolean>({ default: false })
+
+const options: Option[] = [
+  { label: 'Account', icon: 'carbon:user-avatar', key: 'account' },
+  { label: 'Privacy', icon: 'carbon:security', key: 'privacy' },
+  { label: 'Notifications', icon: 'carbon:notification-new', key: 'notifications' },
+  { label: 'Data and storage', icon: 'carbon:object-storage-alt', key: 'data-and-storage' },
+]
 </script>
 
 <template>
@@ -12,9 +23,14 @@ const isGroupModalOpen = defineModel<boolean>({ default: false })
       footer: 'flex justify-end items-center gap-2',
     }"
   >
-    <div class="w-[200px] p-2 border-r border-slate-200">
-      <div class="p-2 bg-slate-100 rounded-lg cursor-pointer">
-        <BaseFont class="text-sm" content="General" />
+    <div class="w-[200px] p-2 border-r border-slate-200 flex flex-col gap-1">
+      <div
+        v-for="option in options"
+        :key="option.key"
+        class="p-2 first:bg-slate-100 hover:bg-slate-100 rounded-lg cursor-pointer flex items-center gap-2 text-slate-900"
+      >
+        <Icon :name="option.icon" />
+        <BaseFont class="text-sm" :content="option.label" />
       </div>
     </div>
 
