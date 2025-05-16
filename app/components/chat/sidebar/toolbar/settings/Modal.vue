@@ -1,18 +1,23 @@
 <script lang="ts">
-// import type { Component } from 'vue'
-// import { SidebarToolbarSettingsContentAccount } from '#components'
+import type { Component } from 'vue'
+import {
+  SidebarToolbarSettingsContentAccount,
+  SidebarToolbarSettingsContentDataAndStorage,
+  SidebarToolbarSettingsContentNotifications,
+  SidebarToolbarSettingsContentPrivacy,
+} from '#components'
 
-export interface Option { label: string, icon: string, key: string }
+export interface Option { label: string, icon: string, key: string, component: Component }
 </script>
 
 <script setup lang="ts">
 const isGroupModalOpen = defineModel<boolean>()
 
 const options: Option[] = [
-  { label: 'Account', icon: 'carbon:user-avatar', key: 'account' },
-  { label: 'Privacy', icon: 'carbon:security', key: 'privacy' },
-  { label: 'Notifications', icon: 'carbon:notification-new', key: 'notifications' },
-  { label: 'Data and storage', icon: 'carbon:object-storage-alt', key: 'data-and-storage' },
+  { label: 'Account', icon: 'carbon:user-avatar', key: 'account', component: SidebarToolbarSettingsContentAccount },
+  { label: 'Privacy', icon: 'carbon:security', key: 'privacy', component: SidebarToolbarSettingsContentPrivacy },
+  { label: 'Notifications', icon: 'carbon:notification-new', key: 'notifications', component: SidebarToolbarSettingsContentNotifications },
+  { label: 'Data and storage', icon: 'carbon:object-storage-alt', key: 'data-and-storage', component: SidebarToolbarSettingsContentDataAndStorage },
 ]
 const selectedOption = shallowRef<Option | undefined>(options[0])
 </script>
@@ -37,7 +42,7 @@ const selectedOption = shallowRef<Option | undefined>(options[0])
       />
     </SidebarToolbarSettingsMenu>
 
-    <!-- <component :is="selectedOption?.component" /> -->
+    <component :is="selectedOption?.component" />
     <!--
     <template #footer>
       <BaseButton :ui="{ base: 'bg-slate-100 hover:bg-slate-200 text-slate-700' }" content="Cancel" />
