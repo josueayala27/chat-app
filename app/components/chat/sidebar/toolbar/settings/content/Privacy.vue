@@ -19,7 +19,22 @@ useForm<User>({
     <div class="flex flex-col">
       <div class="flex items-center py-3 justify-between border-b border-slate-200">
         <BaseFont class="text-sm" content="Last seen & online" />
-        <BaseToggle />
+
+        <BasePopover :config="{ placement: 'bottom-end' }">
+          <button class="py-1 px-2 bg-slate-200/50 hover:bg-slate-200 rounded-lg cursor-pointer duration-200 flex items-center gap-2">
+            <BaseFont class="text-sm text-slate-700" content="Everyone" />
+            <Icon name="carbon:chevron-down" size="20px" />
+          </button>
+
+          <template #content>
+            <BaseMenuContainer>
+              <BaseMenuItem label="Everyone" />
+              <BaseMenuItem label="My contacts" />
+              <BaseMenuItem label="My contacts except..." />
+              <BaseMenuItem label="Nobody" />
+            </BaseMenuContainer>
+          </template>
+        </BasePopover>
       </div>
 
       <div class="flex items-center py-3 justify-between border-b border-slate-200">

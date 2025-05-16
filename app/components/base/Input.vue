@@ -30,6 +30,6 @@ const { value } = useField(name)
       <Icon :name="props.icon" />
     </div>
 
-    <input v-bind="attrs" v-model="value" :name="name" :type="type || 'text'" :class="[base({ class: ui?.base })]">
+    <input v-bind="attrs" :id="name" v-model="value" :name="name" :type="type || 'text'" :class="[base({ class: ui?.base })]">
   </div>
 </template>
