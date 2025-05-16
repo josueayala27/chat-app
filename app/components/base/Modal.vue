@@ -27,26 +27,24 @@ onClickOutside(reference, () => model.value = false)
 </script>
 
 <template>
-  <Teleport to="body">
-    <div v-if="model" :class="ui.base({ class: props.ui?.base })">
-      <div ref="reference" :class="ui.container({ class: props.ui?.container })">
-        <!-- Header... -->
-        <div v-if="title || slots.header" :class="ui.header({ class: props.ui?.header })">
-          <slot name="header" :title>
-            <BaseFont :content="title" />
-          </slot>
-        </div>
+  <div v-if="model" :class="ui.base({ class: props.ui?.base })">
+    <div ref="reference" role="dialog" :class="ui.container({ class: props.ui?.container })">
+      <!-- Header... -->
+      <div v-if="title || slots.header" :class="ui.header({ class: props.ui?.header })">
+        <slot name="header" :title>
+          <BaseFont :content="title" />
+        </slot>
+      </div>
 
-        <!-- Body -->
-        <div :class="ui.body({ class: props.ui?.body })">
-          <slot />
-        </div>
+      <!-- Body -->
+      <div :class="ui.body({ class: props.ui?.body })">
+        <slot />
+      </div>
 
-        <!-- Footer -->
-        <div v-if="slots.footer" :class="ui.footer({ class: props.ui?.footer })">
-          <slot name="footer" />
-        </div>
+      <!-- Footer -->
+      <div v-if="slots.footer" :class="ui.footer({ class: props.ui?.footer })">
+        <slot name="footer" />
       </div>
     </div>
-  </Teleport>
+  </div>
 </template>

@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import type { BasePopover } from '#components'
-
-type PopoverInstance = InstanceType<typeof BasePopover>
+const { reference: profilePopoverReference, closePopover: closeProfilePopover } = usePopover()
+const { reference, closePopover } = usePopover()
 
 /**
  * Provides current layout state and a method to update it.
@@ -9,23 +8,11 @@ type PopoverInstance = InstanceType<typeof BasePopover>
 const { updateLayout, layout } = useSidebar()
 
 /**
- * Reference to the first `BasePopover` instance.
- */
-const menuPopover = ref<PopoverInstance | null>(null)
-
-/**
  * Controls visibility of the "Create group" modal
  */
 const isGroupModalOpen = ref<boolean>(false)
 
-/**
- * Closes the popover if it is currently open.
- */
-function closePopover(): void {
-  if (menuPopover.value) {
-    menuPopover.value.isOpen = false
-  }
-}
+const isSettingsModalOpen = ref<boolean>(true)
 
 /**
  * Change the layout to the one you specify and close the popover.
@@ -41,25 +28,31 @@ function openModal(): void {
   closePopover()
   isGroupModalOpen.value = true
 }
+
+function openSettingsModal() {
+  closeProfilePopover()
+  isSettingsModalOpen.value = true
+}
 </script>
 
 <template>
   <SidebarToolbarNewGroupModal v-model="isGroupModalOpen" />
+  <SidebarToolbarSettingsModal v-model="isSettingsModalOpen" />
 
   <div class="flex items-center justify-between">
-    <BasePopover>
+    <BasePopover ref="profilePopoverReference">
       <BaseAvatar :ui="{ base: 'cursor-pointer' }" size="40" />
 
       <template #content>
         <BaseMenuContainer>
-          <BaseMenuItem icon="carbon:settings" label="Settings" />
+          <BaseMenuItem icon="carbon:settings" label="Settings" @click="openSettingsModal()" />
           <BaseMenuItem icon="carbon:logout" label="Sign out" />
         </BaseMenuContainer>
       </template>
     </BasePopover>
 
     <div class="flex items-center justify-end">
-      <BasePopover ref="menuPopover">
+      <BasePopover ref="reference">
         <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer">
           <Icon size="20px" name="carbon:add-large" class="flex shrink-0 duration-300" />
         </div>
@@ -73,7 +66,7 @@ function openModal(): void {
               @click="setLayout('new-friend')"
             />
 
-            <BaseMenuItem icon="carbon:user-multiple" label="New group" @click="openModal" />
+            <BaseMenuItem icon="carbon:user-multiple" label="New group" @click="openModal()" />
 
             <BaseMenuItem
               v-if="layout !== 'new-message'"
