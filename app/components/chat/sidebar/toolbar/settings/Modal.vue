@@ -26,6 +26,11 @@ const selectedOption = shallowRef<Option | undefined>(options[0])
   <BaseModal
     v-model="isGroupModalOpen"
     title="Settings"
+    :ui-attrs="{
+      container: {
+        'aria-label': 'User settings',
+      },
+    }"
     :ui="{
       container: 'w-[680px]',
       body: 'flex p-0',

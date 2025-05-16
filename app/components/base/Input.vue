@@ -13,6 +13,7 @@ interface BaseInputProps {
 
 <script lang="ts" setup>
 defineOptions({ inheritAttrs: false })
+
 const props = withDefaults(defineProps<BaseInputProps>(), { size: 'medium' })
 const attrs = useAttrs()
 
