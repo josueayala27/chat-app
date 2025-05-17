@@ -15,7 +15,7 @@
 </script>
 
 <template>
-  <div class="flex flex-col w-full p-6">
+  <div class="flex flex-col">
     <BaseFont class="text-sm font-semibold" content="Auto-download photos" />
     <div class="flex flex-col">
       <div v-for="item in ['Private chats', 'Group chats']" :key="item" class="flex items-center py-3 justify-between last:border-b-0 border-b border-slate-200">
