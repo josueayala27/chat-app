@@ -2,6 +2,11 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
+  app: {
+    head: {
+      htmlAttrs: { lang: 'en' },
+    },
+  },
   nitro: {
     experimental: {
       websocket: true,
@@ -27,7 +32,13 @@ export default defineNuxtConfig({
     { path: '@/components/chat/window/panel/info', prefix: 'PanelInfo' },
     '@/components',
   ],
-  modules: ['@nuxt/icon', '@nuxt/fonts', '@vueuse/nuxt', '@vee-validate/nuxt'],
+  modules: [
+    '@nuxt/icon',
+    '@nuxt/fonts',
+    '@vueuse/nuxt',
+    '@vee-validate/nuxt',
+    '@nuxt/eslint',
+  ],
   fonts: {
     experimental: {
       processCSSVariables: true,
@@ -38,6 +49,12 @@ export default defineNuxtConfig({
     cssLayer: 'base',
     clientBundle: {
       scan: true,
+    },
+  },
+  eslint: {
+    config: {
+      standalone: false,
+      stylistic: true,
     },
   },
 })

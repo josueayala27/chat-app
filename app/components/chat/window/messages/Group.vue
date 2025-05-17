@@ -1,14 +1,19 @@
-<script lang="ts" setup>
+<script lang="ts">
+import type { Component } from 'vue'
+import { WindowMessagesTypeAudio, WindowMessagesTypeFile, WindowMessagesTypePoll, WindowMessagesTypeText } from '#components'
 import { tv } from 'tailwind-variants'
-import { resolveComponent } from 'vue'
 
+export interface Message { type: string, component: Component }
+</script>
+
+<script lang="ts" setup>
 const props = defineProps<{ isOwn: boolean }>()
 
-const messageComponents = [
-  { type: 'text', component: resolveComponent('WindowMessagesTypeText') },
-  { type: 'audio', component: resolveComponent('WindowMessagesTypeAudio') },
-  { type: 'file', component: resolveComponent('WindowMessagesTypeFile') },
-  { type: 'poll', component: resolveComponent('WindowMessagesTypePoll') },
+const messageComponents: Message[] = [
+  { type: 'text', component: WindowMessagesTypeText },
+  { type: 'audio', component: WindowMessagesTypeAudio },
+  { type: 'file', component: WindowMessagesTypeFile },
+  { type: 'poll', component: WindowMessagesTypePoll },
 ]
 
 const ui = tv({

@@ -7,12 +7,8 @@ const { reference, closePopover } = usePopover()
  */
 const { updateLayout, layout } = useSidebar()
 
-/**
- * Controls visibility of the "Create group" modal
- */
 const isGroupModalOpen = ref<boolean>(false)
-
-const isSettingsModalOpen = ref<boolean>(true)
+const isSettingsModalOpen = ref<boolean>(false)
 
 /**
  * Change the layout to the one you specify and close the popover.
@@ -36,8 +32,44 @@ function openSettingsModal() {
 </script>
 
 <template>
-  <SidebarToolbarNewGroupModal v-model="isGroupModalOpen" />
-  <SidebarToolbarSettingsModal v-model="isSettingsModalOpen" />
+  <BaseModal
+    v-model="isGroupModalOpen"
+    state="new-group"
+    :ui="{
+      container: 'w-[442px]',
+      header: 'flex flex-col gap-2',
+      footer: 'flex justify-end items-center gap-2',
+    }"
+  >
+    <template #header>
+      <BaseFont content="Create group chat" />
+      <BaseFont class="text-sm font-normal text-slate-700" content="Gather your friends in a vibrant chat. Share moments and ideas in one fun conversation." />
+    </template>
+
+    <SidebarToolbarNewGroup />
+
+    <template #footer>
+      <BaseButton content="Back" />
+      <BaseButton content="Continue" />
+    </template>
+  </BaseModal>
+
+  <BaseModal
+    v-model="isSettingsModalOpen"
+    title="Settings"
+    :ui-attrs="{
+      container:
+        {
+          'aria-label': 'User settings',
+        },
+    }"
+    :ui="{
+      container: 'w-[680px]',
+      body: 'flex p-0',
+    }"
+  >
+    <SidebarToolbarSettings />
+  </BaseModal>
 
   <div class="flex items-center justify-between">
     <BasePopover ref="profilePopoverReference">

@@ -39,9 +39,9 @@
     "pcss",
     "postcss"
   ],
-  "IDX.aI.enableInlineCompletion": true,
-  "IDX.aI.enableCodebaseIndexing": true,
-  // "tailwindCSS.experimental.classRegex": [
-  //   ["([\"'`][^\"'`]*.*?[\"'`])", "[\"'`]([^\"'`]*).*?[\"'`]"]
-  // ]
+  "tailwindCSS.classAttributes": ["class", "ui"],
+  "tailwindCSS.experimental.classRegex": [
+    ["ui:\\s*{([^)]*)\\s*}", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ],
+  "eslint.useFlatConfig": true
 }

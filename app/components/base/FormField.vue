@@ -26,7 +26,7 @@ const { base } = theme()
 <template>
   <div :class="[base({ class: props.ui?.base })]">
     <div class="flex justify-between items-center">
-      <label class="text-sm text-slate-700">{{ label }}</label>
+      <label :for="name" class="text-sm text-slate-700">{{ label }}</label>
 
       <slot v-if="slots.hint || hint" name="hint">
         <BaseFont class="text-sm text-slate-400" content="Optional" />
