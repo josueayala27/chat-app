@@ -14,7 +14,7 @@ useForm<User>({
 </script>
 
 <template>
-  <div class="grid grid-cols-2 gap-3 p-6 w-full">
+  <div class="grid grid-cols-2 gap-3">
     <BaseFormField name="first_name" label="First name">
       <BaseInput autocomplete="off" placeholder="Enter email" />
     </BaseFormField>

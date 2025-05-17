@@ -25,7 +25,7 @@ const isGroupModalOpen = ref<boolean>(false)
     </BasePopover>
   </DefineTemplate>
 
-  <div class="flex flex-col w-full p-6">
+  <div class="flex flex-col">
     <BaseFont class="text-sm font-semibold" content="Private chats" />
     <div class="flex flex-col">
       <div class="flex items-center py-3 justify-between border-b border-slate-200">

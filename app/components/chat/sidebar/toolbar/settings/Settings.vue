@@ -31,5 +31,7 @@ const selectedOption = shallowRef<Option | undefined>(options[0])
     />
   </SidebarToolbarSettingsMenu>
 
-  <component :is="selectedOption?.component" />
+  <div class="h-[463px] w-full p-3">
+    <component :is="selectedOption?.component" />
+  </div>
 </template>
