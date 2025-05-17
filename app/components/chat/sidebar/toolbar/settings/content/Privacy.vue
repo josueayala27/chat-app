@@ -1,17 +1,5 @@
-<script lang="ts">
-interface User { first_name: string, last_name: string, user: string, email: string }
-</script>
-
 <script lang="ts" setup>
 const [DefineTemplate, ReuseTemplate] = createReusableTemplate()
-useForm<User>({
-  initialValues: {
-    first_name: 'Josué',
-    last_name: 'Ayala',
-    email: 'dikoliw830@bamsrad.com',
-    user: 'josueayala',
-  },
-})
 
 const isGroupModalOpen = ref<boolean>(false)
 </script>
