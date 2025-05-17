@@ -1,3 +1,19 @@
+<script lang="ts" setup>
+// async function cacheImage(url: string) {
+//   if ('caches' in window) {
+//     const cache = await caches.open('chat-images')
+//     const cached = await cache.match(url)
+//     if (!cached) {
+//       await cache.add(url)
+//     }
+
+//     console.log(cache)
+//   }
+// }
+
+// cacheImage('')
+</script>
+
 <template>
   <div class="flex flex-col w-full p-6">
     <BaseFont class="text-sm font-semibold" content="Auto-download photos" />
