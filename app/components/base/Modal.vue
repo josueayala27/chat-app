@@ -5,6 +5,7 @@ import theme from '@/theme/modal'
 interface BaseModalProps {
   title?: string
   ui?: Partial<typeof theme.slots>
+  state?: string
   uiAttrs?: Partial<{
     [K in keyof typeof theme.slots]: HTMLAttributes
   }>
@@ -18,7 +19,11 @@ const props = defineProps<BaseModalProps>()
 const slots = defineSlots<{ header?: any, footer?: any, default: any }>()
 const model = defineModel<boolean>()
 
+const id = useId()
+useState(props.state || id, () => {})
+
 const reference = ref<HTMLDivElement>()
+
 onClickOutside(reference, () => model.value = false)
 
 const { base, body, container, footer, header } = theme()

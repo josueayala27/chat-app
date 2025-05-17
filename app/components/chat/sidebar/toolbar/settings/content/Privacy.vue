@@ -3,6 +3,7 @@ interface User { first_name: string, last_name: string, user: string, email: str
 </script>
 
 <script lang="ts" setup>
+const [DefineTemplate, ReuseTemplate] = createReusableTemplate()
 useForm<User>({
   initialValues: {
     first_name: 'Josué',
@@ -14,37 +15,40 @@ useForm<User>({
 </script>
 
 <template>
+  <DefineTemplate>
+    <BasePopover :config="{ placement: 'bottom-end' }">
+      <button class="py-1 px-2 bg-slate-200/50 hover:bg-slate-200 rounded-lg cursor-pointer duration-200 flex items-center gap-2">
+        <BaseFont class="text-sm text-slate-700" content="Everyone" />
+        <Icon name="carbon:chevron-down" size="20px" />
+      </button>
+
+      <template #content>
+        <BaseMenuContainer>
+          <BaseMenuItem label="Everyone" />
+          <BaseMenuItem label="My contacts" />
+          <BaseMenuItem label="My contacts except..." />
+          <BaseMenuItem label="Nobody" />
+        </BaseMenuContainer>
+      </template>
+    </BasePopover>
+  </DefineTemplate>
+
   <div class="flex flex-col w-full p-6">
     <BaseFont class="text-sm font-semibold" content="Visibility" />
     <div class="flex flex-col">
       <div class="flex items-center py-3 justify-between border-b border-slate-200">
         <BaseFont class="text-sm" content="Last seen & online" />
-
-        <BasePopover :config="{ placement: 'bottom-end' }">
-          <button class="py-1 px-2 bg-slate-200/50 hover:bg-slate-200 rounded-lg cursor-pointer duration-200 flex items-center gap-2">
-            <BaseFont class="text-sm text-slate-700" content="Everyone" />
-            <Icon name="carbon:chevron-down" size="20px" />
-          </button>
-
-          <template #content>
-            <BaseMenuContainer>
-              <BaseMenuItem label="Everyone" />
-              <BaseMenuItem label="My contacts" />
-              <BaseMenuItem label="My contacts except..." />
-              <BaseMenuItem label="Nobody" />
-            </BaseMenuContainer>
-          </template>
-        </BasePopover>
+        <ReuseTemplate />
       </div>
 
       <div class="flex items-center py-3 justify-between border-b border-slate-200">
         <BaseFont class="text-sm" content="Profile photo" />
-        <BaseToggle />
+        <ReuseTemplate />
       </div>
 
       <div class="flex items-center py-3 justify-between border-slate-200">
         <BaseFont class="text-sm" content="Bio" />
-        <BaseToggle />
+        <ReuseTemplate />
       </div>
     </div>
 
@@ -52,7 +56,7 @@ useForm<User>({
     <div class="flex flex-col">
       <div class="flex items-center py-3 justify-between border-b border-slate-200">
         <BaseFont class="text-sm" content="Receive messages" />
-        <BaseToggle />
+        <ReuseTemplate />
       </div>
 
       <div class="flex items-center py-3 justify-between border-slate-200">
@@ -65,7 +69,7 @@ useForm<User>({
     <div class="flex flex-col">
       <div class="flex items-center py-3 justify-between border-slate-200">
         <BaseFont class="text-sm" content="Blocked users" />
-        <BaseToggle />
+        <ReuseTemplate />
       </div>
     </div>
   </div>
