@@ -2,8 +2,6 @@
 // https://www.epidemicsound.com/sound-effects/categories/user-interface/?_us=adwords&_usx=11440412807_notification%20sound
 
 const [DefineTemplate, ReuseTemplate] = createReusableTemplate()
-
-const isGroupModalOpen = ref<boolean>(false)
 </script>
 
 <template>
@@ -18,7 +16,7 @@ const isGroupModalOpen = ref<boolean>(false)
         <BaseMenuContainer>
           <BaseMenuItem label="Everyone" />
           <BaseMenuItem label="My contacts" />
-          <BaseMenuItem label="My contacts except..." @click="isGroupModalOpen = true" />
+          <BaseMenuItem label="My contacts except..." />
           <BaseMenuItem label="Nobody" />
         </BaseMenuContainer>
       </template>
