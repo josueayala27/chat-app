@@ -5,6 +5,4 @@ const currentStep = ref<number>(1)
 <template>
   <SidebarToolbarNewGroupStepOne v-if="currentStep === 1" />
   <SidebarToolbarNewGroupStepTwo v-else-if="currentStep === 2" />
-
-  
 </template>
