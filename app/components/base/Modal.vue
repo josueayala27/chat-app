@@ -19,9 +19,6 @@ const props = defineProps<BaseModalProps>()
 const slots = defineSlots<{ header?: any, footer?: any, default: any }>()
 const model = defineModel<boolean>()
 
-const id = useId()
-useState(props.state || id, () => {})
-
 const reference = ref<HTMLDivElement>()
 
 onClickOutside(reference, () => model.value = false)

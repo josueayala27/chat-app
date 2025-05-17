@@ -12,6 +12,8 @@ useForm<User>({
     user: 'josueayala',
   },
 })
+
+const isGroupModalOpen = ref<boolean>(false)
 </script>
 
 <template>
@@ -26,12 +28,28 @@ useForm<User>({
         <BaseMenuContainer>
           <BaseMenuItem label="Everyone" />
           <BaseMenuItem label="My contacts" />
-          <BaseMenuItem label="My contacts except..." />
+          <BaseMenuItem label="My contacts except..." @click="isGroupModalOpen = true" />
           <BaseMenuItem label="Nobody" />
         </BaseMenuContainer>
       </template>
     </BasePopover>
   </DefineTemplate>
+
+  <BaseModal
+    v-model="isGroupModalOpen"
+    title="My contacts except..."
+    :ui="{
+      container: 'w-[442px]',
+      header: 'flex flex-col gap-2',
+      footer: 'flex justify-end items-center gap-2',
+    }"
+  >
+    <SidebarToolbarNewGroup />
+
+    <template #footer>
+      <BaseButton content="Continue" />
+    </template>
+  </BaseModal>
 
   <div class="flex flex-col w-full p-6">
     <BaseFont class="text-sm font-semibold" content="Visibility" />
