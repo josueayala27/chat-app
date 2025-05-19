@@ -29,13 +29,14 @@ export default defineEventHandler(async (event) => {
     await useStorage('redis').setItem(
       `session:${sid}`,
       { user_id: mongoSession.user_id, expires_at: mongoSession.expires_at },
-      { ttl: ttlMs > 0 ? ttlMs : 1 } 
+      { ttl: ttlMs > 0 ? ttlMs : 1 }
     )
 
     session = { user_id: mongoSession.user_id, expires_at: mongoSession.expires_at }
   }
 
   const user = await User.findById(session.user_id).select('-password')
+
   if (!user)
     throw createError({ statusCode: 401, statusMessage: 'User not found.' })
 
