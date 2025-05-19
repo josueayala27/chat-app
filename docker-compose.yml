@@ -15,9 +15,9 @@ services:
   postgres:
     image: postgres:15
     environment:
-      POSTGRES_USER: chat-app
-      POSTGRES_PASSWORD: chat-app
-      POSTGRES_DB: chat-app
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: chat-app-core
     ports:
       - '5432:5432'
     volumes:
@@ -34,8 +34,8 @@ services:
     ports:
       - 27017:27017
     environment:
-      MONGO_INITDB_ROOT_USERNAME: chat-app
-      MONGO_INITDB_ROOT_PASSWORD: chat-app
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
     volumes:
       - ./mongo-data:/data/db
 volumes:

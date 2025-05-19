@@ -38,6 +38,7 @@
     "@iconify-json/carbon": "^1.2.7",
     "@iconify-json/grommet-icons": "^1.2.1",
     "@iconify-json/svg-spinners": "^1.2.2",
+    "@types/mongoose": "^5.11.96",
     "@vueuse/core": "^13.0.0",
     "typescript": "^5.8.3"
   }

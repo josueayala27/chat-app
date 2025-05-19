@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 export default defineNitroPlugin(async () => {
   const config = useRuntimeConfig()
-  const mongoUri = 'mongodb://chat-app:chat-app@localhost:27017'
+  const mongoUri = 'mongodb://chat-app-core:chat-app-core@mongo:27017/chat-app-core?authSource=chat-app-core'
 
   if (!mongoUri) {
     console.warn('⚠️ No mongodbUri found in `runtimeConfig`.')
