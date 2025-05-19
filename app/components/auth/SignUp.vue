@@ -8,14 +8,19 @@ export interface SignInForm {
 </script>
 
 <script setup lang="ts">
+const router = useRouter()
+
 const messages = {
   required: (field: string) => `${field} field is required`,
   email: () => 'Enter a valid email address',
 }
 
-const { validate } = useForm<SignInForm>({
+const { validate, values } = useForm<SignInForm>({
   name: 'sign-up',
   validationSchema: toTypedSchema(object({
+    first_name: string({ required_error: messages.required('First name') }),
+    last_name: string({ required_error: messages.required('Last name') }),
+    username: string({ required_error: messages.required('User') }),
     email: string({ required_error: messages.required('Email') }).email({ message: messages.email() }),
     password: string({ required_error: messages.required('Password') }).nonempty({ message: messages.required('Password') }),
   })),
@@ -25,7 +30,8 @@ async function onSubmit() {
   const { valid } = await validate()
 
   if (valid) {
-    console.log('Do something...')
+    await $fetch('/api/auth/sign-up', { method: 'POST', body: values })
+    router.push('/')
   }
 }
 </script>
@@ -39,7 +45,7 @@ async function onSubmit() {
     <BaseInput placeholder="Enter email" />
   </BaseFormField>
 
-  <BaseFormField :ui="{ base: 'col-span-2' }" name="user" label="User">
+  <BaseFormField :ui="{ base: 'col-span-2' }" name="username" label="User">
     <BaseInput placeholder="Enter email" />
   </BaseFormField>
 
