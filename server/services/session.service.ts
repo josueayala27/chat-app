@@ -5,7 +5,7 @@ export async function createSession(user_id: string): Promise<string> {
   const session_id = nanoid(32)
 
   const now = new Date()
-  const expires_at = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 7)
+  const expires_at = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 7) // 7 days of life in miliseconds :D
 
   await Session.create({
     session_id,
