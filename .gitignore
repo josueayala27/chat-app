@@ -23,4 +23,8 @@ logs
 .env.*
 !.env.example
 
+<<<<<<< Updated upstream
 mongo-data
+=======
+mongo-data
+>>>>>>> Stashed changes
