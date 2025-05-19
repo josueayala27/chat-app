@@ -14,9 +14,12 @@ export default defineEventHandler(async (event) => {
   }
 
   const session = await Session.findOne({
-    sessionId: sid,
-    expiresAt: { $gt: new Date() },
+    session_id: sid,
+    expires_at: { $gt: new Date() },
   })
+
+  console.log(sid)
+
   if (!session)
     throw createError({ statusCode: 401, statusMessage: 'Session expired or invalid.' })
 
