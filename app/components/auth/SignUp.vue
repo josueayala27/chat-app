@@ -15,7 +15,7 @@ const messages = {
   email: () => 'Enter a valid email address',
 }
 
-const { validate, values } = useForm<SignInForm>({
+const { validate, values: body } = useForm<SignInForm>({
   name: 'sign-up',
   validationSchema: toTypedSchema(object({
     first_name: string({ required_error: messages.required('First name') }),
@@ -30,7 +30,7 @@ async function onSubmit() {
   const { valid } = await validate()
 
   if (valid) {
-    await $fetch('/api/auth/sign-up', { method: 'POST', body: values })
+    await $fetch('/api/auth/sign-up', { method: 'POST', body })
     router.push('/')
   }
 }
