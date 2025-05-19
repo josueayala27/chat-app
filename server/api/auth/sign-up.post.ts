@@ -1,28 +1,14 @@
-import { hash } from 'bcryptjs'
-import { z } from 'zod'
-import User from '~~/server/models/User'
-
-const userSchema = z.object({
-  first_name: z.string(),
-  last_name: z.string(),
-  username: z.string().min(3).max(32).regex(/^[\w.-]+$/),
-  email: z.string().email(),
-  password: z.string(),
-})
+import { createSession } from '~~/server/services/session.service'
+import { signUp } from '~~/server/services/user.service'
+import { userSignUpSchema } from '~~/server/validators/user.validator'
 
 export default defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, userSchema.parse)
+  const body = await readValidatedBody(event, userSignUpSchema.parse)
+  const user = await signUp(body)
 
-  const exists = await User.findOne({ $or: [{ username: body.username }, { email: body.email }] })
+  const session_id = await createSession(user._id as string)
 
-  if (exists) {
-    throw createError({ statusCode: 409, statusMessage: 'Username or email already exists.' })
-  }
-
-  const password = await hash(body.password, 10)
-
-  const user = new User({ ...body, password })
-  await user.save()
+  setCookie(event, 'sid', session_id, { httpOnly: true, sameSite: 'lax', maxAge: 60 * 60 * 24 * 7 })
 
   return { user }
 })
