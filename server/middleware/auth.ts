@@ -13,15 +13,27 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized.' })
   }
 
-  const session = await Session.findOne({
-    session_id: sid,
-    expires_at: { $gt: new Date() },
-  })
+  let session: any = await useStorage('redis').getItem(`session:${sid}`)
 
-  console.log(sid)
+  if (!session) {
+    const mongoSession = await Session.findOne({
+      session_id: sid,
+      expires_at: { $gt: new Date() },
+    })
 
-  if (!session)
-    throw createError({ statusCode: 401, statusMessage: 'Session expired or invalid.' })
+    if (!mongoSession)
+      throw createError({ statusCode: 401, statusMessage: 'Session expired or invalid.' })
+
+    const ttlMs = Math.ceil((new Date(mongoSession.expires_at).getTime() - Date.now()) / 1000)
+
+    await useStorage('redis').setItem(
+      `session:${sid}`,
+      { user_id: mongoSession.user_id, expires_at: mongoSession.expires_at },
+      { ttl: ttlMs > 0 ? ttlMs : 1 } 
+    )
+
+    session = { user_id: mongoSession.user_id, expires_at: mongoSession.expires_at }
+  }
 
   const user = await User.findById(session.user_id).select('-password')
   if (!user)
