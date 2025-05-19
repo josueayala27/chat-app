@@ -10,5 +10,5 @@ export default defineEventHandler(async (event) => {
 
   setCookie(event, 'sid', session_id, { httpOnly: true, sameSite: 'lax', maxAge: 60 * 60 * 24 * 7 })
 
-  return { user }
+  return { success: true, message: 'Registration successful.' }
 })

@@ -1,4 +1,7 @@
-export default defineEventHandler((event) => {
+import Session from '../models/Session'
+import User from '../models/User'
+
+export default defineEventHandler(async (event) => {
   if (!isProtected(getRequestURL(event).pathname))
     return
 
@@ -10,5 +13,16 @@ export default defineEventHandler((event) => {
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized.' })
   }
 
-  event.context.user = sid
+  const session = await Session.findOne({
+    sessionId: sid,
+    expiresAt: { $gt: new Date() },
+  })
+  if (!session)
+    throw createError({ statusCode: 401, statusMessage: 'Session expired or invalid.' })
+
+  const user = await User.findById(session.user_id).select('-password')
+  if (!user)
+    throw createError({ statusCode: 401, statusMessage: 'User not found.' })
+
+  event.context.user = user
 })
