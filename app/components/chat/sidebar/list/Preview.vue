@@ -26,7 +26,7 @@ const item = ref<InstanceType<typeof SidebarChatItem> | null>(null)
   >
     <template #header="{ content }">
       <BaseFont :content="`${content}`" />
-      <BaseFont class="text-xs text-neutral-500 font-normal" content="8:10 PM" />
+      <BaseFont class="text-xs text-slate-500 font-normal" content="8:10 PM" />
     </template>
 
     <template #subheader="{ content }">

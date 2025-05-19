@@ -1,31 +1,14 @@
 <script lang="ts" setup>
-import type { BasePopover } from '#components'
-
-type PopoverInstance = InstanceType<typeof BasePopover>
+const { reference: profilePopoverReference, closePopover: closeProfilePopover } = usePopover()
+const { reference, closePopover } = usePopover()
 
 /**
  * Provides current layout state and a method to update it.
  */
 const { updateLayout, layout } = useSidebar()
 
-/**
- * Reference to the first `BasePopover` instance.
- */
-const menuPopover = ref<PopoverInstance | null>(null)
-
-/**
- * Controls visibility of the "Create group" modal
- */
 const isGroupModalOpen = ref<boolean>(false)
-
-/**
- * Closes the popover if it is currently open.
- */
-function closePopover(): void {
-  if (menuPopover.value) {
-    menuPopover.value.isOpen = false
-  }
-}
+const isSettingsModalOpen = ref<boolean>(false)
 
 /**
  * Change the layout to the one you specify and close the popover.
@@ -41,25 +24,67 @@ function openModal(): void {
   closePopover()
   isGroupModalOpen.value = true
 }
+
+function openSettingsModal() {
+  closeProfilePopover()
+  isSettingsModalOpen.value = true
+}
 </script>
 
 <template>
-  <SidebarToolbarNewGroupModal v-model="isGroupModalOpen" />
+  <BaseModal
+    v-model="isGroupModalOpen"
+    state="new-group"
+    :ui="{
+      container: 'w-[442px]',
+      header: 'flex flex-col gap-2',
+      footer: 'flex justify-end items-center gap-2',
+    }"
+  >
+    <template #header>
+      <BaseFont content="Create group chat" />
+      <BaseFont class="text-sm font-normal text-slate-700" content="Gather your friends in a vibrant chat. Share moments and ideas in one fun conversation." />
+    </template>
+
+    <SidebarToolbarNewGroup />
+
+    <template #footer>
+      <BaseButton content="Back" />
+      <BaseButton content="Continue" />
+    </template>
+  </BaseModal>
+
+  <BaseModal
+    v-model="isSettingsModalOpen"
+    title="Settings"
+    :ui-attrs="{
+      container:
+        {
+          'aria-label': 'User settings',
+        },
+    }"
+    :ui="{
+      container: 'w-[680px]',
+      body: 'flex p-0',
+    }"
+  >
+    <SidebarToolbarSettings />
+  </BaseModal>
 
   <div class="flex items-center justify-between">
-    <BasePopover>
+    <BasePopover ref="profilePopoverReference">
       <BaseAvatar :ui="{ base: 'cursor-pointer' }" size="40" />
 
       <template #content>
         <BaseMenuContainer>
-          <BaseMenuItem icon="carbon:settings" label="Settings" />
+          <BaseMenuItem icon="carbon:settings" label="Settings" @click="openSettingsModal()" />
           <BaseMenuItem icon="carbon:logout" label="Sign out" />
         </BaseMenuContainer>
       </template>
     </BasePopover>
 
     <div class="flex items-center justify-end">
-      <BasePopover ref="menuPopover">
+      <BasePopover ref="reference">
         <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer">
           <Icon size="20px" name="carbon:add-large" class="flex shrink-0 duration-300" />
         </div>
@@ -73,7 +98,7 @@ function openModal(): void {
               @click="setLayout('new-friend')"
             />
 
-            <BaseMenuItem icon="carbon:user-multiple" label="New group" @click="openModal" />
+            <BaseMenuItem icon="carbon:user-multiple" label="New group" @click="openModal()" />
 
             <BaseMenuItem
               v-if="layout !== 'new-message'"

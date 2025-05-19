@@ -12,7 +12,7 @@ const { updateLayout } = useSidebar()
 
     <div>
       <BaseFont class="font-semibold" :content="title" />
-      <BaseFont class="text-sm text-neutral-700" :content="description" />
+      <BaseFont class="text-sm text-slate-700" :content="description" />
     </div>
   </div>
 </template>

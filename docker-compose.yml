@@ -9,3 +9,35 @@ services:
       - /app/node_modules
     stdin_open: true
     tty: true
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: chat-app-core
+    ports:
+      - '5432:5432'
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  redis:
+    image: redis:6.2
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    command: [redis-server, --appendonly, yes]
+  mongo:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - ./mongo-data:/data/db
+volumes:
+  db_data:
+  redis_data:

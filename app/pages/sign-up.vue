@@ -1,5 +1,5 @@
 <script setup lang="ts">
-definePageMeta({ layout: 'auth', middleware: ['guest'] })
+definePageMeta({ layout: 'auth', middleware: ['auth'] })
 useHead({ title: 'Sign Up' })
 </script>
 
