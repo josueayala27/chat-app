@@ -24,6 +24,8 @@
     "eslint": "^9.26.0",
     "gsap": "^3.12.7",
     "ioredis": "^5.6.1",
+    "mongodb": "^6.16.0",
+    "mongoose": "^8.15.0",
     "nuxt": "^3.17.1",
     "tailwind-variants": "^0.3.1",
     "tailwindcss": "^4.1.3",

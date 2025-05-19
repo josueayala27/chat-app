@@ -1,3 +1,4 @@
+import process from 'node:process'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
@@ -56,5 +57,8 @@ export default defineNuxtConfig({
       standalone: false,
       stylistic: true,
     },
+  },
+  runtimeConfig: {
+    DB_URI: process.env.DB_URI,
   },
 })
