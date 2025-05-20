@@ -5,14 +5,12 @@ interface User { first_name: string, last_name: string, user: string, email: str
 <script lang="ts" setup>
 const { user } = useAuth()
 
-console.log(user.value)
-
 useForm<User>({
   initialValues: {
-    first_name: user.value?.first_name ?? '',
-    last_name: user.value?.last_name ?? '',
-    email: user.value?.email ?? '',
-    user: user.value?.username ?? '',
+    first_name: user.value.first_name,
+    last_name: user.value.last_name,
+    email: user.value.email,
+    user: user.value.username,
   },
 })
 </script>
