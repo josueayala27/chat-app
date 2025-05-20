@@ -16,12 +16,12 @@ export async function getUserChatsWithPreview(user_id: ObjectId) {
           { $sort: { created_at: -1 } },
           { $limit: 1 },
         ],
-        as: 'lastMessage',
+        as: 'last_message',
       },
     },
     {
       $addFields: {
-        lastMessage: { $arrayElemAt: ['$lastMessage', 0] },
+        last_message: { $arrayElemAt: ['$last_message', 0] },
       },
     },
   ])
