@@ -38,12 +38,10 @@ export default defineEventHandler(async (event) => {
     session = { user_id: mongoSession.user_id, expires_at: mongoSession.expires_at }
   }
 
-  const user = await User.findById(session.user_id).select('-password')
+  const user = await User.findById(session.user_id).select('-password -created_at -updated_at')
 
   if (!user)
     throw createError({ statusCode: 401, statusMessage: 'User not found.' })
 
   event.context.user = user
-
-  console.log('hello...')
 })

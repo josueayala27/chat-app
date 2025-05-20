@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 
 export interface IUser extends User, Document {}
 
-const userSchema = new mongoose.Schema<User>({
+const userSchema = new mongoose.Schema<IUser>({
   first_name: { type: String, required: true },
   last_name: { type: String, required: true },
   username: { type: String, required: true, unique: true },
