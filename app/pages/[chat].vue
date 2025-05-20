@@ -1,5 +1,6 @@
 <script setup lang="ts">
 useHead({ title: 'Charlie' })
+definePageMeta({ middleware: ['auth'] })
 
 const route = useRoute()
 const isSelectMessagesActive = useState<boolean>(`select-messages-${route.params.chat}`, () => false)
