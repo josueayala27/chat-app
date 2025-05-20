@@ -3,16 +3,9 @@ import type { IChat, IChatUser } from '../models/Chat'
 import mongoose from 'mongoose'
 import Chat from '../models/Chat'
 
-export async function getUserChats(user_id: ObjectId) {
-  console.log(user_id)
-  const response = await Chat.find({ 'users.user_id': user_id })
-
-  return response
-}
-
-export async function getUserChatsWithPreview(user_id: string) {
+export async function getUserChatsWithPreview(user_id: ObjectId) {
   const chats = await Chat.aggregate([
-    { $match: { 'users.user_id': new mongoose.Types.ObjectId(user_id) } },
+    { $match: { 'users.user_id': user_id } },
     { $sort: { updated_at: -1 } },
     {
       $lookup: {

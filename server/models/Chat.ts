@@ -21,7 +21,6 @@ const chatUserSchema: Schema<IChatUser> = new mongoose.Schema(
     is_admin: { type: Boolean, default: false },
     joined_at: { type: Date, default: Date.now },
   },
-  { _id: false },
 )
 
 const chatSchema = new mongoose.Schema<IChat>({
