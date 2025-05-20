@@ -1,4 +1,4 @@
-import type { Document, Schema } from 'mongoose'
+import type { Document } from 'mongoose'
 import mongoose from 'mongoose'
 
 export interface IUser extends User, Document {}

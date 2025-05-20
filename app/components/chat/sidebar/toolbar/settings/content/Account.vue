@@ -5,6 +5,8 @@ interface User { first_name: string, last_name: string, user: string, email: str
 <script lang="ts" setup>
 const { user } = useAuth()
 
+console.log(user.value)
+
 useForm<User>({
   initialValues: {
     first_name: user.value?.first_name ?? '',

@@ -1,7 +1,7 @@
 export default function useAuth() {
   const headers = useRequestHeaders(['cookie'])
 
-    const user = useState<User>('user', () => null)
+  const user = useState<User>('user', () => ({} as User))
   const isAuthenticated = computed(() => Boolean(user.value))
 
   const getUserAsync = useAsync(() => $fetch('/api/auth/me', { headers }))
