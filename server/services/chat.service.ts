@@ -31,7 +31,7 @@ export async function getUserChatsWithPreview(user_id: ObjectId) {
         let: { sender_id: '$last_message.sender_id' },
         pipeline: [
           { $match: { $expr: { $eq: ['$_id', '$$sender_id'] } } },
-          { $project: { username: 1 } },
+          { $project: { username: 1, first_name: 1, last_name: 1 } },
         ],
         as: 'last_message.sender',
       },
@@ -44,6 +44,8 @@ export async function getUserChatsWithPreview(user_id: ObjectId) {
     {
       $project: {
         users: 0,
+        created_at: 0,
+        updated_at: 0,
       },
     },
   ])
