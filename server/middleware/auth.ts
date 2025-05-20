@@ -1,3 +1,4 @@
+import type { ISession } from '../models/Session'
 import Session from '../models/Session'
 import User from '../models/User'
 
@@ -13,7 +14,9 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized.' })
   }
 
-  let session: any = await useStorage('redis').getItem(`session:${sid}`)
+  const storage = useStorage('redis')
+
+  let session = await storage.getItem<Pick<ISession, 'user_id' | 'expires_at'>>(`session:${sid}`)
 
   if (!session) {
     const mongoSession = await Session.findOne({
@@ -26,10 +29,10 @@ export default defineEventHandler(async (event) => {
 
     const ttlMs = Math.ceil((new Date(mongoSession.expires_at).getTime() - Date.now()) / 1000)
 
-    await useStorage('redis').setItem(
+    await storage.setItem(
       `session:${sid}`,
       { user_id: mongoSession.user_id, expires_at: mongoSession.expires_at },
-      { ttl: ttlMs > 0 ? ttlMs : 1 }
+      { ttl: ttlMs > 0 ? ttlMs : 1 },
     )
 
     session = { user_id: mongoSession.user_id, expires_at: mongoSession.expires_at }
@@ -41,4 +44,6 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, statusMessage: 'User not found.' })
 
   event.context.user = user
+
+  console.log('hello...')
 })

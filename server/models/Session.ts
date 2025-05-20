@@ -10,7 +10,7 @@ export interface ISession extends Document {
 const SessionSchema = new Schema<ISession>({
   session_id: { type: String, required: true, unique: true },
   user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  expires_at: { type: Date, required: true }
+  expires_at: { type: Date, required: true },
 }, {
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
 })
