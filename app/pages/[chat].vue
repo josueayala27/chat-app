@@ -1,5 +1,7 @@
 <script setup lang="ts">
+const headers = useRequestHeaders(['cookie'])
 useHead({ title: 'Charlie' })
+
 definePageMeta({ middleware: ['auth'] })
 
 const route = useRoute()
@@ -7,6 +9,11 @@ const isSelectMessagesActive = useState<boolean>(`select-messages-${route.params
 
 onUnmounted(() => {
   isSelectMessagesActive.value = false
+})
+
+onMounted(async () => {
+  const response = await $fetch('/api/chats', { headers })
+  console.log(response)
 })
 </script>
 

@@ -1,13 +1,13 @@
 import type { Document, Types } from 'mongoose'
 import mongoose, { Schema } from 'mongoose'
 
-interface IChatUser {
+export interface IChatUser {
   user_id: Types.ObjectId
   is_admin?: boolean
   joined_at: Date
 }
 
-interface IChat extends Document {
+export interface IChat extends Document {
   type: 'private' | 'group'
   users: IChatUser[]
   name?: string

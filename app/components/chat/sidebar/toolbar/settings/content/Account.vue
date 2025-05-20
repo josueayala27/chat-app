@@ -1,7 +1,7 @@
 <script lang="ts">
 interface User { first_name: string, last_name: string, user: string, email: string }
 </script>
-  
+
 <script lang="ts" setup>
 const { user } = useAuth()
 

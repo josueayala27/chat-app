@@ -1,7 +1,8 @@
+import type { ObjectId } from 'mongoose'
 import { nanoid } from 'nanoid'
 import Session from '../models/Session'
 
-export async function createSession(user_id: string): Promise<string> {
+export async function createSession(user_id: ObjectId): Promise<string> {
   const session_id = nanoid(32)
 
   const now = new Date()
