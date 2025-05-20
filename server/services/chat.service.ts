@@ -24,6 +24,13 @@ export async function getUserChatsWithPreview(user_id: ObjectId) {
         last_message: { $arrayElemAt: ['$last_message', 0] },
       },
     },
+    {
+      $project: {
+        users: 0,
+        created_at: 0,
+        updated_at: 0,
+      },
+    },
   ])
   return chats
 }
