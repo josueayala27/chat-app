@@ -1,5 +1,4 @@
 <script setup lang="ts">
-const { getChats } = useChat()
 useHead({ title: 'Charlie' })
 
 definePageMeta({ middleware: ['auth'] })
@@ -10,8 +9,6 @@ const isSelectMessagesActive = useState<boolean>(`select-messages-${route.params
 onUnmounted(() => {
   isSelectMessagesActive.value = false
 })
-
-
 </script>
 
 <template>
