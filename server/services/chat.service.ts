@@ -5,8 +5,19 @@ import Chat from '../models/Chat'
 
 export async function getUserChatsWithPreview(user_id: ObjectId) {
   return Chat.aggregate([
+    /**
+     * 1. Find all chats where the current user is a participant.
+     */
     { $match: { 'users.user_id': user_id } },
+
+    /**
+     * 2. Sort chats so most recently updated appear first (for chat previews).
+     */
     { $sort: { updated_at: -1 } },
+
+    /**
+     * 3. Lookup the last message for each chat (sort by creation date descending and limit to 1).
+     */
     {
       $lookup: {
         from: 'messages',
@@ -20,11 +31,19 @@ export async function getUserChatsWithPreview(user_id: ObjectId) {
         as: 'last_message',
       },
     },
+
+    /**
+     * 4. Flatten last_message array into an object (since we only want one).
+     */
     {
       $addFields: {
         last_message: { $arrayElemAt: ['$last_message', 0] },
       },
     },
+
+    /**
+     * 5. Lookup sender details (username, first_name, last_name) for last_message.
+     */
     {
       $lookup: {
         from: 'users',
@@ -33,24 +52,35 @@ export async function getUserChatsWithPreview(user_id: ObjectId) {
           { $match: { $expr: { $eq: ['$_id', '$$sender_id'] } } },
           { $project: { username: 1, first_name: 1, last_name: 1 } },
         ],
-        as: 'last_message.sender',
+        as: 'last_message_sender',
       },
     },
+
+    /**
+     * 6. Flatten last_message_sender array into an object under last_message.sender.
+     */
     {
       $addFields: {
-        'last_message.sender': { $arrayElemAt: ['$last_message.sender', 0] },
+        'last_message.sender': { $arrayElemAt: ['$last_message_sender', 0] },
       },
     },
+
+    /**
+     * 7. For private chats: extract the friend (the other participant) by filtering out the current user.
+     * For group chats: this field will not appear.
+     */
     {
       $addFields: {
-        friend: {
+        friend_id: {
           $cond: [
-            { $eq: ['$type', 'group'] },
+            { $eq: ['$type', 'private'] },
             {
-              $filter: {
-                input: '$users',
-                as: 'user',
-                cond: { $ne: ['$$user.user_id', user_id] },
+              $first: {
+                $filter: {
+                  input: '$users',
+                  as: 'user',
+                  cond: { $ne: ['$$user.user_id', user_id] },
+                },
               },
             },
             '$$REMOVE',
@@ -58,26 +88,41 @@ export async function getUserChatsWithPreview(user_id: ObjectId) {
         },
       },
     },
+
+    /**
+     * 8. Lookup friend details (username, first_name, last_name, avatar_url)
+     * Uses friend_id extracted above for private chats.
+     */
     {
       $lookup: {
         from: 'users',
-        let: { friend_id: { $arrayElemAt: ['$friend.user_id', 0] } },
+        let: { friend_id: '$friend_id.user_id' },
         pipeline: [
           { $match: { $expr: { $eq: ['$_id', '$$friend_id'] } } },
           { $project: { username: 1, first_name: 1, last_name: 1, avatar_url: 1 } },
         ],
-        as: 'friend_user',
+        as: 'friend',
       },
     },
+
+    /**
+     * 9. Flatten friend array into an object (or remove if not private).
+     */
     {
       $addFields: {
-        friend: { $arrayElemAt: ['$friend_user', 0] },
+        friend: { $arrayElemAt: ['$friend', 0] },
       },
     },
+
+    /**
+     * 10. Project only relevant fields:
+     * - Remove users array, temporary fields, and timestamps from the final result.
+     */
     {
       $project: {
         users: 0,
-        friend_user: 0,
+        last_message_sender: 0,
+        friend_id: 0,
         created_at: 0,
         updated_at: 0,
       },
