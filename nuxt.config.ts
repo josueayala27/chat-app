@@ -40,14 +40,16 @@ export default defineNuxtConfig({
       websocket: true,
     },
     storage: {
-      test: {
-        driver: 'upstash',
-        base: 'unstorage',
+      redis: {
+        driver: 'redis',
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT,
       },
     },
   },
   vite: { plugins: [tailwindcss()] },
   eslint: {
+    checker: true,
     config: {
       standalone: false,
       stylistic: true,
