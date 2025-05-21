@@ -1,6 +1,5 @@
 <script lang="ts">
 import { NuxtLink } from '#components'
-import { format } from '@formkit/tempo'
 
 export interface ChatListMessage {
   uuid: string
@@ -24,7 +23,10 @@ const { data } = useNuxtData('chat-list')
     >
       <template #header>
         <BaseFont :content="item.type === 'private' ? `${item.friend.first_name} ${item.friend.last_name}` : item.name" />
-        <BaseFont class="text-xs text-slate-500 font-normal" :content="format(item.last_message.created_at, { time: 'short' })" />
+
+        <BaseFont class="text-xs text-slate-500 font-normal">
+          <NuxtTime :datetime="item.last_message.created_at" hour="2-digit" minute="2-digit" />
+        </BaseFont>
       </template>
 
       <template #subheader>
