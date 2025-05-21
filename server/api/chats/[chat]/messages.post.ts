@@ -1,5 +1,3 @@
-import mongoose from 'mongoose'
-import Message from '~~/server/models/Message'
 import { createMessage } from '~~/server/services/message.service'
 
 export default defineEventHandler(async (event) => {

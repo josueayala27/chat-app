@@ -1,6 +1,7 @@
+import mongoose from 'mongoose'
 import Message from '../models/Message'
 
-export async function createMessage() {
+export async function createMessage(data: Message<string>) {
   return Message.create({
     chat_id: new mongoose.Types.ObjectId(param),
     sender_id: new mongoose.Types.ObjectId(user._id),

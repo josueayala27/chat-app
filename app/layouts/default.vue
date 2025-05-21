@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { ChatList } from '@/types/chat'
+
 const headers = useRequestHeaders(['cookie'])
-await useAsyncData('chat-list', () => $fetch('/api/chats', { headers }))
+await useAsyncData('chat-list', () => $fetch<ChatList[]>('/api/chats', { headers }))
 </script>
 
 <template>

@@ -99,7 +99,7 @@ export async function getUserChatsWithPreview(user_id: ObjectId) {
         let: { friend_id: '$friend_id.user_id' },
         pipeline: [
           { $match: { $expr: { $eq: ['$_id', '$$friend_id'] } } },
-          { $project: { username: 1, first_name: 1, last_name: 1, avatar_url: 1 } },
+          { $project: { username: 1, first_name: 1, last_name: 1 } },
         ],
         as: 'friend',
       },
@@ -120,11 +120,12 @@ export async function getUserChatsWithPreview(user_id: ObjectId) {
      */
     {
       $project: {
-        users: 0,
-        last_message_sender: 0,
-        friend_id: 0,
-        created_at: 0,
-        updated_at: 0,
+        'users': 0,
+        'last_message_sender': 0,
+        'friend_id': 0,
+        'created_at': 0,
+        'updated_at': 0,
+        'last_message.sender_id': 0,
       },
     },
   ])

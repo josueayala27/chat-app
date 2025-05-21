@@ -1,15 +1,10 @@
 <script lang="ts">
+import type { ChatList } from '@/types/chat'
 import { NuxtLink } from '#components'
-
-export interface ChatListMessage {
-  uuid: string
-  name: string
-  message: string
-}
 </script>
 
 <script lang="ts" setup>
-const { data } = useNuxtData('chat-list')
+const { data } = useNuxtData<ChatList[]>('chat-list')
 </script>
 
 <template>
@@ -22,7 +17,7 @@ const { data } = useNuxtData('chat-list')
       :ui="{ header: 'flex items-center justify-between w-full', subheader: 'flex items-center gap-1', content: 'relative' }"
     >
       <template #header>
-        <BaseFont :content="item.type === 'private' ? `${item.friend.first_name} ${item.friend.last_name}` : item.name" />
+        <BaseFont :content="item.type === 'private' ? `${item.friend?.first_name} ${item.friend?.last_name}` : item.name" />
 
         <BaseFont class="text-xs text-slate-500 font-normal">
           <NuxtTime :datetime="item.last_message.created_at" hour="2-digit" minute="2-digit" />
