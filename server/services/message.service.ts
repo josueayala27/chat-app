@@ -1,5 +1,6 @@
 import type { Types } from 'mongoose'
 import type { z } from 'zod'
+import type { MessageDocument } from '../models/Message'
 import type { createMessageBodySchema } from '../validators/message.validator'
 import mongoose from 'mongoose'
 import Message from '../models/Message'
@@ -9,7 +10,7 @@ export type CreateMessageInput = z.infer<typeof createMessageBodySchema> & {
   user: Types.ObjectId
 }
 
-export async function createMessage(data: CreateMessageInput) {
+export async function createMessage(data: CreateMessageInput): Promise<MessageDocument> {
   return Message.create({
     chat_id: new mongoose.Types.ObjectId(data.chat_id),
     sender_id: data.user._id,
