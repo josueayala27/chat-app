@@ -42,8 +42,42 @@ export async function getUserChatsWithPreview(user_id: ObjectId) {
       },
     },
     {
+      $addFields: {
+        friend: {
+          $cond: [
+            { $eq: ['$type', 'group'] },
+            {
+              $filter: {
+                input: '$users',
+                as: 'user',
+                cond: { $ne: ['$$user.user_id', user_id] },
+              },
+            },
+            '$$REMOVE',
+          ],
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: 'users',
+        let: { friend_id: { $arrayElemAt: ['$friend.user_id', 0] } },
+        pipeline: [
+          { $match: { $expr: { $eq: ['$_id', '$$friend_id'] } } },
+          { $project: { username: 1, first_name: 1, last_name: 1, avatar_url: 1 } },
+        ],
+        as: 'friend_user',
+      },
+    },
+    {
+      $addFields: {
+        friend: { $arrayElemAt: ['$friend_user', 0] },
+      },
+    },
+    {
       $project: {
         users: 0,
+        friend_user: 0,
         created_at: 0,
         updated_at: 0,
       },

@@ -11,13 +11,11 @@ onUnmounted(() => {
   isSelectMessagesActive.value = false
 })
 
-onMounted(async () => {
-  const response = await $fetch('/api/chats', { headers })
-  console.log(response)
-})
+const { data } = await useAsyncData('hello', () => $fetch('/api/chats', { headers }))
 </script>
 
 <template>
+  {{ data }}
   <div class="flex flex-col divide-y divide-slate-200 flex-1">
     <WindowHeader />
 
