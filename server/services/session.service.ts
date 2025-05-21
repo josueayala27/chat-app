@@ -14,7 +14,7 @@ export async function createSession(user_id: ObjectId): Promise<string> {
     expires_at,
   })
 
-  useStorage('redis').setItem(`session:${session_id}`, { user_id, expires_at }, { ttl: 60 * 60 * 24 * 7 })
+  useStorage('upstash').setItem(`session:${session_id}`, { user_id, expires_at }, { ttl: 60 * 60 * 24 * 7 })
 
   return session_id
 }
