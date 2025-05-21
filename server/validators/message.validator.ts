@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const createMessageParamSchema = z.object({
+export const messageParamSchema = z.object({
   chat: z.string().length(24),
 })
 

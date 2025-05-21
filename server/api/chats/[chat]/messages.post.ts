@@ -1,9 +1,9 @@
 import { createMessage } from '~~/server/services/message.service'
-import { createMessageBodySchema, createMessageParamSchema } from '~~/server/validators/message.validator'
+import { createMessageBodySchema, messageParamSchema } from '~~/server/validators/message.validator'
 
 export default defineEventHandler(async (event) => {
-  const param = await getValidatedRouterParams(event, createMessageParamSchema.parse)
+  const params = await getValidatedRouterParams(event, messageParamSchema.parse)
   const body = await readValidatedBody(event, createMessageBodySchema.parse)
 
-  return await createMessage({ ...body, chat_id: param.chat, user: event.context.user })
+  return await createMessage({ ...body, chat_id: params.chat, user: event.context.user })
 })
