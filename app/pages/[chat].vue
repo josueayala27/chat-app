@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const headers = useRequestHeaders(['cookie'])
+const { getChats } = useChat()
 useHead({ title: 'Charlie' })
 
 definePageMeta({ middleware: ['auth'] })
@@ -11,11 +11,10 @@ onUnmounted(() => {
   isSelectMessagesActive.value = false
 })
 
-const { data } = await useAsyncData('hello', () => $fetch('/api/chats', { headers }))
+
 </script>
 
 <template>
-  {{ data }}
   <div class="flex flex-col divide-y divide-slate-200 flex-1">
     <WindowHeader />
 

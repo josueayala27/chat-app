@@ -1,4 +1,7 @@
 <script lang="ts">
+import { NuxtLink } from '#components'
+import { format } from '@formkit/tempo'
+
 export interface ChatListMessage {
   uuid: string
   name: string
@@ -7,23 +10,54 @@ export interface ChatListMessage {
 </script>
 
 <script lang="ts" setup>
-const messages = ref<ChatListMessage[]>([
-  { uuid: '378ae97b-d6c6-4ec4-bf39-2aaae75bd514', name: 'Alice', message: 'Hello there!' },
-  { uuid: '86b765de-b5ef-4334-a040-28bd1a46c5ad', name: 'Bob', message: 'How are you?' },
-  { uuid: '1a7895ee-d744-4f81-9aa9-c16f14463232', name: 'Charlie', message: 'Good morning!' },
-  { uuid: '5857f77a-f5cc-410c-9871-1d5651427d96', name: 'David', message: 'What\'s up? This is my really long message, haha' },
-  { uuid: '4fd8a65d-de60-43ed-89bd-343359c9989f', name: 'Eve', message: 'See you later!' },
-])
+const { data } = useNuxtData('chat-list')
 </script>
 
 <template>
   <BaseList>
-    <SidebarListPreview
-      v-for="item in messages"
-      :key="item.uuid"
-      :uuid="item.uuid"
-      :name="item.name"
-      :message="item.message"
-    />
+    <SidebarChatItem
+      :is="NuxtLink"
+      v-for="item in data"
+      :key="item._id"
+      :to="{ name: 'chat', params: { chat: item.chat_id } }"
+      :ui="{ header: 'flex items-center justify-between w-full', subheader: 'flex items-center gap-1', content: 'relative' }"
+    >
+      <template #header>
+        <BaseFont :content="item.type === 'private' ? `${item.friend.first_name} ${item.friend.last_name}` : item.name" />
+        <BaseFont class="text-xs text-slate-500 font-normal" :content="format(item.last_message.created_at, { time: 'short' })" />
+      </template>
+
+      <template #subheader>
+        <!-- <Icon class="shrink-0" size="20px" name="carbon:checkmark" /> -->
+        <BaseFont :content="item.last_message.content" />
+      </template>
+
+      <template #extra>
+        <BasePopover>
+          <template #default="{ isOpen }">
+            <div
+              :class="{ 'visible not-group-hover:bg-white': isOpen }"
+              class="absolute right-0 top-0 flex items-center h-full bg-slate-100 mask-l-from-60% mask-l-to-90% w-[20%] justify-end invisible group-hover:visible"
+            >
+              <div
+                class="p-2 rounded-full bg-white place-items-center cursor-pointer border border-slate-300" @click.prevent
+              >
+                <Icon size="20px" name="carbon:overflow-menu-horizontal" class="flex shrink-0" />
+              </div>
+            </div>
+          </template>
+
+          <template #content>
+            <BaseMenuContainer>
+              <BaseMenuItem icon="carbon:pin" label="Pin chat" />
+              <BaseMenuItem icon="carbon:star" label="Add to favorites" />
+              <BaseMenuItem icon="carbon:notification-off" label="Mute" />
+              <BaseMenuItem icon="carbon:locked" label="Block" />
+              <BaseMenuItem :ui="{ root: 'text-red-500' }" icon="carbon:trash-can" label="Delete chat" />
+            </BaseMenuContainer>
+          </template>
+        </BasePopover>
+      </template>
+    </SidebarChatItem>
   </BaseList>
 </template>

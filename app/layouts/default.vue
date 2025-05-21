@@ -1,3 +1,8 @@
+<script setup lang="ts">
+const headers = useRequestHeaders(['cookie'])
+await useAsyncData('chat-list', () => $fetch<any>('/api/chats', { headers }))
+</script>
+
 <template>
   <div class="h-screen overflow-hidden flex divide-x divide-slate-200">
     <Sidebar />

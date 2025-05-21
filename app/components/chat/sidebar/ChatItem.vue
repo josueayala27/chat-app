@@ -4,7 +4,7 @@ import { tv } from 'tailwind-variants'
 
 <script setup lang="ts">
 interface SidebarChatItemBaseProps {
-  data: [string, string]
+  data?: [string, string]
   is?: Component
   ui?: Partial<typeof ui.slots>
 }
@@ -30,14 +30,14 @@ const { root, content, header, subheader } = ui()
     <div :class="content({ class: props.ui?.content })">
       <div class="flex flex-col flex-1">
         <div :class="header({ class: props.ui?.header })">
-          <slot name="header" :content="data[0]">
-            <BaseFont :content="data[0]" />
+          <slot name="header" :content="data?.[0]">
+            <BaseFont v-if="data?.[0]" :content="data[0]" />
           </slot>
         </div>
 
         <div :class="subheader({ class: props.ui?.subheader })">
-          <slot name="subheader" :content="data[1]">
-            <BaseFont :content="data[1]" />
+          <slot name="subheader" :content="data?.[1]">
+            <BaseFont v-if="data?.[1]" :content="data[1]" />
           </slot>
         </div>
       </div>
