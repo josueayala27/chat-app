@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const headers = useRequestHeaders(['cookie'])
-await useAsyncData('chat-list', () => $fetch<any>('/api/chats', { headers }))
+await useAsyncData('chat-list', () => $fetch('/api/chats', { headers }))
 </script>
 
 <template>

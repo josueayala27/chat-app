@@ -19,7 +19,7 @@ const { data } = useNuxtData('chat-list')
       :is="NuxtLink"
       v-for="item in data"
       :key="item._id"
-      :to="{ name: 'chat', params: { chat: item.chat_id } }"
+      :to="{ name: 'chat', params: { chat: item._id } }"
       :ui="{ header: 'flex items-center justify-between w-full', subheader: 'flex items-center gap-1', content: 'relative' }"
     >
       <template #header>
@@ -28,7 +28,7 @@ const { data } = useNuxtData('chat-list')
       </template>
 
       <template #subheader>
-        <!-- <Icon class="shrink-0" size="20px" name="carbon:checkmark" /> -->
+        <Icon class="shrink-0" size="20px" name="carbon:checkmark" />
         <BaseFont :content="item.last_message.content" />
       </template>
 
