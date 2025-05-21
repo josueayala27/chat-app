@@ -1,13 +1,13 @@
-import type { Types } from 'mongoose'
 import type { z } from 'zod'
 import type { MessageDocument } from '../models/Message'
+import type { UserDocument } from '../models/User'
 import type { createMessageBodySchema } from '../validators/message.validator'
 import mongoose from 'mongoose'
 import Message from '../models/Message'
 
 export type CreateMessageInput = z.infer<typeof createMessageBodySchema> & {
   chat_id: string
-  user: Types.ObjectId
+  user: UserDocument
 }
 
 export async function createMessage(data: CreateMessageInput): Promise<MessageDocument> {
