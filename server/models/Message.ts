@@ -1,20 +1,8 @@
 import type { Document, Model, Types } from 'mongoose'
 import mongoose, { Schema } from 'mongoose'
 
-export interface IReadBy {
-  user_id: Types.ObjectId
-  read_at: Date
-}
-
-export interface IMessage extends Document {
-  chat_id: Types.ObjectId
-  sender_id: Types.ObjectId
-  content: string
-  type: 'text' | 'image' | 'video' | 'file' | 'audio' | 'system'
-  attachments?: string[]
-  reply_to?: Types.ObjectId
-  read_by?: IReadBy[]
-}
+export interface IReadBy extends ReadBy<Types.ObjectId> {}
+export interface IMessage extends Message<Types.ObjectId>, Document {}
 
 const readBySchema: Schema<IReadBy> = new Schema(
   {
