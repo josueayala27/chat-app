@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized.' })
   }
 
-  const storage = useStorage('redis')
+  const storage = useStorage('upstash')
 
   let session = await storage.getItem<Pick<ISession, 'user_id' | 'expires_at'>>(`session:${sid}`)
 
