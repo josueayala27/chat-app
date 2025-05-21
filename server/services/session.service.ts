@@ -1,20 +1,23 @@
-import type { ObjectId } from 'mongoose'
+import type { UserDocument } from '../models/User'
 import { nanoid } from 'nanoid'
 import Session from '../models/Session'
 
-export async function createSession(user_id: ObjectId): Promise<string> {
+const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7 // 7 days
+
+/**
+ * Creates a new session for the user and stores it in the database and cache.
+ *
+ * @param {UserDocument} user - The user's ID.
+ * @returns {Promise<string>} The generated session ID.
+ */
+export async function createSession(user: UserDocument): Promise<string> {
   const session_id = nanoid(32)
-
   const now = new Date()
-  const expires_at = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 7) // 7 days of life in miliseconds :D
+  const expires_at = new Date(now.getTime() + SESSION_TTL_SECONDS * 1000)
 
-  await Session.create({
-    session_id,
-    user_id,
-    expires_at,
-  })
+  await Session.create({ session_id, user_id: user._id, expires_at })
 
-  useStorage('upstash').setItem(`session:${session_id}`, { user_id, expires_at }, { ttl: 60 * 60 * 24 * 7 })
+  useStorage('upstash').setItem(`session:${session_id}`, { user_id: user._id, expires_at }, { ttl: SESSION_TTL_SECONDS })
 
   return session_id
 }

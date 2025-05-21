@@ -1,6 +1,13 @@
 import type { ISession } from '../models/Session'
+import type { UserDocument } from '../models/User'
 import Session from '../models/Session'
 import User from '../models/User'
+
+declare module 'h3' {
+  interface H3EventContext {
+    user: UserDocument
+  }
+}
 
 export default defineEventHandler(async (event) => {
   if (!isProtected(getRequestURL(event).pathname))
