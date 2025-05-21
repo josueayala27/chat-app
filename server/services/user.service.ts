@@ -21,3 +21,20 @@ export async function signUp(data: UserSignUpInput): Promise<IUser> {
 
   return user
 }
+
+export async function findUserByEmail(email: string): Promise<IUser | null> {
+  return User.findOne({ email })
+}
+
+export async function setPasswordResetToken(userId: string, token: string, expiresAt: Date): Promise<IUser | null> {
+  return User.findByIdAndUpdate(userId, { $set: { resetPasswordToken: token, resetPasswordExpires: expiresAt } }, { new: true })
+}
+
+export async function verifyPasswordResetToken(hashedToken: string): Promise<IUser | null> {
+  return User.findOne({ resetPasswordToken: hashedToken, resetPasswordExpires: { $gt: Date.now() } })
+}
+
+export async function updateUserPassword(userId: string, newPassword: string): Promise<IUser | null> {
+  const password = await hash(newPassword, 10)
+  return User.findByIdAndUpdate(userId, { $set: { password, resetPasswordToken: undefined, resetPasswordExpires: undefined } }, { new: true })
+}
