@@ -12,5 +12,5 @@ export interface Message<T = string | Types.ObjectId> {
   type: 'text' | 'image' | 'video' | 'file' | 'audio' | 'system'
   attachments?: string[]
   reply_to?: string
-  read_by?: ReadBy[]
+  read_by?: ReadBy<T>[]
 }
