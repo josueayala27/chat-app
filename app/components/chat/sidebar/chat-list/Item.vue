@@ -44,6 +44,10 @@ onMounted(async () => {
       console.log(message)
     }
   })
+
+  await channel.presence.subscribe('enter', (member) => {
+    console.log(`Member ${member.clientId} entered`)
+  })
 })
 </script>
 
