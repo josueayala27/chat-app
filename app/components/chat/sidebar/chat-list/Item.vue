@@ -1,52 +1,24 @@
 <script lang="ts">
-import type { Message as AblyMessage, RealtimeChannel } from 'ably'
+import type { MessageEvent } from '@ably/chat'
 import type { ChatList } from '~/types/chat'
-import type { Message as ChatMessage } from '~/types/message'
 import { NuxtLink } from '#components'
 </script>
 
 <script setup lang="ts">
 const props = defineProps<{ item: ChatList }>()
 
-/**
- * Accesses the Ably Realtime client from the Nuxt application context.
- * @type {Ably.Realtime}
- */
-const { $ably } = useNuxtApp()
-
-/**
- * Retrieves the authenticated user information.
- * @type {object}
- * @property {Ref<User>} user - The current authenticated user.
- */
-const { user } = useAuth()
+const { $chat } = useNuxtApp()
 
 /**
  * Lifecycle hook that runs after the component is mounted.
  * Sets up a subscription to the Ably channel for real-time message handling.
  */
 onMounted(async () => {
-  /**
-   * Retrieves the Ably channel corresponding to the chat item.
-   * @type {RealtimeChannel}
-   */
-  const channel: RealtimeChannel = $ably.channels.get(`channel:${props.item._id}`)
+  const room = await $chat.rooms.get(`channel:${props.item._id}`)
+  await room.attach()
 
-  /**
-   * Subscribes to the 'message' event on the Ably channel.
-   * Processes incoming messages and logs them if they are from other users.
-   * @param {Ably.Types.Message} message - The incoming message from the channel.
-   */
-  channel.subscribe('message', (message: AblyMessage) => {
-    const data = message.data as ChatMessage
-
-    if (data.sender_id !== user.value._id) {
-      console.log(message)
-    }
-  })
-
-  await channel.presence.subscribe('enter', (member) => {
-    console.log(`Member ${member.clientId} entered`)
+  room.messages.subscribe((msg: MessageEvent) => {
+    console.log(`Received message: ${msg.message.text}`)
   })
 })
 </script>

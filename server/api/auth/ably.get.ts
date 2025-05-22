@@ -17,6 +17,7 @@ const ably: Ably.Rest = new Ably.Rest(process.env.ABLY_API_KEY as string)
  * @returns {Promise<Ably.Types.TokenRequest>} The token request payload that your frontend can use for Ably authentication.
  * @throws {Error} If Ably fails to generate a token request (in which case, feel free to blame the intern or, more likely, the missing API key).
  */
-export default defineEventHandler(async () => {
-  return await ably.auth.createTokenRequest()
+export default defineEventHandler(async (event) => {
+  const session = getCookie(event, 'sid')
+  return await ably.auth.createTokenRequest({ clientId: session })
 })
