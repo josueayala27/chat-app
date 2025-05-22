@@ -52,6 +52,9 @@ function sortMessagesByDate(messages: Message[]): Message[] {
  *
  * @param sorted - messages already sorted oldest→newest
  * @returns object where keys are dates and values are sender maps
+ * @example
+ * const grouped = groupMessages(sortedMessages);
+ * // grouped['2025-05-22'].senders['sender-123'].messages
  */
 function groupMessages(sorted: Message[]): Record<string, GroupedMessages> {
   return sorted.reduce((acc, message) => {
