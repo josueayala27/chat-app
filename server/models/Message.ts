@@ -1,22 +1,10 @@
-import type { Document, Model, Types } from 'mongoose'
+import type { Document, Model } from 'mongoose'
+import type { Message, ReadBy } from '../types/message'
 import mongoose, { Schema } from 'mongoose'
 
-export interface IReadBy {
-  user_id: Types.ObjectId
-  read_at: Date
-}
+export interface MessageDocument extends Message, Document {}
 
-export interface IMessage extends Document {
-  chat_id: Types.ObjectId
-  sender_id: Types.ObjectId
-  content: string
-  type: 'text' | 'image' | 'video' | 'file' | 'audio' | 'system'
-  attachments?: string[]
-  reply_to?: Types.ObjectId
-  read_by?: IReadBy[]
-}
-
-const readBySchema: Schema<IReadBy> = new Schema(
+const readBySchema: Schema<ReadBy> = new Schema(
   {
     user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     read_at: { type: Date, required: true },
@@ -24,7 +12,7 @@ const readBySchema: Schema<IReadBy> = new Schema(
   { _id: false },
 )
 
-const messageSchema: Schema<IMessage> = new Schema(
+const messageSchema: Schema<MessageDocument> = new Schema(
   {
     chat_id: { type: Schema.Types.ObjectId, ref: 'Chat', required: true },
     sender_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -41,4 +29,4 @@ const messageSchema: Schema<IMessage> = new Schema(
 
 messageSchema.index({ chat_id: 1, created_at: -1 })
 
-export default (mongoose.models.Message as Model<IMessage>) || mongoose.model<IMessage>('Message', messageSchema)
+export default (mongoose.models.Message as Model<MessageDocument>) || mongoose.model<MessageDocument>('Message', messageSchema)
