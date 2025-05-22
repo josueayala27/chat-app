@@ -104,10 +104,7 @@ function transformToArray(grouped: Record<string, GroupedMessages>) {
 }
 
 const { data } = await useAsyncData(`channel:${route.params.chat}`, () =>
-  $fetch<Message[]>(`/api/chats/${route.params.chat}/messages`, {
-    method: 'GET',
-    headers,
-  }), {
+  $fetch<Message[]>(`/api/chats/${route.params.chat}/messages`, { method: 'GET', headers }), {
   /**
    * Fetches raw messages then sorts & groups them for the UI.
    *
@@ -128,6 +125,11 @@ const { data } = await useAsyncData(`channel:${route.params.chat}`, () =>
 
     <WindowMain :id="`channel-${route.params.chat}-window`">
       <template v-for="(group, i) in data" :key="i">
+        <div class="flex justify-center">
+          <BaseFont class="text-xs bg-slate-100 px-2 py-1 rounded-full font-medium">
+            <NuxtTime :datetime="group.date" />
+          </BaseFont>
+        </div>
         <WindowMessagesGroup v-for="(sender, j) in group.senders" :key="j" :is-own="false" />
       </template>
     </WindowMain>
