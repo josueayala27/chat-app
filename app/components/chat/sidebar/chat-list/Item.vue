@@ -25,7 +25,7 @@ const { user } = useAuth()
  * Lifecycle hook that runs after the component is mounted.
  * Sets up a subscription to the Ably channel for real-time message handling.
  */
-onMounted(() => {
+onMounted(async () => {
   /**
    * Retrieves the Ably channel corresponding to the chat item.
    * @type {RealtimeChannel}
@@ -43,8 +43,10 @@ onMounted(() => {
     if (data.sender_id !== user.value._id) {
       console.log(message)
     }
+  })
 
-    console.log(props.item)
+  await channel.presence.subscribe('enter', (member) => {
+    console.log(`Member ${member.clientId} entered`)
   })
 })
 </script>
