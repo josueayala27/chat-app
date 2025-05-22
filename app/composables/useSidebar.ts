@@ -1,7 +1,7 @@
 /**
  * List of valid sidebar layout keys.
  */
-export const LAYOUT_KEYS = ['list', 'new-friend', 'new-message', 'starred-messages'] as const
+export const LAYOUT_KEYS = ['chat-list', 'new-friend', 'new-message', 'starred-messages'] as const
 
 /**
  * Type representing the possible sidebar layout values.
@@ -13,7 +13,7 @@ export type LayoutKeys = (typeof LAYOUT_KEYS)[number]
  * @returns layout state and setter function
  */
 export default function useSidebar(): { layout: Ref<LayoutKeys>, updateLayout: (key: LayoutKeys) => void } {
-  const layout = useState<LayoutKeys>('layout', () => 'list')
+  const layout = useState<LayoutKeys>('layout', () => 'chat-list')
 
   /**
    * Updates the current layout.

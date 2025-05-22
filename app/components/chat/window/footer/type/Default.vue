@@ -1,20 +1,9 @@
 <script lang="ts" setup>
-const { $ably } = useNuxtApp()
-const { user } = useAuth()
 const { values, validate } = useForm<{ content: string }>({
   name: 'chat-footer',
 })
 
 const route = useRoute()
-
-onMounted(() => {
-  console.log(`user:${user.value._id}`)
-
-  const channel = $ably.channels.get(`user:${user.value._id}`)
-  channel.subscribe('message', (message) => {
-    console.log(message)
-  })
-})
 
 async function sendMessage() {
   const { valid } = await validate()
