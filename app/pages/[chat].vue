@@ -126,7 +126,7 @@ const { data } = await useAsyncData(`channel:${route.params.chat}`, () =>
   <div class="flex flex-col divide-y divide-slate-200 flex-1">
     <WindowHeader />
 
-    <WindowMain>
+    <WindowMain :id="`channel-${route.params.chat}-window`">
       <template v-for="(group, i) in data" :key="i">
         <WindowMessagesGroup v-for="(sender, j) in group.senders" :key="j" :is-own="false" />
       </template>
