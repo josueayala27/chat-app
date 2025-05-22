@@ -1,7 +1,34 @@
 <script lang="ts" setup>
-const { values } = useForm<{ content: string }>({
+const { $ably } = useNuxtApp()
+const { user } = useAuth()
+const { values, validate } = useForm<{ content: string }>({
   name: 'chat-footer',
 })
+
+const route = useRoute()
+
+onMounted(() => {
+  console.log(`user:${user.value._id}`)
+
+  const channel = $ably.channels.get(`user:${user.value._id}`)
+  channel.subscribe('message', (message) => {
+    console.log(message)
+  })
+})
+
+async function sendMessage() {
+  const { valid } = await validate()
+
+  if (valid) {
+    await $fetch(`/api/chats/${route.params.chat}/messages`, {
+      method: 'POST',
+      body: {
+        type: 'text',
+        content: values.content,
+      },
+    })
+  }
+}
 </script>
 
 <template>
@@ -31,7 +58,7 @@ const { values } = useForm<{ content: string }>({
       type="text"
     />
 
-    <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer">
+    <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer" @click="sendMessage">
       <Icon
         size="20px"
         :name="values.content ? 'carbon:send-filled' : 'carbon:microphone'"
