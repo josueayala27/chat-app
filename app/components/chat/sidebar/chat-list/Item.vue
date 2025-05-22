@@ -17,6 +17,8 @@ const { $ably } = useNuxtApp()
  */
 const { user } = useAuth()
 
+const isActive = ref<boolean>(false)
+
 /**
  * Lifecycle hook that runs after the component is mounted.
  * Sets up a subscription to the Ably channel for real-time message handling.
@@ -40,6 +42,11 @@ onMounted(async () => {
       console.log(message)
     }
   })
+
+  await channel.presence.enter({ user_id: user.value._id })
+
+  channel.presence.subscribe('enter', () => isActive.value = true)
+  channel.presence.subscribe('leave', () => isActive.value = false)
 })
 </script>
 
@@ -48,6 +55,7 @@ onMounted(async () => {
     :is="NuxtLink"
     :to="{ name: 'chat', params: { chat: item._id } }"
     :ui="{ header: 'flex items-center justify-between w-full', subheader: 'flex items-center gap-1', content: 'relative' }"
+    :presence="isActive ? 'online' : 'offline'"
   >
     <template #header>
       <BaseFont :content="item.type === 'private' ? `${item.friend?.first_name} ${item.friend?.last_name}` : item.name" />

@@ -7,6 +7,7 @@ interface SidebarChatItemBaseProps {
   data?: [string, string]
   is?: Component
   ui?: Partial<typeof ui.slots>
+  presence?: 'online' | 'offline'
 }
 
 const props = defineProps<SidebarChatItemBaseProps>()
@@ -25,7 +26,9 @@ const { root, content, header, subheader } = ui()
 
 <template>
   <component :is="is ?? 'div'" :class="root({ class: props.ui?.root })">
-    <BaseAvatar />
+    <BaseAvatar>
+      <span v-if="presence === 'online'" class="bottom-1 right-1 size-2 bg-green-500 absolute rounded-full" />
+    </BaseAvatar>
 
     <div :class="content({ class: props.ui?.content })">
       <div class="flex flex-col flex-1">
