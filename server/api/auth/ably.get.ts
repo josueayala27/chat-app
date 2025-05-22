@@ -10,7 +10,7 @@ const ably: Ably.Rest = new Ably.Rest(process.env.ABLY_API_KEY as string)
 
 /**
  * Event handler for generating a new Ably token request.
- * Because security is cool, and hardcoding keys is so 2005.
+ * Because security is cool, and hardcoding keys is so 2005 (lie, I keep doing it lol).
  *
  * @async
  * @function

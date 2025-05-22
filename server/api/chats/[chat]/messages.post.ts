@@ -1,8 +1,14 @@
+import process from 'node:process'
 import Ably from 'ably'
 import { createMessage } from '~~/server/services/message.service'
 import { createMessageBodySchema, messageParamSchema } from '~~/server/validators/message.validator'
 
-const ably = new Ably.Rest('MkWAaA._QGpTg:r5t5EyUOOy8yOR5bfQWu4AzJaQFp8P6u-g7u3sGb6ac')
+/**
+ * Creates an Ably REST client using the API key from environment variables.
+ * @type {Ably.Rest}
+ * @see {@link https://ably.com/docs/rest}
+ */
+const ably: Ably.Rest = new Ably.Rest(process.env.ABLY_API_KEY as string)
 
 export default defineEventHandler(async (event) => {
   const params = await getValidatedRouterParams(event, messageParamSchema.parse)
