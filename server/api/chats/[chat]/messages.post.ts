@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
   const message = await createMessage({ ...body, chat_id: params.chat, user: event.context.user })
 
-  const channel = ably.channels.get(`chat:${params.chat}`)
+  const channel = ably.channels.get(`channel:${params.chat}`)
   await channel.publish('message', message)
 
   return message
