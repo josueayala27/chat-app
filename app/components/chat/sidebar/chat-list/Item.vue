@@ -80,6 +80,7 @@ onMounted(async () => {
       <BaseFont :content="item.type === 'private' ? `${item.friend?.first_name} ${item.friend?.last_name}` : item.name" />
 
       <BaseFont class="text-xs text-slate-500 font-normal">
+        <!-- relative -->
         <NuxtTime :datetime="item.last_message.created_at" hour="2-digit" minute="2-digit" time-zone="America/El_Salvador" />
       </BaseFont>
     </template>
