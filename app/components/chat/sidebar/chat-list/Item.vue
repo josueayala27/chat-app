@@ -14,7 +14,11 @@ const { $chat } = useNuxtApp()
  * Sets up a subscription to the Ably channel for real-time message handling.
  */
 onMounted(async () => {
-  const room = await $chat.rooms.get(`channel:${props.item._id}`)
+  const room = await $chat.rooms.get(`channel:${props.item._id}`, {
+    occupancy: {
+      enableEvents: true,
+    },
+  })
   await room.attach()
 
   room.messages.subscribe((msg: MessageEvent) => {

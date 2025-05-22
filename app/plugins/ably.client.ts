@@ -5,8 +5,6 @@ export default defineNuxtPlugin(() => {
   const ably = new Ably.Realtime({ authUrl: '/api/auth/ably' })
   const chat = new ChatClient(ably)
 
-  console.log(chat)
-
   return {
     provide: {
       ably,
