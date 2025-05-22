@@ -1,9 +1,10 @@
 <script lang="ts">
-import type { Message } from '~/types/message'
+import type { ChatMessage } from '~/types/message'
+import type { User } from '~/types/user'
 
 interface SenderGroup {
-  sender_id: string
-  messages: Message[]
+  sender: Pick<User, '_id' | 'first_name' | 'last_name'>
+  messages: ChatMessage[]
 }
 
 interface GroupedMessages {
@@ -41,7 +42,7 @@ function getISODateKey(date: Date | string): string {
  * @param messages - array of Message objects
  * @returns new sorted array
  */
-function sortMessagesByDate(messages: Message[]): Message[] {
+function sortMessagesByDate(messages: ChatMessage[]): ChatMessage[] {
   return [...messages].sort((a, b) =>
     new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
   )
@@ -56,13 +57,10 @@ function sortMessagesByDate(messages: Message[]): Message[] {
  * const grouped = groupMessages(sortedMessages);
  * // grouped['2025-05-22'].senders['sender-123'].messages
  */
-function groupMessages(sorted: Message[]): Record<string, GroupedMessages> {
+function groupMessages(sorted: ChatMessage[]): Record<string, GroupedMessages> {
   return sorted.reduce((acc, message) => {
     const dateKey = getISODateKey(message.created_at)
 
-    /**
-     * Initialize date group if not exists.
-     */
     if (!acc[dateKey]) {
       acc[dateKey] = {
         date: dateKey,
@@ -70,21 +68,21 @@ function groupMessages(sorted: Message[]): Record<string, GroupedMessages> {
       }
     }
 
-    const senderKey = message.sender_id
+    const senderKey = message.sender_id._id
 
-    /**
-     * Initialize sender group if not exists.
-     */
+    const senderData = {
+      _id: message.sender_id._id,
+      first_name: message.sender_id.first_name,
+      last_name: message.sender_id.last_name,
+    }
+
     if (!acc[dateKey].senders[senderKey]) {
       acc[dateKey].senders[senderKey] = {
-        sender_id: senderKey,
+        sender: senderData,
         messages: [],
       }
     }
 
-    /**
-     * Add message to sender's group.
-     */
     acc[dateKey].senders[senderKey].messages.push(message)
     return acc
   }, {} as Record<string, GroupedMessages>)
@@ -104,7 +102,7 @@ function transformToArray(grouped: Record<string, GroupedMessages>) {
 }
 
 const { data } = await useAsyncData(`channel:${route.params.chat}`, () =>
-  $fetch<Message[]>(`/api/chats/${route.params.chat}/messages`, { method: 'GET', headers }), {
+  $fetch<ChatMessage[]>(`/api/chats/${route.params.chat}/messages`, { method: 'GET', headers }), {
   /**
    * Fetches raw messages then sorts & groups them for the UI.
    *

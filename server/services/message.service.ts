@@ -43,5 +43,8 @@ export async function getMessages({ chat_id, before }: GetMessagesInput): Promis
   return Message.find({
     chat_id: new mongoose.Types.ObjectId(chat_id),
     ...(before && { _id: { $lt: new mongoose.Types.ObjectId(before) } }),
-  }).sort({ created_at: -1 }).limit(MESSAGE_FETCH_LIMIT)
+  })
+    .sort({ created_at: -1 })
+    .limit(MESSAGE_FETCH_LIMIT)
+    .populate('sender_id', 'first_name last_name')
 }
