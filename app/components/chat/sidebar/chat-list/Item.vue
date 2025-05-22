@@ -43,9 +43,26 @@ onMounted(async () => {
     }
   })
 
+  /**
+   * Announces our presence to the channel with a custom payload.
+   * This lets others know this user has entered.
+   * @param {{ user_id: string }} data - Payload containing the user identifier.
+   * @returns {Promise<void>} Resolves once presence enter is acknowledged.
+   */
   await channel.presence.enter({ user_id: user.value._id })
 
+  /**
+   * Listens for other members entering the channel.
+   * Sets `isActive.value` to true when someone joins.
+   * @param {Ably.PresenceMessage} member - The presence message for the entering member.
+   */
   channel.presence.subscribe('enter', () => isActive.value = true)
+
+  /**
+   * Listens for members leaving the channel.
+   * Sets `isActive.value` to false when someone leaves.
+   * @param {Ably.PresenceMessage} member - The presence message for the leaving member.
+   */
   channel.presence.subscribe('leave', () => isActive.value = false)
 })
 </script>
