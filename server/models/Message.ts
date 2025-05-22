@@ -27,6 +27,4 @@ const messageSchema: Schema<MessageDocument> = new Schema(
   },
 )
 
-messageSchema.index({ chat_id: 1, created_at: -1 })
-
 export default (mongoose.models.Message as Model<MessageDocument>) || mongoose.model<MessageDocument>('Message', messageSchema)

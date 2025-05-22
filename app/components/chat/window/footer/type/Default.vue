@@ -1,7 +1,44 @@
 <script lang="ts" setup>
-const { values } = useForm<{ content: string }>({
+const { values, validate } = useForm<{ content: string }>({
   name: 'chat-footer',
 })
+
+const route = useRoute()
+
+/**
+ * A reactive reference to a Promise used to queue asynchronous tasks.
+ * Ensures that tasks are executed sequentially.
+ * @type {import('vue').Ref<Promise<void>>}
+ */
+const taskQueue: Ref<Promise<void>> = ref<Promise<void>>(Promise.resolve())
+
+/**
+ * Enqueues an asynchronous task to be executed after the current queue.
+ * @param {() => Promise<void>} task - The asynchronous function to enqueue.
+ */
+function enqueueTask(task: () => Promise<void>) {
+  taskQueue.value = taskQueue.value.then(() => task())
+}
+
+/**
+ * Validates the form and, if valid, enqueues a task to send the message.
+ * Sends a POST request to the appropriate chat endpoint with the message content.
+ */
+async function sendMessage() {
+  const { valid } = await validate()
+
+  if (valid) {
+    enqueueTask(async () => {
+      await $fetch(`/api/chats/${route.params.chat}/messages`, {
+        method: 'POST',
+        body: {
+          type: 'text',
+          content: values.content,
+        },
+      })
+    })
+  }
+}
 </script>
 
 <template>
@@ -31,7 +68,7 @@ const { values } = useForm<{ content: string }>({
       type="text"
     />
 
-    <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer">
+    <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer" @click="sendMessage">
       <Icon
         size="20px"
         :name="values.content ? 'carbon:send-filled' : 'carbon:microphone'"

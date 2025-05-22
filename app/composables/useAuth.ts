@@ -1,18 +1,16 @@
-interface IUser extends User {
-  _id: string
-}
+import type { User } from '~/types/user'
 
 export default function useAuth() {
   const headers = useRequestHeaders(['cookie'])
 
-  const user = useState<IUser>('user', () => ({} as IUser))
+  const user = useState<User>('user', () => ({} as User))
   const isAuthenticated = computed(() => Boolean(user.value._id))
 
-  const getUserAsync = useAsync(() => $fetch('/api/auth/me', { headers }))
+  const getUserAsync = useAsync(() => $fetch<User>('/api/auth/me', { headers }))
 
   async function getUser() {
     const data = await getUserAsync.execute()
-    user.value = data
+    user.value = data as User
   }
 
   return { user, isAuthenticated, getUser, getUserLoading: getUserAsync.loading, getUserError: getUserAsync.error }

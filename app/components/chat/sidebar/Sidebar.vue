@@ -4,7 +4,7 @@ import type { ConcreteComponent } from 'vue'
 const { layout } = useSidebar()
 
 const sidebarComponents: Record<LayoutKeys, string | ConcreteComponent> = {
-  'list': resolveComponent('SidebarList'),
+  'chat-list': resolveComponent('SidebarChatList'),
   'new-friend': resolveComponent('SidebarNewFriend'),
   'new-message': resolveComponent('SidebarNewMessage'),
   'starred-messages': '',
