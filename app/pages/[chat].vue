@@ -124,16 +124,15 @@ const { data } = await useAsyncData(`channel:${route.params.chat}`, () =>
 
 <template>
   <div class="flex flex-col divide-y divide-slate-200 flex-1">
-    {{ data }}
-    <!-- <WindowHeader />
+    <WindowHeader />
 
     <WindowMain>
-      <WindowMessagesGroup v-for="item in 1" :key="item" :is-own="false" />
-      <WindowMessagesGroup v-for="item in 1" :key="item" :is-own="false" />
-      <WindowMessagesGroup v-for="item in 1" :key="item" :is-own="true" />
+      <template v-for="(group, i) in data" :key="i">
+        <WindowMessagesGroup v-for="(sender, j) in group.senders" :key="j" :is-own="false" />
+      </template>
     </WindowMain>
 
-    <WindowFooter /> -->
+    <WindowFooter />
   </div>
 
   <WindowPanel>
