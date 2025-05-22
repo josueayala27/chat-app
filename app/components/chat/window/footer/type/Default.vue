@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const { values, validate } = useForm<{ content: string }>({
+const { values, validate, resetForm } = useForm<{ content: string }>({
   name: 'chat-footer',
 })
 
@@ -28,12 +28,15 @@ async function sendMessage() {
   const { valid } = await validate()
 
   if (valid) {
+    const content = values.content.trim()
+    resetForm()
+
     enqueueTask(async () => {
       await $fetch(`/api/chats/${route.params.chat}/messages`, {
         method: 'POST',
         body: {
           type: 'text',
-          content: values.content,
+          content,
         },
       })
     })
