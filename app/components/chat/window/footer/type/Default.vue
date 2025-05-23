@@ -1,9 +1,19 @@
 <script lang="ts" setup>
+import type { RealtimeChannel } from 'ably'
+
+const { $ably } = useNuxtApp()
+const route = useRoute()
+
+/**
+ * Retrieves the authenticated user information.
+ * @type {object}
+ * @property {Ref<User>} user - The current authenticated user.
+ */
+const { user } = useAuth()
+
 const { values, validate, resetForm } = useForm<{ content: string }>({
   name: 'chat-footer',
 })
-
-const route = useRoute()
 
 /**
  * A reactive reference to a Promise used to queue asynchronous tasks.
@@ -42,6 +52,34 @@ async function sendMessage() {
     })
   }
 }
+
+const channel: Ref<RealtimeChannel | undefined> = ref<RealtimeChannel>()
+onMounted(() => {
+/**
+ * Retrieves the Ably channel corresponding to the chat item.
+ * @type {RealtimeChannel}
+ */
+  channel.value = $ably.channels.get(`channel:${route.params.chat}`)
+})
+
+const isTyping = ref<boolean>(false)
+
+function typing(event: string, _isTyping: boolean) {
+  channel.value?.publish(event, { user_id: user.value._id, is_typing: _isTyping })
+}
+
+const debouncedFn = useDebounceFn(() => {
+  isTyping.value = false
+  typing('event:stop-typing', isTyping.value)
+}, 1000)
+
+function onInput() {
+  if (!isTyping.value) {
+    isTyping.value = true
+    typing('event:start-typing', isTyping.value)
+  }
+  debouncedFn()
+}
 </script>
 
 <template>
@@ -69,6 +107,7 @@ async function sendMessage() {
       :ui="{ root: 'w-full' }"
       placeholder="Write something"
       type="text"
+      @input="onInput"
     />
 
     <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer" @click="sendMessage">
