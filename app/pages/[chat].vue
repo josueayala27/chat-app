@@ -3,7 +3,7 @@ import type { ChatMessage } from '~/types/message'
 import type { User } from '~/types/user'
 
 interface SenderGroup {
-  sender: Pick<User, '_id' | 'first_name' | 'last_name'>
+  sender_id: Pick<User, '_id' | 'first_name' | 'last_name'>
   messages: ChatMessage[]
 }
 
@@ -78,7 +78,7 @@ function groupMessages(sorted: ChatMessage[]): Record<string, GroupedMessages> {
 
     if (!acc[dateKey].senders[senderKey]) {
       acc[dateKey].senders[senderKey] = {
-        sender: senderData,
+        sender_id: senderData,
         messages: [],
       }
     }
@@ -115,20 +115,36 @@ const { data } = await useAsyncData(`channel:${route.params.chat}`, () =>
     return transformToArray(grouped)
   },
 })
+
+const el = ref()
+useInfiniteScroll(
+  el,
+  () => {
+    console.log('Load more content...')
+  },
+  {
+    direction: 'top',
+    distance: 100,
+    canLoadMore: () => {
+      return true
+    },
+  },
+)
 </script>
 
 <template>
   <div class="flex flex-col divide-y divide-slate-200 flex-1">
     <WindowHeader />
 
-    <WindowMain :id="`channel-${route.params.chat}-window`">
+    <WindowMain :id="`channel-${route.params.chat}-window`" ref="el">
       <template v-for="(group, i) in data" :key="i">
         <div class="flex justify-center">
           <BaseFont class="text-xs bg-slate-100 px-2 py-1 rounded-full font-medium">
             <NuxtTime :datetime="group.date" />
           </BaseFont>
         </div>
-        <WindowMessagesGroup v-for="(sender, j) in group.senders" :key="j" :is-own="false" />
+
+        <WindowMessagesGroup v-for="({ sender_id, messages }, j) in group.senders" :key="j" :messages :sender="sender_id" :is-own="false" />
       </template>
     </WindowMain>
 

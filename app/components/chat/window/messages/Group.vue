@@ -1,20 +1,18 @@
 <script lang="ts">
 import type { Component } from 'vue'
-import { WindowMessagesTypeAudio, WindowMessagesTypeFile, WindowMessagesTypePoll, WindowMessagesTypeText } from '#components'
+import type { ChatMessage } from '~/types/message'
+import type { User } from '~/types/user'
 import { tv } from 'tailwind-variants'
 
 export interface Message { type: string, component: Component }
 </script>
 
 <script lang="ts" setup>
-const props = defineProps<{ isOwn: boolean }>()
-
-const messageComponents: Message[] = [
-  { type: 'text', component: WindowMessagesTypeText },
-  { type: 'audio', component: WindowMessagesTypeAudio },
-  { type: 'file', component: WindowMessagesTypeFile },
-  { type: 'poll', component: WindowMessagesTypePoll },
-]
+const props = defineProps<{
+  isOwn: boolean
+  sender: Pick<User, '_id' | 'first_name' | 'last_name'>
+  messages: ChatMessage[]
+}>()
 
 const ui = tv({
   slots: {
@@ -48,12 +46,15 @@ provide('isOwn', props.isOwn)
     <BaseAvatar :ui="{ base: avatar() }" />
 
     <div :class="content()">
-      <BaseFont :class="[title()]" :content="isOwn ? 'Tú' : 'Josué Ayala'" />
+      <BaseFont :class="[title()]" :content="isOwn ? 'Tú' : `${sender.first_name} ${sender.last_name}`" />
 
       <div class="flex flex-col gap-0.5 w-full">
-        <template v-for="(msg, i) in messageComponents" :key="i">
+        <template v-for="(msg, i) in messages" :key="i">
           <WindowMessagesRoot>
-            <component :is="msg.component" />
+            <!-- <component :is="msg.component" /> -->
+            <WindowMessagesTypeText>
+              {{ msg.content }}
+            </WindowMessagesTypeText>
           </WindowMessagesRoot>
         </template>
       </div>
