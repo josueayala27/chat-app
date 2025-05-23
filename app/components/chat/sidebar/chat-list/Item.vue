@@ -35,7 +35,7 @@ onMounted(async () => {
    * Processes incoming messages and logs them if they are from other users.
    * @param {Ably.Types.Message} message - The incoming message from the channel.
    */
-  channel.subscribe('message', (message: AblyMessage) => {
+  channel.subscribe('event:new-message', (message: AblyMessage) => {
     const data = message.data as ChatMessage
 
     if (data.sender_id !== user.value._id) {
