@@ -39,7 +39,7 @@ export default defineComponent({
       /**
        * Destructure to remove 'ref' and extract 'class'
        */
-      const { ref, class: childClass, ...childProps } = child.props || {}
+      const { class: childClass, ...childProps } = child.props || {}
 
       /**
        * Merge external attributes with child props, combining class names
