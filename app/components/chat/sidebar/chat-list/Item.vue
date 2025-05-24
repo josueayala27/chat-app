@@ -18,6 +18,7 @@ const { $ably } = useNuxtApp()
 const { user } = useAuth()
 
 const isActive = ref<boolean>(false)
+const isTyping = ref<boolean>(false)
 
 /**
  * Lifecycle hook that runs after the component is mounted.
@@ -41,6 +42,31 @@ onMounted(async () => {
     if (data.sender_id !== user.value._id) {
       console.log(message)
     }
+  })
+
+  /**
+   * Subscribes to the 'event:start-typing' event on the Ably channel.
+   * Updates the `isTyping` reactive flag when another user begins typing.
+   *
+   * @param {Ably.Types.Message} message - The incoming Ably message.
+   * @param {{ user_id: string, is_typing: boolean }} message.data - Payload containing the ID of the user who is typing and their typing status.
+   */
+  channel.subscribe('event:start-typing', (message: AblyMessage) => {
+    const data = message.data as { user_id: string, is_typing: boolean }
+
+    if (data.user_id !== user.value._id) {
+      isTyping.value = data.is_typing
+    }
+  })
+
+  /**
+   * Subscribes to the 'event:stop-typing' event on the Ably channel.
+   * Resets the `isTyping` reactive flag when typing stops.
+   *
+   * @param {Ably.Types.Message} [message] - (Optional) The incoming Ably message, not used in this handler.
+   */
+  channel.subscribe('event:stop-typing', () => {
+    isTyping.value = false
   })
 
   /**
@@ -86,8 +112,12 @@ onMounted(async () => {
     </template>
 
     <template #subheader>
-      <Icon class="shrink-0" size="20px" name="carbon:checkmark" />
-      <BaseFont :content="item.last_message.content" />
+      <BaseFont v-if="isTyping" content="Typing..." />
+
+      <template v-else>
+        <Icon class="shrink-0" size="20px" name="carbon:checkmark" />
+        <BaseFont :content="item.last_message.content" />
+      </template>
     </template>
 
     <template #extra>
@@ -97,9 +127,7 @@ onMounted(async () => {
             :class="{ 'visible not-group-hover:bg-white': isOpen }"
             class="absolute right-0 top-0 flex items-center h-full bg-slate-100 mask-l-from-60% mask-l-to-90% w-[20%] justify-end invisible group-hover:visible"
           >
-            <div
-              class="p-2 rounded-full bg-white place-items-center cursor-pointer border border-slate-300" @click.prevent
-            >
+            <div class="p-2 rounded-full bg-white place-items-center cursor-pointer border border-slate-300" @click.prevent>
               <Icon size="20px" name="carbon:overflow-menu-horizontal" class="flex shrink-0" />
             </div>
           </div>
