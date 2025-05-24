@@ -83,14 +83,18 @@ onMounted(async () => {
      * Sets `isActive.value` to true when someone joins.
      * @param {Ably.PresenceMessage} member - The presence message for the entering member.
      */
-    channel.presence.subscribe('enter', () => isActive.value = true)
+    channel.presence.subscribe('enter', () => {
+      isActive.value = true
+    })
 
     /**
      * Listens for members leaving the channel.
      * Sets `isActive.value` to false when someone leaves.
      * @param {Ably.PresenceMessage} member - The presence message for the leaving member.
      */
-    channel.presence.subscribe('leave', () => isActive.value = false)
+    channel.presence.subscribe('leave', () => {
+      isActive.value = false
+    })
   }
 })
 </script>
