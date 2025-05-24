@@ -1,3 +1,5 @@
+import type { User } from './user'
+
 export interface MessageReadBy {
   user_id: string
   read_at: Date
@@ -13,4 +15,8 @@ export interface Message {
   read_by: MessageReadBy[]
   created_at: Date
   updated_at: Date
+}
+
+export interface ChatMessage extends Pick<Message, '_id' | 'chat_id' | 'content' | 'type' | 'attachments' | 'read_by' | 'created_at' | 'updated_at'> {
+  sender_id: Pick<User, '_id' | 'first_name' | 'last_name'>
 }

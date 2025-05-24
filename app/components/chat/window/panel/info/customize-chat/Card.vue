@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import type { ChatInfoCustomizeChatTheme } from '../CustomizeChat.vue'
 
-interface ChatInfoCustomizeChatCardProps extends ChatInfoCustomizeChatTheme {}
-
-defineProps<ChatInfoCustomizeChatCardProps>()
+defineProps<ChatInfoCustomizeChatTheme>()
 </script>
 
 <template>

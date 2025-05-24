@@ -1,9 +1,19 @@
 <script lang="ts" setup>
+import type { RealtimeChannel } from 'ably'
+
+const { $ably } = useNuxtApp()
+const route = useRoute()
+
+/**
+ * Retrieves the authenticated user information.
+ * @type {object}
+ * @property {Ref<User>} user - The current authenticated user.
+ */
+const { user } = useAuth()
+
 const { values, validate, resetForm } = useForm<{ content: string }>({
   name: 'chat-footer',
 })
-
-const route = useRoute()
 
 /**
  * A reactive reference to a Promise used to queue asynchronous tasks.
@@ -42,6 +52,53 @@ async function sendMessage() {
     })
   }
 }
+
+const channel: Ref<RealtimeChannel | undefined> = ref<RealtimeChannel>()
+onMounted(() => {
+/**
+ * Retrieves the Ably channel corresponding to the chat item.
+ * @type {RealtimeChannel}
+ */
+  channel.value = $ably.channels.get(`channel:${route.params.chat}`)
+})
+
+/**
+ * Reactive ref tracking whether the current user is typing.
+ * @type {Ref<boolean>}
+ */
+const isTyping: Ref<boolean> = ref<boolean>(false)
+
+/**
+ * Publish a typing event to the channel.
+ * @param {string} event - Either 'event:start-typing' or 'event:stop-typing'.
+ * @param {boolean} _isTyping - The current typing status.
+ */
+function typing(event: string, _isTyping: boolean) {
+  channel.value?.publish(event, { user_id: user.value._id, is_typing: _isTyping })
+}
+
+/**
+ * Debounced function that stops typing after a delay (1s).
+ * Sets `isTyping` to false and publishes the stop-typing event.
+ * @see useDebounceFn
+ */
+const debouncedFn = useDebounceFn(() => {
+  isTyping.value = false
+  typing('event:stop-typing', isTyping.value)
+}, 1000)
+
+/**
+ * Handle input events:
+ * - On first keystroke, mark typing as true and publish start-typing.
+ * - Then reset the stop-typing timer on each input.
+ */
+function onInput() {
+  if (!isTyping.value) {
+    isTyping.value = true
+    typing('event:start-typing', isTyping.value)
+  }
+  debouncedFn()
+}
 </script>
 
 <template>
@@ -69,6 +126,7 @@ async function sendMessage() {
       :ui="{ root: 'w-full' }"
       placeholder="Write something"
       type="text"
+      @input="onInput"
     />
 
     <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer" @click="sendMessage">

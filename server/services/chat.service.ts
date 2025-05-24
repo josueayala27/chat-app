@@ -1,5 +1,6 @@
 import type { ObjectId } from 'mongoose'
 import type { IChat, IChatUser } from '../models/Chat'
+import type { UserDocument } from '../models/User'
 import mongoose from 'mongoose'
 import Chat from '../models/Chat'
 
@@ -131,7 +132,19 @@ export async function getUserChatsWithPreview(user_id: ObjectId) {
   ])
 }
 
-export async function createChat(body: IChat) {
+/**
+ * Creates a new group chat with the given users and name.
+ *
+ * @async
+ * @param {IChat} body - Payload containing chat details.
+ * @param {Array<{ user_id: string; is_admin?: boolean }>} body.users
+ *   List of users to add to the chat. Each user object must have a `user_id`
+ *   (string) and may optionally include `is_admin` (boolean).
+ * @param {string} body.name - The desired name for the new group chat.
+ * @returns {Promise<IChat>}
+ *   The newly created Chat document.
+ */
+export async function createChat(body: IChat): Promise<IChat> {
   const users: IChatUser[] = body.users.map(u => ({
     user_id: new mongoose.Types.ObjectId(u.user_id),
     is_admin: !!u.is_admin,
@@ -139,4 +152,105 @@ export async function createChat(body: IChat) {
   }))
 
   return Chat.create({ type: 'group', users, name: body.name })
+}
+
+/**
+ * Retrieves a chat by its ID, with custom shaping based on chat type.
+ *
+ * @async
+ * @param {object} params
+ * @param {string} params.chat_id       - The ID of the chat to retrieve.
+ * @param {UserDocument} params.user    - The requesting user (used to filter out self in private chats).
+ * @returns {Promise<Array<object>>}     - Aggregation result array containing one shaped chat object.
+ */
+export async function getChatById({ chat_id, user }: { user: UserDocument, chat_id: string }): Promise<Array<object>> {
+  return Chat.aggregate([
+    /**
+     * 1. Match the desired chat document by its `_id`.
+     */
+    {
+      $match:
+      {
+        _id: new mongoose.Types.ObjectId(chat_id),
+      },
+    },
+
+    /**
+     * 2. For private chats, compute `friend_id` as the other participant’s record;
+     *    for group chats, remove this field.
+     */
+    {
+      $addFields: {
+        friend_id: {
+          $cond: [
+            { $eq: ['$type', 'private'] },
+            {
+              $first: {
+                $filter: {
+                  input: '$users',
+                  as: 'user',
+                  cond: {
+                    $ne: ['$$user.user_id', user._id],
+                  },
+                },
+              },
+            },
+            '$$REMOVE',
+          ],
+        },
+      },
+    },
+
+    /**
+     * 3. Lookup the friend’s user document (`username`, `first_name`, `last_name`)
+     * using the `friend_id.user_id` we just extracted.
+     */
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'friend_id.user_id',
+        foreignField: '_id',
+        pipeline: [
+          { $project: { username: 1, first_name: 1, last_name: 1 } },
+        ],
+        as: 'friend',
+      },
+    },
+
+    /**
+     * 4. Flatten the `friend` array into a single object (or null if not private).
+     */
+    {
+      $addFields: {
+        friend: { $arrayElemAt: ['$friend', 0] },
+      },
+    },
+
+    /**
+     * 5. Omit the `name` field when the chat is private; retain it for groups.
+     */
+    {
+      $addFields: {
+        name: {
+          $cond: [
+            { $eq: ['$type', 'private'] },
+            '$$REMOVE',
+            '$name',
+          ],
+        },
+      },
+    },
+
+    /**
+     * 6. Final projection: remove helper fields and timestamps.
+     */
+    {
+      $project: {
+        friend_id: 0,
+        users: 0,
+        created_at: 0,
+        updated_at: 0,
+      },
+    },
+  ])
 }
