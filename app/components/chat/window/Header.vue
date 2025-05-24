@@ -1,13 +1,63 @@
+<script lang="ts">
+import type { Message as AblyMessage, RealtimeChannel } from 'ably'
+</script>
+
 <script lang="ts" setup>
+const { $ably } = useNuxtApp()
 const { reference, closePopover } = usePopover()
 const route = useRoute()
 
+/**
+ * Retrieves the authenticated user information.
+ * @type {object}
+ * @property {Ref<User>} user - The current authenticated user.
+ */
+const { user } = useAuth()
+
+const isTyping = ref<boolean>(false)
 const isSelectMessagesActive = useState<boolean>(`select-messages-${route.params.chat}`, () => false)
 
 function onSelectMessages() {
   closePopover()
   isSelectMessagesActive.value = true
 }
+
+/**
+ * Lifecycle hook that runs after the component is mounted.
+ * Sets up a subscription to the Ably channel for real-time message handling.
+ */
+onMounted(() => {
+  /**
+   * Retrieves the Ably channel corresponding to the chat item.
+   * @type {RealtimeChannel}
+   */
+  const channel: RealtimeChannel = $ably.channels.get(`channel:${route.params.chat}`)
+
+  /**
+   * Subscribes to the 'event:start-typing' event on the Ably channel.
+   * Updates the `isTyping` reactive flag when another user begins typing.
+   *
+   * @param {Ably.Types.Message} message - The incoming Ably message.
+   * @param {{ user_id: string, is_typing: boolean }} message.data - Payload containing the ID of the user who is typing and their typing status.
+   */
+  channel.subscribe('event:start-typing', (message: AblyMessage) => {
+    const data = message.data as { user_id: string, is_typing: boolean }
+
+    if (data.user_id !== user.value._id) {
+      isTyping.value = data.is_typing
+    }
+  })
+
+  /**
+   * Subscribes to the 'event:stop-typing' event on the Ably channel.
+   * Resets the `isTyping` reactive flag when typing stops.
+   *
+   * @param {Ably.Types.Message} [message] - (Optional) The incoming Ably message, not used in this handler.
+   */
+  channel.subscribe('event:stop-typing', () => {
+    isTyping.value = false
+  })
+})
 </script>
 
 <template>
@@ -16,6 +66,7 @@ function onSelectMessages() {
       <BaseAvatar />
       <div class="flex flex-col text-sm">
         <BaseFont content="Josué Ayala" class="font-medium" />
+        <BaseFont v-if="isTyping" content="Typing..." class="text-xs text-slate-700" />
       </div>
     </div>
     <div class="flex items-center">
