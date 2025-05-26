@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@vee-validate/nuxt',
     '@nuxt/eslint',
+    '@nuxt/test-utils/module',
   ],
   components: [
     { path: '@/components/chat/window', prefix: 'Window' },
