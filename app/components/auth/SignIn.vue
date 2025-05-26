@@ -16,7 +16,7 @@ const messages = {
   email: () => 'Enter a valid email address',
 }
 
-const { validate } = useForm<SignInForm>({
+const { values, validate } = useForm<SignInForm>({
   name: 'sign-in',
   validationSchema: toTypedSchema(object({
     email: string({ required_error: messages.required('Email') }).email({ message: messages.email() }),
@@ -24,13 +24,42 @@ const { validate } = useForm<SignInForm>({
   })),
 })
 
+const loading = ref(false)
+const errorMessage = ref<string | null>(null)
+
 async function onSubmit() {
+  errorMessage.value = null
+  loading.value = true
   const { valid } = await validate()
 
   if (valid) {
-    await $fetch('/api/auth/login', { method: 'POST' })
-    await getUser()
-    router.push({ name: 'index' })
+    try {
+      await $fetch('/api/auth/login', {
+        method: 'POST',
+        body: {
+          email: values.email,
+          password: values.password,
+        },
+      })
+      await getUser() // This will set user state and potentially getUserLoading
+      // Check if user is loaded (getUser was successful and didn't result in an error state for useAuth)
+      // and also ensure that getUserLoading is false before navigating.
+      if (useAuth().user.value && !getUserLoading.value) {
+        router.push({ name: 'index' })
+      } else if (!useAuth().user.value && !getUserLoading.value && !errorMessage.value) {
+        // If getUser completed but user is still null and no specific error from login API,
+        // it implies getUser itself might have failed silently or user data is invalid.
+        errorMessage.value = 'Failed to retrieve user details after login.'
+      }
+    }
+    catch (error: any) {
+      errorMessage.value = error.data?.message || 'An unexpected error occurred during login.'
+    }
+    finally {
+      loading.value = false
+    }
+  } else {
+    loading.value = false // Also set loading to false if form validation fails
   }
 }
 </script>
@@ -57,5 +86,9 @@ async function onSubmit() {
     </template>
   </BaseFormField>
 
-  <BaseButton :loading="getUserLoading" type="submit" content="Sign In" @click="onSubmit()" />
+  <div v-if="errorMessage" class="p-2 mb-2 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+    <span class="font-medium">Error:</span> {{ errorMessage }}
+  </div>
+
+  <BaseButton :loading="loading || getUserLoading" type="submit" content="Sign In" @click="onSubmit()" />
 </template>
