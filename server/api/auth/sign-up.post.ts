@@ -1,7 +1,7 @@
 import { createSession } from '~~/server/services/session.service'
 import { signUp } from '~~/server/services/user.service'
+import { setAuthCookie } from '~~/server/utils/cookie'
 import { userSignUpSchema } from '~~/server/validators/user.validator'
-import { setAuthCookie } from '~~/server/utils/cookie' // Added import
 
 export default defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, userSignUpSchema.parse)

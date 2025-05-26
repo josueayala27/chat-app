@@ -1,19 +1,25 @@
-// Removed: import process from 'node:process';
-// Assuming readValidatedBody is auto-imported by Nuxt 3 from '#imports'
-// If not, it would be: import { readValidatedBody } from 'h3';
-import { userLoginSchema } from '../../validators/user.validator';
-import { verifyUserCredentials } from '../../services/user.service';
-import { createSession } from '../../services/session.service';
-import { setAuthCookie } from '../../utils/cookie'; // New import
+import { createSession } from '../../services/session.service'
+import { verifyUserCredentials } from '../../services/user.service'
+import { setAuthCookie } from '../../utils/cookie'
+import { userLoginSchema } from '../../validators/user.validator'
 
+/**
+ * Handles user login request.
+ *
+ * Validates incoming credentials, verifies the user,
+ * creates a session, and sets an authentication cookie.
+ *
+ * @param {H3Event} event - The incoming HTTP event containing the request.
+ * @returns {Promise<{ success: boolean, message: string }>} Response object indicating login success.
+ */
 export default defineEventHandler(async (event) => {
-  const { email, password } = await readValidatedBody(event, userLoginSchema);
+  const { email, password } = await readValidatedBody(event, userLoginSchema.parse)
 
-  const user = await verifyUserCredentials(email, password);
+  const user = await verifyUserCredentials(email, password)
 
-  const sessionId = await createSession(user); // createSession expects the user object
+  const sessionId = await createSession(user)
 
-  setAuthCookie(event, sessionId); // Use the new utility
+  setAuthCookie(event, sessionId)
 
-  return { success: true, message: 'Login successful.' }; // Standardized response
-});
+  return { success: true, message: 'Login successful.' }
+})

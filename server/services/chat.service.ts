@@ -144,6 +144,7 @@ export async function getUserChatsWithPreview(user_id: ObjectId) {
  * @returns {Promise<IChat>}
  *   The newly created Chat document.
  */
+// TODO: Create a type for body, don't use `IChat`, example: `chat.d.ts`.
 export async function createChat(body: IChat): Promise<IChat> {
   const users: IChatUser[] = body.users.map(u => ({
     user_id: new mongoose.Types.ObjectId(u.user_id),

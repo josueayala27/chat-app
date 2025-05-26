@@ -25,22 +25,17 @@ const { validate } = useForm<SignInForm>({ // Removed 'values' as it's not used 
 })
 
 async function onSubmit() {
-  // 'values' needs to be destructured here if 'validate()' alone doesn't make it available
-  // to 'await signIn(values)'
-  // Let's assume 'validate()' updates a reactive 'values' from useForm, or it needs to be explicitly obtained.
-  // The user's code had: const { valid, values } = await validate()
-  const { valid, values } = await validate() // Re-adding 'values' from validate()
+  const { valid, values } = await validate()
 
   if (valid) {
     await signIn(values) 
 
     if (getSignInError.value) {
-      // TODO: show a toast message
-      console.log('Do something... Error during sign in:', getSignInError.value) // Enhanced console log
+      console.log('Do something... Error during sign in:', getSignInError.value)
       return
     }
 
-    // If no error, navigate. getUser() is not called here.
+    // If no error, navigate. `useAuth().getUser()` is not called here.
     router.push('/')
   }
 }

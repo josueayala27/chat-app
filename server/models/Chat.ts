@@ -1,12 +1,14 @@
 import type { Document, Types } from 'mongoose'
 import mongoose, { Schema } from 'mongoose'
 
+// TODO: Rename to ChatUserDocument
 export interface IChatUser {
   user_id: Types.ObjectId
   is_admin?: boolean
   joined_at: Date
 }
 
+// TODO: Rename to ChangeDocument
 export interface IChat extends Document {
   type: 'private' | 'group'
   users: IChatUser[]

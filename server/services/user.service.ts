@@ -1,11 +1,8 @@
 import type { z } from 'zod'
+import type { UserDocument } from '../models/User'
 import type { userSignUpSchema } from '../validators/user.validator'
-import { hash, compare } from 'bcryptjs' // Added compare
+import { compare, hash } from 'bcryptjs'
 import User from '../models/User'
-// Session and nanoid are removed as they are no longer needed in this function
-
-// You might need to import createError if not globally available
-// import { createError } from 'h3'; 
 
 export type UserSignUpInput = z.infer<typeof userSignUpSchema>
 
@@ -25,21 +22,24 @@ export async function signUp(data: UserSignUpInput) {
   return user
 }
 
-export async function verifyUserCredentials(email?: string, password?: string) {
-  if (!email || !password) {
-    throw createError({ statusCode: 400, message: 'Email and password are required' });
-  }
-
-  const user = await User.findOne({ email });
+/**
+ * Verifies a user's credentials by checking the email and password.
+ *
+ * @param {string} [email] - The user's email address.
+ * @param {string} [password] - The user's plain text password.
+ * @returns {Promise<object>} The authenticated user object.
+ * @throws Will throw a 401 error if the user is not found or the password is invalid.
+ */
+export async function verifyUserCredentials(email?: string, password?: string): Promise<UserDocument> {
+  const user = await User.findOne({ email })
   if (!user) {
-    // It's good practice to not reveal if the user exists or not for security reasons
-    throw createError({ statusCode: 401, message: 'Invalid credentials' });
+    throw createError({ statusCode: 401, message: 'Invalid credentials' })
   }
 
-  const isPasswordValid = await compare(password, user.password);
+  const isPasswordValid = await compare(password, user.password)
   if (!isPasswordValid) {
-    throw createError({ statusCode: 401, message: 'Invalid credentials' });
+    throw createError({ statusCode: 401, message: 'Invalid credentials' })
   }
 
-  return user; // Return the full user object
+  return user
 }

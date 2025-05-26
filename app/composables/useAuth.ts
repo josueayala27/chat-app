@@ -1,26 +1,25 @@
-import type { User } from '~/types/user';
-// Assuming SignInForm is defined in SignIn.vue and imported, or use a generic type for body
-import type { SignInForm } from '~/components/auth/SignIn.vue'; 
+import type { User } from '~/types/user'
 
 export default function useAuth() {
-  const headers = useRequestHeaders(['cookie']);
+  const headers = useRequestHeaders(['cookie'])
 
-  const user: Ref<User> = useState<User>('user', () => ({} as User));
-  const isAuthenticated = computed(() => Boolean(user.value._id));
+  const user: Ref<User> = useState<User>('user', () => ({} as User))
+  const isAuthenticated = computed(() => Boolean(user.value._id))
 
-  const getUserAsync = useAsync(() => $fetch<User>('/api/auth/me', { headers }));
-  // Type hint here should still be <{ success: boolean, message: string }> to match API
-  const signInAsync = useAsync((body: SignInForm) => $fetch<{ success: boolean, message: string }>('/api/auth/login', { method: 'POST', body }));
+  const getUserAsync = useAsync(() => $fetch<User>('/api/auth/me', { headers }))
+
+  // TODO: body type
+  const signInAsync = useAsync((body: any) =>
+    $fetch<{ success: boolean, message: string }>('/api/auth/login', { method: 'POST', body }))
 
   async function getUser() {
-    const data = await getUserAsync.execute();
-    user.value = data as User;
+    const data = await getUserAsync.execute()
+    user.value = data as User
   }
 
-  async function signIn(body: SignInForm) { // Changed 'any' to 'SignInForm'
-    await signInAsync.execute(body);
-    // No getUser() call here
-    // No inspection of response.success here
+  // TODO: body type
+  async function signIn(body: any) {
+    await signInAsync.execute(body)
   }
 
   return {
@@ -30,10 +29,9 @@ export default function useAuth() {
     signIn,
 
     getSignInLoading: signInAsync.loading,
-    getSignInError: signInAsync.error, // This will be set for network/HTTP errors
+    getSignInError: signInAsync.error,
 
     getUserLoading: getUserAsync.loading,
     getUserError: getUserAsync.error,
-    // getSignInData is NOT exposed here
-  };
+  }
 }
