@@ -8,7 +8,7 @@ export interface SignInForm {
 </script>
 
 <script setup lang="ts">
-const { signIn, getSignInLoading, getSignInError } = useAuth()
+const { signIn, getSignInLoading, getSignInError } = useAuth() // Assumes getUser is not used here directly
 const router = useRouter()
 
 const messages = {
@@ -16,7 +16,7 @@ const messages = {
   email: () => 'Enter a valid email address',
 }
 
-const { validate } = useForm<SignInForm>({
+const { validate } = useForm<SignInForm>({ // Removed 'values' as it's not used in this version's onSubmit
   name: 'sign-in',
   validationSchema: toTypedSchema(object({
     email: string({ required_error: messages.required('Email') }).email({ message: messages.email() }),
@@ -25,17 +25,22 @@ const { validate } = useForm<SignInForm>({
 })
 
 async function onSubmit() {
-  const { valid, values } = await validate()
+  // 'values' needs to be destructured here if 'validate()' alone doesn't make it available
+  // to 'await signIn(values)'
+  // Let's assume 'validate()' updates a reactive 'values' from useForm, or it needs to be explicitly obtained.
+  // The user's code had: const { valid, values } = await validate()
+  const { valid, values } = await validate() // Re-adding 'values' from validate()
 
   if (valid) {
-    await signIn(values)
+    await signIn(values) 
 
     if (getSignInError.value) {
       // TODO: show a toast message
-      console.log('Do something...')
+      console.log('Do something... Error during sign in:', getSignInError.value) // Enhanced console log
       return
     }
 
+    // If no error, navigate. getUser() is not called here.
     router.push('/')
   }
 }

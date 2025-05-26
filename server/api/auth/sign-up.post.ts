@@ -1,6 +1,7 @@
 import { createSession } from '~~/server/services/session.service'
 import { signUp } from '~~/server/services/user.service'
 import { userSignUpSchema } from '~~/server/validators/user.validator'
+import { setAuthCookie } from '~~/server/utils/cookie' // Added import
 
 export default defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, userSignUpSchema.parse)
@@ -8,7 +9,7 @@ export default defineEventHandler(async (event) => {
 
   const session_id = await createSession(user)
 
-  setCookie(event, 'sid', session_id, { httpOnly: true, sameSite: 'lax', maxAge: 60 * 60 * 24 * 7 })
+  setAuthCookie(event, session_id) // Use the new utility
 
   return { success: true, message: 'Registration successful.' }
 })

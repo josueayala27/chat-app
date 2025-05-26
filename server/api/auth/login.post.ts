@@ -1,25 +1,19 @@
-import process from 'node:process'
-import Session from '../../models/Session'
-import User from '../../models/User'
+// Removed: import process from 'node:process';
+// Assuming readValidatedBody is auto-imported by Nuxt 3 from '#imports'
+// If not, it would be: import { readValidatedBody } from 'h3';
+import { userLoginSchema } from '../../validators/user.validator';
+import { verifyUserCredentials } from '../../services/user.service';
+import { createSession } from '../../services/session.service';
+import { setAuthCookie } from '../../utils/cookie'; // New import
 
 export default defineEventHandler(async (event) => {
-  const { email, password } = await readBody(event)
+  const { email, password } = await readValidatedBody(event, userLoginSchema);
 
-  const user = await User.findOne({ email })
+  const user = await verifyUserCredentials(email, password);
 
-  if (!user || !user.comparePassword(password)) {
-    throw createError({ statusCode: 401, message: 'Invalid credentials' })
-  }
+  const sessionId = await createSession(user); // createSession expects the user object
 
-  const session = await Session.create({ userId: user._id })
+  setAuthCookie(event, sessionId); // Use the new utility
 
-  setCookie(event, 'sid', session._id, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 7 * 24 * 60 * 60, // 7 days
-  })
-
-  return { ok: true }
-})
+  return { success: true, message: 'Login successful.' }; // Standardized response
+});
