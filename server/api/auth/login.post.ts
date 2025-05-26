@@ -1,6 +1,6 @@
 import process from 'node:process'
-import { User } from '../../models/User'
-import { Session } from '../../models/Session'
+import Session from '../../models/Session'
+import User from '../../models/User'
 
 export default defineEventHandler(async (event) => {
   const { email, password } = await readBody(event)

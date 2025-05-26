@@ -7,11 +7,27 @@ export default function useAuth() {
   const isAuthenticated = computed(() => Boolean(user.value._id))
 
   const getUserAsync = useAsync(() => $fetch<User>('/api/auth/me', { headers }))
+  const signInAsync = useAsync(body => $fetch<{ ok: boolean }>('/api/auth/login', { method: 'POST', body }))
 
   async function getUser() {
     const data = await getUserAsync.execute()
     user.value = data as User
   }
 
-  return { user, isAuthenticated, getUser, getUserLoading: getUserAsync.loading, getUserError: getUserAsync.error }
+  async function signIn(body: any) {
+    await signInAsync.execute(body)
+  }
+
+  return {
+    user,
+    isAuthenticated,
+    getUser,
+    signIn,
+
+    getSignInLoading: signInAsync.loading,
+    getSignInError: signInAsync.error,
+
+    getUserLoading: getUserAsync.loading,
+    getUserError: getUserAsync.error,
+  }
 }

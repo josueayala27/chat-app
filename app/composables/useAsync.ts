@@ -7,6 +7,7 @@ export function useAsync<TArgs extends any[], TResult>(
   const execute = async (...args: TArgs): Promise<TResult | undefined> => {
     loading.value = true
     error.value = null
+
     try {
       return await fn(...args)
     }
@@ -18,5 +19,9 @@ export function useAsync<TArgs extends any[], TResult>(
     }
   }
 
-  return { execute, loading: loading as Ref<boolean>, error: error as Ref<Error | null> }
+  return {
+    execute,
+    loading: loading as Ref<boolean>,
+    error: error as Ref<Error | null>,
+  }
 }
