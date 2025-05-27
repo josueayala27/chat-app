@@ -15,7 +15,7 @@ import { userLoginSchema } from '../../validators/user.validator'
 export default defineEventHandler(async (event) => {
   const { email, password } = await readValidatedBody(event, userLoginSchema.parse)
 
-  const user = await verifyUserCredentials(email, password)
+  const user = await verifyUserCredentials({ email, password })
 
   const sessionId = await createSession(user)
 
