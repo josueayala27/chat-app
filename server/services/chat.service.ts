@@ -147,7 +147,7 @@ export async function getUserChatsWithPreview(user_id: ObjectId) {
 export async function createChat(body: IChat): Promise<IChat> {
   const users: IChatUser[] = body.users.map(u => ({
     user_id: new mongoose.Types.ObjectId(u.user_id),
-    is_admin: !!u.is_admin,
+    is_admin: Boolean(u.is_admin),
     joined_at: new Date(),
   }))
 
