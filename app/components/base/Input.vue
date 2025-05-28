@@ -19,7 +19,7 @@ const attrs = useAttrs()
 
 const id = useId()
 const name = inject<string>('name', props.name || id)
-const { root, base, icon } = theme({ size: props.size, icon: !!props.icon })
+const { root, base, icon } = theme({ size: props.size, icon: Boolean(props.icon) })
 
 const { value } = useField(name)
 </script>
