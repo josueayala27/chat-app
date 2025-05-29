@@ -2,13 +2,14 @@ import { BaseButton } from '#components'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { describe, expect, it } from 'vitest'
 
-describe('button component', () => {
+describe('baseButton', () => {
   it('renders the default button correctly (snapshot)', async () => {
     const wrapper = await mountSuspended(BaseButton, {
       props: {
         content: 'Click me',
       },
     })
+
     expect(wrapper.html()).toMatchSnapshot()
   })
 
@@ -28,6 +29,7 @@ describe('button component', () => {
         default: 'Slot Content',
       },
     })
+
     expect(wrapper.text()).toContain('Slot Content')
   })
 
@@ -37,7 +39,8 @@ describe('button component', () => {
         loading: true,
       },
     })
-    const icon = wrapper.find('svg')
+
+    const icon = wrapper.find('span')
     expect(icon.exists()).toBe(true)
   })
 
@@ -49,6 +52,7 @@ describe('button component', () => {
         },
       },
     })
+
     const btn = wrapper.find('button')
     expect(btn.attributes('class')).toContain('bg-red-500')
   })

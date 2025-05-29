@@ -18,8 +18,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
   if (import.meta.client)
     return
 
-  console.log('🔒 FE: Auth Middleware')
-
   const { isAuthenticated, getUser, user } = useAuth()
 
   const isGuestMode: boolean = to.meta.auth?.unauthenticatedOnly || false

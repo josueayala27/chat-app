@@ -26,5 +26,4 @@ services:
     volumes:
       - ./mongo-data:/data/db
 volumes:
-  db_data:
   redis_data:

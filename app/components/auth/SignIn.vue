@@ -1,36 +1,34 @@
 <script lang="ts">
-import { object, string } from 'zod'
-
-export interface SignInForm {
-  email: string
-  password: string
-}
+import { userLoginSchema } from '~/validators/user.validator'
 </script>
 
 <script setup lang="ts">
-const { getUser, getUserLoading } = useAuth()
+const { signIn, getSignInLoading, getSignInError } = useAuth()
 const router = useRouter()
 
-const messages = {
-  required: (field: string) => `${field} field is required`,
-  email: () => 'Enter a valid email address',
-}
-
-const { validate } = useForm<SignInForm>({
+const { validate } = useForm<SignInInput>({
   name: 'sign-in',
-  validationSchema: toTypedSchema(object({
-    email: string({ required_error: messages.required('Email') }).email({ message: messages.email() }),
-    password: string({ required_error: messages.required('Password') }).nonempty({ message: messages.required('Password') }),
-  })),
+  validationSchema: toTypedSchema(userLoginSchema),
 })
 
+/**
+ * Handles the sign-in process after form validation.
+ * - Validates user input using the sign-in schema.
+ * - Calls the signIn method if valid.
+ * - Redirects to home on success, logs error otherwise.
+ */
 async function onSubmit() {
-  const { valid } = await validate()
+  const { valid, values } = await validate()
 
   if (valid) {
-    await $fetch('/api/auth/login', { method: 'POST' })
-    await getUser()
-    router.push({ name: 'index' })
+    await signIn(values as Required<SignInInput>)
+
+    if (getSignInError.value) {
+      console.log('Do something... Error during sign in:', getSignInError.value)
+      return
+    }
+
+    router.push('/')
   }
 }
 </script>
@@ -51,11 +49,11 @@ async function onSubmit() {
     />
 
     <template #hint>
-      <NuxtLink to="/reset-password" class="text-sm text-sky-500 font-medium">
+      <NuxtLink tabindex="-1" to="/reset-password" class="text-sm text-sky-500 font-medium">
         Forgot password?
       </NuxtLink>
     </template>
   </BaseFormField>
 
-  <BaseButton :loading="getUserLoading" type="submit" content="Sign In" @click="onSubmit()" />
+  <BaseButton :loading="getSignInLoading" type="submit" content="Sign In" @click="onSubmit()" />
 </template>
