@@ -28,7 +28,7 @@ async function onSubmit() {
   const { valid, values } = await validate()
 
   if (valid) {
-    await signIn(values) 
+    await signIn(values)
 
     if (getSignInError.value) {
       console.log('Do something... Error during sign in:', getSignInError.value)
