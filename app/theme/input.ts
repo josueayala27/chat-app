@@ -22,8 +22,6 @@ const input = tv({
       true: { base: 'pl-(--height)' },
       false: { base: 'pl-3' },
     },
-
-    // TODO: Change to compoundVariants and add the `highlight` variant
     color: {
       primary: {
         base: 'ring-[1.5px] ring-inset ring-transparent focus:ring-sky-500',

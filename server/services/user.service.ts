@@ -7,8 +7,7 @@ import User from '../models/User'
 export type UserSignUpInput = z.infer<typeof userSignUpSchema>
 export type UserLoginInput = z.infer<typeof userLoginSchema>
 
-// TODO: type return
-export async function signUp(data: UserSignUpInput) {
+export async function signUp(data: UserSignUpInput): Promise<Omit<UserDocument, 'password'>> {
   const exists = await User.findOne({ $or: [{ username: data.username }, { email: data.email }] }).select('-password')
 
   if (exists) {

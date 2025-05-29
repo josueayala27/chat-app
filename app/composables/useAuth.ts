@@ -20,7 +20,6 @@ export default function useAuth() {
     user.value = data as User
   }
 
-  // TODO: body type
   async function signIn(body: SignInInput) {
     await signInAsync.execute(body)
   }
