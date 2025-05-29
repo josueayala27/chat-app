@@ -10,7 +10,7 @@ export type UserLoginInput = z.infer<typeof userLoginSchema>
 /**
  * Registers a new user in the system.
  *
- * @param {UserSignUpInput} data - The user sign-up input containing first_name, last_name, username, email, password, etc.
+ * @param {UserSignUpInput} data - The user sign-up input.
  * @returns {Promise<Omit<UserDocument, 'password'>>} A promise that resolves to the created user document, omitting the password field.
  * @throws Will throw a 409 error if the username or email already exists.
  */
