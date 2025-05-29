@@ -21,7 +21,7 @@ export default function useAuth() {
   }
 
   // TODO: body type
-  async function signIn(body: any) {
+  async function signIn(body: SignInInput) {
     await signInAsync.execute(body)
   }
 

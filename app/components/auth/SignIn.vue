@@ -11,18 +11,23 @@ const { validate } = useForm<SignInInput>({
   validationSchema: toTypedSchema(userLoginSchema),
 })
 
+/**
+ * Handles the sign-in process after form validation.
+ * - Validates user input using the sign-in schema.
+ * - Calls the signIn method if valid.
+ * - Redirects to home on success, logs error otherwise.
+ */
 async function onSubmit() {
   const { valid, values } = await validate()
 
   if (valid) {
-    await signIn(values)
+    await signIn(values as Required<SignInInput>)
 
     if (getSignInError.value) {
       console.log('Do something... Error during sign in:', getSignInError.value)
       return
     }
 
-    // If no error, navigate. `useAuth().getUser()` is not called here.
     router.push('/')
   }
 }
