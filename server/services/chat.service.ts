@@ -1,5 +1,5 @@
 import type { ObjectId } from 'mongoose'
-import type { IChat, IChatUser } from '../models/Chat'
+import type { ChatDocument, ChatUserDocument } from '../models/Chat'
 import type { UserDocument } from '../models/User'
 import mongoose from 'mongoose'
 import Chat from '../models/Chat'
@@ -136,17 +136,17 @@ export async function getUserChatsWithPreview(user_id: ObjectId) {
  * Creates a new group chat with the given users and name.
  *
  * @async
- * @param {IChat} body - Payload containing chat details.
+ * @param {ChatDocument} body - Payload containing chat details.
  * @param {Array<{ user_id: string; is_admin?: boolean }>} body.users
  *   List of users to add to the chat. Each user object must have a `user_id`
  *   (string) and may optionally include `is_admin` (boolean).
  * @param {string} body.name - The desired name for the new group chat.
- * @returns {Promise<IChat>}
+ * @returns {Promise<ChatDocument>}
  *   The newly created Chat document.
  */
-// TODO: Create a type for body, don't use `IChat`, example: `chat.d.ts`.
-export async function createChat(body: IChat): Promise<IChat> {
-  const users: IChatUser[] = body.users.map(u => ({
+// TODO: Create a type for body, don't use `ChatDocument`, example: `chat.d.ts`.
+export async function createChat(body: ChatDocument): Promise<ChatDocument> {
+  const users: ChatUserDocument[] = body.users.map(u => ({
     user_id: new mongoose.Types.ObjectId(u.user_id),
     is_admin: Boolean(u.is_admin),
     joined_at: new Date(),

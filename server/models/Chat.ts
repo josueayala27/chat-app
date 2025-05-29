@@ -1,23 +1,21 @@
 import type { Document, Types } from 'mongoose'
 import mongoose, { Schema } from 'mongoose'
 
-// TODO: Rename to ChatUserDocument
-export interface IChatUser {
+export interface ChatUserDocument {
   user_id: Types.ObjectId
   is_admin?: boolean
   joined_at: Date
 }
 
-// TODO: Rename to ChangeDocument
-export interface IChat extends Document {
+export interface ChatDocument extends Document {
   type: 'private' | 'group'
-  users: IChatUser[]
+  users: ChatUserDocument[]
   name?: string
   avatar_url?: string
   description?: string
 }
 
-const chatUserSchema: Schema<IChatUser> = new mongoose.Schema(
+const chatUserSchema: Schema<ChatUserDocument> = new mongoose.Schema(
   {
     user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     is_admin: { type: Boolean, default: false },
@@ -25,7 +23,7 @@ const chatUserSchema: Schema<IChatUser> = new mongoose.Schema(
   },
 )
 
-const chatSchema = new mongoose.Schema<IChat>({
+const chatSchema = new mongoose.Schema<ChatDocument>({
   type: { type: String, enum: ['private', 'group'], required: true },
   users: { type: [chatUserSchema], required: true },
   name: { type: String },
@@ -37,4 +35,4 @@ const chatSchema = new mongoose.Schema<IChat>({
 
 chatSchema.index({ 'type': 1, 'users.user_id': 1 })
 
-export default mongoose.model<IChat>('Chat', chatSchema)
+export default mongoose.model<ChatDocument>('Chat', chatSchema)

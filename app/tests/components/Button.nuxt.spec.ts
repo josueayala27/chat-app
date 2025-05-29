@@ -33,7 +33,6 @@ describe('baseButton', () => {
     expect(wrapper.text()).toContain('Slot Content')
   })
 
-  // TODO: Modify this test because <Icon /> doesn't render a svg tag
   it('renders loading icon when loading is true', async () => {
     const wrapper = await mountSuspended(BaseButton, {
       props: {
