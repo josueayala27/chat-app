@@ -1,17 +1,12 @@
 <script lang="ts">
 import { userLoginSchema } from '~/validators/user.validator'
-
-export interface SignInForm {
-  email: string
-  password: string
-}
 </script>
 
 <script setup lang="ts">
 const { signIn, getSignInLoading, getSignInError } = useAuth()
 const router = useRouter()
 
-const { validate } = useForm<SignInForm>({
+const { validate } = useForm<SignInInput>({
   name: 'sign-in',
   validationSchema: toTypedSchema(userLoginSchema),
 })

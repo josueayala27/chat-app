@@ -1,4 +1,8 @@
+import type { z } from 'zod'
 import type { User } from '~/types/user'
+import type { userLoginSchema } from '~/validators/user.validator'
+
+export type SignInInput = z.infer<typeof userLoginSchema>
 
 export default function useAuth() {
   const headers = useRequestHeaders(['cookie'])
@@ -8,8 +12,7 @@ export default function useAuth() {
 
   const getUserAsync = useAsync(() => $fetch<User>('/api/auth/me', { headers }))
 
-  // TODO: body type
-  const signInAsync = useAsync((body: any) =>
+  const signInAsync = useAsync((body: SignInInput) =>
     $fetch<{ success: boolean, message: string }>('/api/auth/login', { method: 'POST', body }))
 
   async function getUser() {
