@@ -49,7 +49,7 @@ async function onSubmit() {
     />
 
     <template #hint>
-      <NuxtLink to="/reset-password" class="text-sm text-sky-500 font-medium">
+      <NuxtLink tabindex="-1" to="/reset-password" class="text-sm text-sky-500 font-medium">
         Forgot password?
       </NuxtLink>
     </template>
