@@ -33,12 +33,12 @@ export async function signUp(data: UserSignUpInput) {
 export async function verifyUserCredentials(data: UserLoginInput): Promise<UserDocument> {
   const user = await User.findOne({ email: data.email })
   if (!user) {
-    throw createError({ statusCode: 401, message: 'Invalid credentials' })
+    throw createError({ statusCode: 401, message: 'Invalid credentials.' })
   }
 
   const isPasswordValid = await compare(data.password, user.password)
   if (!isPasswordValid) {
-    throw createError({ statusCode: 401, message: 'Invalid credentials' })
+    throw createError({ statusCode: 401, message: 'Invalid credentials.' })
   }
 
   return user

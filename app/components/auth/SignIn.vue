@@ -1,5 +1,5 @@
 <script lang="ts">
-import { object, string } from 'zod'
+import { userLoginSchema } from '~/validators/user.validator'
 
 export interface SignInForm {
   email: string
@@ -8,20 +8,12 @@ export interface SignInForm {
 </script>
 
 <script setup lang="ts">
-const { signIn, getSignInLoading, getSignInError } = useAuth() // Assumes getUser is not used here directly
+const { signIn, getSignInLoading, getSignInError } = useAuth()
 const router = useRouter()
 
-const messages = {
-  required: (field: string) => `${field} field is required`,
-  email: () => 'Enter a valid email address',
-}
-
-const { validate } = useForm<SignInForm>({ // Removed 'values' as it's not used in this version's onSubmit
+const { validate } = useForm<SignInForm>({
   name: 'sign-in',
-  validationSchema: toTypedSchema(object({
-    email: string({ required_error: messages.required('Email') }).email({ message: messages.email() }),
-    password: string({ required_error: messages.required('Password') }).nonempty({ message: messages.required('Password') }),
-  })),
+  validationSchema: toTypedSchema(userLoginSchema),
 })
 
 async function onSubmit() {
