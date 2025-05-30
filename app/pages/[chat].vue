@@ -80,7 +80,7 @@ function groupAndTransform(messages: ChatMessage[]): {
   )
 }
 
-const { data } = await useAsyncData(`channel-${route.params.chat}`, () =>
+const { data } = await useAsyncData(`channel:${route.params.chat}`, () =>
   $fetch<ChatMessage[]>(`/api/chats/${route.params.chat}/messages`, { method: 'GET', headers }), {
   /**
    * Fetches raw messages then sorts & groups them for the UI.
@@ -112,7 +112,7 @@ const el = ref()
     <WindowFooter />
   </div>
 
-  <WindowPanel v-if="false">
+  <WindowPanel v-if="true">
     <PanelInfo />
   </WindowPanel>
 </template>

@@ -16,10 +16,6 @@ onClickOutside(reference, () => isOpen.value = false, { ignore: [floating] })
       </BaseFlex>
     </div>
 
-    <PanelInfoSection :ui="{ content: 'flex flex-col pb-2 overflow-hidden' }" title="Customize Chat">
-      <PanelInfoCustomizeChat />
-    </PanelInfoSection>
-
     <PanelInfoSection :ui="{ content: 'flex flex-col gap-2' }" :is-open="true" title="Shared Media">
       <PanelInfoSharedMedia />
     </PanelInfoSection>
