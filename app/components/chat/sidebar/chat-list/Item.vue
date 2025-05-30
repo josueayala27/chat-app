@@ -107,7 +107,7 @@ onMounted(async () => {
     :presence="isActive ? 'online' : 'offline'"
   >
     <template #header>
-      <BaseFont :content="item.type === 'private' ? `${item.friend?.first_name} ${item.friend?.last_name}` : item.name" />
+      <BaseFont class="text-sm font-medium" :content="item.type === 'private' ? `${item.friend?.first_name} ${item.friend?.last_name}` : item.name" />
 
       <BaseFont class="text-xs text-slate-500 font-normal">
         <!-- relative -->
