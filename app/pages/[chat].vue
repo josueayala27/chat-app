@@ -1,5 +1,6 @@
 <script lang="ts">
 import type { ChatMessage } from '~/types/message'
+import type { User } from '~/types/user'
 import { entries, groupBy, mapValues, pipe, sortBy } from 'remeda'
 </script>
 
@@ -27,28 +28,48 @@ function formatDateLocal(iso: Date) {
     .replace(/-/g, '-')
 }
 
-function groupAndTransform(messages: ChatMessage[]) {
-  console.log(
-    pipe(
-      messages,
-      sortBy(({ created_at }) => created_at),
-      groupBy(({ created_at }) => formatDateLocal(created_at)),
-      mapValues(msgs => groupBy(msgs, ({ sender_id }) => sender_id._id)),
-      _ => entries(_).map(([date, senders]) => ({
-        date,
-        senders: entries(senders).map(([id, messages]) => ({
-          sender_id: messages[0].sender_id,
-          messages,
-        })),
-      })),
-    ),
-  )
-
+/**
+ * Groups chat messages by date and then by sender,
+ * returning a structured array ideal for chat UIs.
+ *
+ * @param {ChatMessage[]} messages - Array of chat messages to group and transform.
+ * @returns {{
+ *   date: string,
+ *   senders: {
+ *     sender_id: Pick<User, '_id' | 'first_name' | 'last_name'>
+ *     messages: ChatMessage[]
+ *   }[]
+ * }[]} Array grouped by date and sender, ready for UI rendering.
+ */
+function groupAndTransform(messages: ChatMessage[]): {
+  date: string
+  senders: {
+    sender_id: Pick<User, '_id' | 'first_name' | 'last_name'>
+    messages: ChatMessage[]
+  }[]
+}[] {
   return pipe(
     messages,
-    _ => sortBy(_, ({ created_at }) => created_at),
-    _ => groupBy(_, ({ created_at }) => formatDateLocal(created_at)),
-    _ => mapValues(_, msgs => groupBy(msgs, ({ sender_id }) => sender_id._id)),
+
+    /**
+     * Sort by creation date.
+     */
+    sortBy(({ created_at }) => created_at),
+
+    /**
+     * Group by local-formatted date.
+     */
+    groupBy(({ created_at }) => formatDateLocal(created_at)),
+
+    /**
+     * Group each day's messages by sender's _id.
+     */
+    mapValues(msgs => groupBy(msgs, ({ sender_id }) => sender_id._id)),
+
+    /**
+     * Transform to array shape, preserving sender info.
+     * @param _
+     */
     _ => entries(_).map(([date, senders]) => ({
       date,
       senders: entries(senders).map(([id, messages]) => ({
@@ -70,19 +91,6 @@ const { data } = await useAsyncData(`channel-${route.params.chat}`, () =>
 })
 
 const el = ref()
-// useInfiniteScroll(
-//   el,
-//   () => {
-//     console.log('Load more content...')
-//   },
-//   {
-//     direction: 'top',
-//     distance: 100,
-//     canLoadMore: () => {
-//       return true
-//     },
-//   },
-// )
 </script>
 
 <template>
