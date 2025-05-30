@@ -100,7 +100,7 @@ const el = ref()
     <WindowMain :id="`channel-${route.params.chat}-window`" ref="el">
       <template v-for="(group, i) in data" :key="i">
         <div class="flex justify-center">
-          <BaseFont class="text-sm bg-slate-100 px-2 py-1 rounded-full font-medium select-none">
+          <BaseFont class="text-xs bg-slate-100 px-2 py-1 rounded-full font-medium select-none">
             <NuxtTime :datetime="group.date" />
           </BaseFont>
         </div>
