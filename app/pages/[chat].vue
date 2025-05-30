@@ -2,7 +2,7 @@
 import type { ChatMessage } from '~/types/message'
 import { groupBy, mapValues, pipe } from 'remeda'
 </script>
-˝
+
 <script setup lang="ts">
 useHead({ title: 'Charlie' })
 definePageMeta({ middleware: ['auth'] })
