@@ -105,7 +105,7 @@ const el = ref()
           </BaseFont>
         </div>
 
-        <WindowMessagesGroup v-for="({ sender_id, messages }, j) in group.senders" :key="j" :messages :sender="sender_id" :is-own="false" />
+        <WindowMessagesGroup v-for="({ sender_id, messages }, j) in group.senders" :key="j" :messages :sender="sender_id" />
       </template>
     </WindowMain>
 
