@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { ChatMessage } from '~/types/message'
-import { groupBy, mapValues, pipe } from 'remeda'
+import { entries, groupBy, mapValues, pipe, sortBy } from 'remeda'
 </script>
 
 <script setup lang="ts">
@@ -28,23 +28,38 @@ function formatDateLocal(iso: Date) {
 }
 
 function groupAndTransform(messages: ChatMessage[]) {
-  return pipe(
-    messages,
-    _ => [..._].sort((a, b) => +new Date(a.created_at) - +new Date(b.created_at)),
-    _ => groupBy(_, message => formatDateLocal(message.created_at)),
-    dates => mapValues(dates, ms => groupBy(ms, m => m.sender_id._id)),
-    dates =>
-      Object.entries(dates).map(([date, senders]) => ({
+  console.log(
+    pipe(
+      messages,
+      sortBy(({ created_at }) => created_at),
+      groupBy(({ created_at }) => formatDateLocal(created_at)),
+      mapValues(msgs => groupBy(msgs, ({ sender_id }) => sender_id._id)),
+      _ => entries(_).map(([date, senders]) => ({
         date,
-        senders: Object.entries(senders).map(([_, messages]) => ({
-          sender_id: (messages[0].sender_id),
+        senders: entries(senders).map(([id, messages]) => ({
+          sender_id: messages[0].sender_id,
           messages,
         })),
       })),
+    ),
+  )
+
+  return pipe(
+    messages,
+    _ => sortBy(_, ({ created_at }) => created_at),
+    _ => groupBy(_, ({ created_at }) => formatDateLocal(created_at)),
+    _ => mapValues(_, msgs => groupBy(msgs, ({ sender_id }) => sender_id._id)),
+    _ => entries(_).map(([date, senders]) => ({
+      date,
+      senders: entries(senders).map(([id, messages]) => ({
+        sender_id: messages[0].sender_id,
+        messages,
+      })),
+    })),
   )
 }
 
-const { data } = await useAsyncData(() =>
+const { data } = await useAsyncData(`channel-${route.params.chat}`, () =>
   $fetch<ChatMessage[]>(`/api/chats/${route.params.chat}/messages`, { method: 'GET', headers }), {
   /**
    * Fetches raw messages then sorts & groups them for the UI.
