@@ -19,13 +19,16 @@ const messageSchema: Schema<MessageDocument> = new Schema(
     type: { type: String, enum: ['text', 'file', 'audio', 'system'], default: 'text' },
 
     reply_to: { type: Schema.Types.ObjectId, ref: 'Message' },
-    read_by: { type: [readBySchema], default: [] },
+    read_by: { type: [readBySchema] },
 
     content: { type: String, required: true },
-    attachments: [{ type: String }],
+    attachments: [{ type: Schema.Types.ObjectId }],
   },
   {
-    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+    timestamps: {
+      createdAt: 'created_at',
+      updatedAt: 'updated_at',
+    },
   },
 )
 

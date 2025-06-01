@@ -13,7 +13,6 @@ const attachmentSchema: Schema<AttachmentDocument> = new Schema(
 
     height: { type: Number },
     width: { type: Number },
-
   },
   {
     timestamps: {
