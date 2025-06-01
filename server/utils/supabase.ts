@@ -1,12 +1,21 @@
 import { StorageClient } from '@supabase/storage-js'
 
-export function useSupabase() {
+/**
+ * Returns a Supabase Storage client, configured with runtime environment settings.
+ *
+ * @returns {StorageClient} A configured Supabase StorageClient instance.
+ *
+ * @example
+ * const storage = useSupabaseStorage()
+ * const buckets = await storage.listBuckets()
+ */
+export function useSupabaseStorage(): StorageClient {
   const config = useRuntimeConfig()
 
-  const storageClient = new StorageClient(`${config}/storage/v1`, {
+  const storage = new StorageClient(`${config}/storage/v1`, {
     apikey: config.SUPABASE_SERVICE_ROLE,
     Authorization: `Bearer ${config.SUPABASE_SERVICE_ROLE}`,
   })
 
-  return storageClient
+  return storage
 }
