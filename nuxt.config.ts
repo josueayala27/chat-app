@@ -31,6 +31,8 @@ export default defineNuxtConfig({
     MONGODB_DB: process.env.MONGODB_DB,
     MONGODB_HOST: process.env.MONGODB_HOST,
     MONGODB_PORT: process.env.MONGODB_PORT,
+    SUPABASE_URL: process.env.SUPABASE_URL,
+    SUPABASE_SERVICE_ROLE: process.env.SUPABASE_SERVICE_ROLE,
   },
   future: {
     compatibilityVersion: 4,
