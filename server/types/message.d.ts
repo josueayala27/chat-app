@@ -10,7 +10,7 @@ export interface Message {
   sender_id: Types.ObjectId
   content: string
   type: 'text' | 'image' | 'video' | 'file' | 'audio' | 'system'
-  attachments?: string[]
+  attachments?: Types.ObjectId[]
   reply_to?: Types.ObjectId
   read_by?: ReadBy[]
 }

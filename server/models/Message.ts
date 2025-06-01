@@ -16,11 +16,13 @@ const messageSchema: Schema<MessageDocument> = new Schema(
   {
     chat_id: { type: Schema.Types.ObjectId, ref: 'Chat', required: true },
     sender_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    content: { type: String, required: true },
-    type: { type: String, enum: ['text', 'image', 'video', 'file', 'audio', 'system'], default: 'text' },
-    attachments: [{ type: String }],
+    type: { type: String, enum: ['text', 'file', 'audio', 'system'], default: 'text' },
+
     reply_to: { type: Schema.Types.ObjectId, ref: 'Message' },
     read_by: { type: [readBySchema], default: [] },
+
+    content: { type: String, required: true },
+    attachments: [{ type: String }],
   },
   {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
