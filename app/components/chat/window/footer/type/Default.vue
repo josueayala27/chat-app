@@ -101,9 +101,6 @@ function onInput() {
 }
 
 const media = ref<HTMLInputElement>()
-function selectFiles() {
-  media.value?.click()
-}
 
 /**
  * Handles file input changes by uploading each selected file in parallel.
@@ -128,7 +125,7 @@ async function onInputChange(): Promise<void> {
       /**
        * Request a presigned upload URL from your backend.
        */
-      const response = await $fetch<{ _id: string, upload_url: string }>(
+      const { _id, upload_url } = await $fetch<{ _id: string, upload_url: string }>(
         `/api/chats/${route.params.chat}/attachments`,
         {
           method: 'POST',
@@ -139,7 +136,7 @@ async function onInputChange(): Promise<void> {
       /**
        * Upload the file directly to the storage endpoint.
        */
-      await $fetch(response.upload_url, {
+      await $fetch(upload_url, {
         method: 'PUT',
         body: file,
         headers: { 'Content-Type': type },
@@ -148,7 +145,7 @@ async function onInputChange(): Promise<void> {
       /**
        * Return the file ID for further processing if needed.
        */
-      return response._id
+      return _id
     })
 
     const ids = await Promise.all(uploadPromises)
@@ -172,7 +169,7 @@ async function onInputChange(): Promise<void> {
         <BaseMenuContainer
           :items="[
             { icon: 'carbon:document-add', label: 'File' },
-            { icon: 'carbon:image-copy', label: 'Photos & videos', onClick: selectFiles },
+            { icon: 'carbon:image-copy', label: 'Photos & videos', onClick: () => media?.click() },
             { icon: 'carbon:text-short-paragraph', label: 'Poll' },
           ]"
         />

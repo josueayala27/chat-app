@@ -17,9 +17,12 @@ const BUCKET_NAME = 'messages'
  */
 export default defineEventHandler(async (event) => {
   const supabase = useSupabaseStorage()
+
+  const chat = getRouterParam(event, 'chat')
+
   const body = await readValidatedBody(event, attachmentCreateSchema.parse)
 
-  const FILENAME = `files/${body.filename}`
+  const FILENAME = `files/${chat}/${body.filename}`
 
   const storage: StorageFileApi = supabase.from(BUCKET_NAME)
 
