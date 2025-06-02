@@ -12,7 +12,7 @@ import { StorageClient } from '@supabase/storage-js'
 export function useSupabaseStorage(): StorageClient {
   const config = useRuntimeConfig()
 
-  const storage = new StorageClient(`${config}/storage/v1`, {
+  const storage = new StorageClient(`${config.SUPABASE_URL}/storage/v1`, {
     apikey: config.SUPABASE_SERVICE_ROLE,
     Authorization: `Bearer ${config.SUPABASE_SERVICE_ROLE}`,
   })

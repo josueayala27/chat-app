@@ -9,7 +9,7 @@ const attachmentSchema: Schema<AttachmentDocument> = new Schema(
     content_type: { type: String, required: true },
     filename: { type: String, required: true },
     size: { type: Number, required: true },
-    url: { type: String, required: true },
+    url: { type: String },
 
     height: { type: Number },
     width: { type: Number },

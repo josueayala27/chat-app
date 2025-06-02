@@ -160,9 +160,9 @@ export async function createChat(body: ChatDocument): Promise<ChatDocument> {
  *
  * @async
  * @param {object} params
- * @param {string} params.chat_id       - The ID of the chat to retrieve.
- * @param {UserDocument} params.user    - The requesting user (used to filter out self in private chats).
- * @returns {Promise<Array<object>>}     - Aggregation result array containing one shaped chat object.
+ * @param {string} params.chat_id - The ID of the chat to retrieve.
+ * @param {UserDocument} params.user - The requesting user (used to filter out self in private chats).
+ * @returns {Promise<Array<object>>} - Aggregation result array containing one shaped chat object.
  */
 export async function getChatById({ chat_id, user }: { user: UserDocument, chat_id: string }): Promise<Array<object>> {
   return Chat.aggregate([
