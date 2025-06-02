@@ -2,7 +2,7 @@ import type StorageFileApi from '@supabase/storage-js/dist/module/packages/Stora
 import { createAttachment } from '~~/server/services/attachment.service'
 import { attachmentCreateSchema } from '~~/server/validators/attachment.validator'
 
-const BUCKET_NAME: string = 'messages'
+const BUCKET_NAME = 'messages'
 
 /**
  * Event handler for creating a signed upload URL and registering an attachment.
@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
   const supabase = useSupabaseStorage()
   const body = await readValidatedBody(event, attachmentCreateSchema.parse)
 
-  const FILENAME: string = `files/${body.filename}`
+  const FILENAME = `files/${body.filename}`
 
   const storage: StorageFileApi = supabase.from(BUCKET_NAME)
 
