@@ -16,7 +16,6 @@ const slots = defineSlots<{ default: () => any, hint: () => any }>()
 
 const uid = useId()
 const name = props.name || uid
-const error = useFieldError(name)
 
 provide('name', name)
 
@@ -34,7 +33,5 @@ const { base } = theme()
     </div>
 
     <slot />
-
-    <BaseFont v-if="error" class="text-sm text-red-500" :content="error" />
   </div>
 </template>

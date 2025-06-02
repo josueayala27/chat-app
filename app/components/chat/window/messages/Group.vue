@@ -9,7 +9,6 @@ export interface Message { type: string, component: Component }
 
 <script lang="ts" setup>
 const props = defineProps<{
-  isOwn: boolean
   sender: Pick<User, '_id' | 'first_name' | 'last_name'>
   messages: ChatMessage[]
 }>()
@@ -37,8 +36,13 @@ const ui = tv({
   },
 })
 
-const { root, content, avatar, title } = ui({ isOwn: props.isOwn })
-provide('isOwn', props.isOwn)
+const { user } = useAuth()
+
+const isOwn = ref<boolean>(props.sender._id === user.value._id)
+
+const { root, content, avatar, title } = ui({ isOwn: isOwn.value })
+
+provide('isOwn', isOwn.value)
 </script>
 
 <template>
@@ -51,7 +55,6 @@ provide('isOwn', props.isOwn)
       <div class="flex flex-col gap-0.5 w-full">
         <template v-for="(msg, i) in messages" :key="i">
           <WindowMessagesRoot>
-            <!-- <component :is="msg.component" /> -->
             <WindowMessagesTypeText>
               {{ msg.content }}
             </WindowMessagesTypeText>

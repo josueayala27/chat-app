@@ -22,6 +22,14 @@ const input = tv({
       true: { base: 'pl-(--height)' },
       false: { base: 'pl-3' },
     },
+    color: {
+      primary: {
+        base: 'ring-[1.5px] ring-inset ring-transparent focus:ring-sky-500',
+      },
+      error: {
+        base: 'ring ring-red-500',
+      },
+    },
   },
 })
 

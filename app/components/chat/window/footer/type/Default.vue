@@ -99,9 +99,64 @@ function onInput() {
   }
   debouncedFn()
 }
+
+const media = ref<HTMLInputElement>()
+
+/**
+ * Handles file input changes by uploading each selected file in parallel.
+ * - Requests an upload URL for each file from the backend.
+ * - Uploads each file directly to the provided storage URL using PUT.
+ * - Returns an array of uploaded file IDs.
+ *
+ * @async
+ * @function onInputChange
+ * @returns {Promise<string[]|undefined>} Array of uploaded file IDs, or undefined if no files.
+ */
+async function onInputChange(): Promise<void> {
+  const files = media.value?.files
+
+  if (files) {
+    /**
+     * Create an array of upload promises for parallel processing.
+     */
+    const uploadPromises = Array.from(files).map(async (file) => {
+      const { name, size, type } = file
+
+      /**
+       * Request a presigned upload URL from your backend.
+       */
+      const { _id, upload_url } = await $fetch<{ _id: string, upload_url: string }>(
+        `/api/chats/${route.params.chat}/attachments`,
+        {
+          method: 'POST',
+          body: { filename: name, size, content_type: type },
+        },
+      )
+
+      /**
+       * Upload the file directly to the storage endpoint.
+       */
+      await $fetch(upload_url, {
+        method: 'PUT',
+        body: file,
+        headers: { 'Content-Type': type },
+      })
+
+      /**
+       * Return the file ID for further processing if needed.
+       */
+      return _id
+    })
+
+    const ids = await Promise.all(uploadPromises)
+    console.log(ids)
+  }
+}
 </script>
 
 <template>
+  <input ref="media" multiple type="file" class="hidden" @change="onInputChange">
+
   <div class="p-2 flex items-center gap-2">
     <BasePopover>
       <template #default="{ isOpen }">
@@ -114,7 +169,7 @@ function onInput() {
         <BaseMenuContainer
           :items="[
             { icon: 'carbon:document-add', label: 'File' },
-            { icon: 'carbon:image-copy', label: 'Photos & videos' },
+            { icon: 'carbon:image-copy', label: 'Photos & videos', onClick: () => media?.click() },
             { icon: 'carbon:text-short-paragraph', label: 'Poll' },
           ]"
         />

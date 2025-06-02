@@ -1,5 +1,5 @@
 import type { ObjectId } from 'mongoose'
-import type { IChat, IChatUser } from '../models/Chat'
+import type { ChatDocument, ChatUserDocument } from '../models/Chat'
 import type { UserDocument } from '../models/User'
 import mongoose from 'mongoose'
 import Chat from '../models/Chat'
@@ -136,18 +136,19 @@ export async function getUserChatsWithPreview(user_id: ObjectId) {
  * Creates a new group chat with the given users and name.
  *
  * @async
- * @param {IChat} body - Payload containing chat details.
+ * @param {ChatDocument} body - Payload containing chat details.
  * @param {Array<{ user_id: string; is_admin?: boolean }>} body.users
  *   List of users to add to the chat. Each user object must have a `user_id`
  *   (string) and may optionally include `is_admin` (boolean).
  * @param {string} body.name - The desired name for the new group chat.
- * @returns {Promise<IChat>}
+ * @returns {Promise<ChatDocument>}
  *   The newly created Chat document.
  */
-export async function createChat(body: IChat): Promise<IChat> {
-  const users: IChatUser[] = body.users.map(u => ({
+// TODO: Create a type for body, don't use `ChatDocument`, example: `chat.d.ts`.
+export async function createChat(body: ChatDocument): Promise<ChatDocument> {
+  const users: ChatUserDocument[] = body.users.map(u => ({
     user_id: new mongoose.Types.ObjectId(u.user_id),
-    is_admin: !!u.is_admin,
+    is_admin: Boolean(u.is_admin),
     joined_at: new Date(),
   }))
 
@@ -159,9 +160,9 @@ export async function createChat(body: IChat): Promise<IChat> {
  *
  * @async
  * @param {object} params
- * @param {string} params.chat_id       - The ID of the chat to retrieve.
- * @param {UserDocument} params.user    - The requesting user (used to filter out self in private chats).
- * @returns {Promise<Array<object>>}     - Aggregation result array containing one shaped chat object.
+ * @param {string} params.chat_id - The ID of the chat to retrieve.
+ * @param {UserDocument} params.user - The requesting user (used to filter out self in private chats).
+ * @returns {Promise<Array<object>>} - Aggregation result array containing one shaped chat object.
  */
 export async function getChatById({ chat_id, user }: { user: UserDocument, chat_id: string }): Promise<Array<object>> {
   return Chat.aggregate([

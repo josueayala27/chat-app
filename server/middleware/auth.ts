@@ -13,8 +13,6 @@ export default defineEventHandler(async (event) => {
   if (!isProtected(getRequestURL(event).pathname))
     return
 
-  console.log('🔒 BE: Auth Middleware')
-
   const sid = getCookie(event, 'sid')
 
   if (!sid) {
