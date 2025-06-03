@@ -1,4 +1,5 @@
 import type StorageFileApi from '@supabase/storage-js/dist/module/packages/StorageFileApi'
+import { nanoid } from 'nanoid'
 import { createAttachment } from '~~/server/services/attachment.service'
 import { attachmentCreateSchema } from '~~/server/validators/attachment.validator'
 
@@ -22,14 +23,14 @@ export default defineEventHandler(async (event) => {
 
   const body = await readValidatedBody(event, attachmentCreateSchema.parse)
 
-  const FILENAME = `files/${chat}/${body.filename}`
+  const FILENAME = `files/${chat}/${nanoid(32)}.${body.filename.split('.')[1]}`
 
   const storage: StorageFileApi = supabase.from(BUCKET_NAME)
 
   const { data } = await storage.createSignedUploadUrl(FILENAME)
   const { data: { publicUrl: url } } = storage.getPublicUrl(FILENAME)
 
-  const attachment = await createAttachment({ ...body, url })
+  const attachment = await createAttachment({ ...body, system_filename: FILENAME, url })
 
   return {
     _id: attachment._id,

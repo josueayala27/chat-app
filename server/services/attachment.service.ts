@@ -8,7 +8,7 @@ import Attachment from '../models/Attachment'
  * Input type for creating an attachment.
  * Combines validated schema fields with the attachment's URL.
  */
-export type CreateAttachmentInput = z.infer<typeof attachmentCreateSchema> & Pick<IAttachment, 'url'>
+export type CreateAttachmentInput = z.infer<typeof attachmentCreateSchema> & Pick<IAttachment, 'url' | 'system_filename'>
 
 /**
  * Persists a new attachment in the database.
