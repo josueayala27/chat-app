@@ -94,7 +94,7 @@ const el = ref()
 </script>
 
 <template>
-  <div class="flex flex-col divide-y divide-slate-200 flex-1">
+  <div class="flex flex-col divide-y divide-slate-200 flex-1 overflow-hidden">
     <WindowHeader />
 
     <WindowMain :id="`channel-${route.params.chat}-window`" ref="el">

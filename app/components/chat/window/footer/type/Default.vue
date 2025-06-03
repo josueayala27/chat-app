@@ -101,6 +101,7 @@ function onInput() {
 }
 
 const media = ref<HTMLInputElement>()
+const files = ref<FileList | null | undefined>()
 
 /**
  * Handles file input changes by uploading each selected file in parallel.
@@ -113,13 +114,13 @@ const media = ref<HTMLInputElement>()
  * @returns {Promise<string[]|undefined>} Array of uploaded file IDs, or undefined if no files.
  */
 async function onInputChange(): Promise<void> {
-  const files = media.value?.files
+  files.value = media.value?.files
 
-  if (files) {
+  if (files.value) {
     /**
      * Create an array of upload promises for parallel processing.
      */
-    const uploadPromises = Array.from(files).map(async (file) => {
+    const uploadPromises = Array.from(files.value).map(async (file) => {
       const { name, size, type } = file
 
       /**
@@ -152,10 +153,30 @@ async function onInputChange(): Promise<void> {
     console.log(ids)
   }
 }
+
+function getImage(file: File) {
+  return URL.createObjectURL(file)
+}
 </script>
 
 <template>
   <input ref="media" multiple type="file" class="hidden" @change="onInputChange">
+
+  <div class="w-full p-3 border-b flex items-center gap-2 overflow-auto scrollbar-hidden">
+    <div
+      v-for="(file, index) in files" :key="index"
+      class="size-21 bg-slate-100 text-xs text-slate-400 grid place-items-center rounded-lg cursor-pointer hover:bg-slate-200/60 shrink-0 overflow-hidden"
+    >
+      <template v-if="!['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/bmp', 'image/x-icon', 'image/tiff', 'image/heic', 'image/avif'].includes(file.type)">
+        <div class="flex flex-col items-center gap-1 p-2">
+          <icon size="24px" name="carbon:document-blank" />
+          <BaseFont class="line-clamp-1 break-all" :content="file.name" />
+        </div>
+      </template>
+
+      <img v-else class="h-full w-full object-cover" :src="getImage(file)">
+    </div>
+  </div>
 
   <div class="p-2 flex items-center gap-2">
     <BasePopover>
