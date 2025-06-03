@@ -154,7 +154,7 @@ async function onInputChange(): Promise<void> {
   }
 }
 
-function getImage(file: File) {
+function fileToURL(file: File) {
   return URL.createObjectURL(file)
 }
 </script>
@@ -174,7 +174,7 @@ function getImage(file: File) {
         </div>
       </template>
 
-      <img v-else class="h-full w-full object-cover" :src="getImage(file)">
+      <img v-else class="h-full w-full object-cover" :src="fileToURL(file)">
     </div>
   </div>
 
