@@ -6,7 +6,7 @@ import { entries, groupBy, mapValues, pipe, sortBy } from 'remeda'
 
 <script setup lang="ts">
 useHead({ title: 'Charlie' })
-definePageMeta({ middleware: ['auth'] })
+definePageMeta({ middleware: ['auth'], key: route => route.fullPath, keepalive: true })
 
 const route = useRoute()
 const isSelectMessagesActive = useState<boolean>(`select-messages-${route.params.chat}`, () => false)
