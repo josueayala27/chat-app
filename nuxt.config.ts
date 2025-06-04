@@ -9,6 +9,8 @@ export default defineNuxtConfig({
     '@vee-validate/nuxt',
     '@nuxt/eslint',
     '@nuxt/test-utils/module',
+    '@pinia/colada-nuxt',
+    '@pinia/nuxt',
   ],
   components: [
     { path: '@/components/chat/window', prefix: 'Window' },
