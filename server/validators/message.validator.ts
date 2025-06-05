@@ -13,4 +13,5 @@ export const createMessageBodySchema = z.object({
   content: z.string(),
 })
 
-export const userUpdateSchema = createMessageBodySchema.partial()
+// Schema for updating an existing message
+export const messageUpdateSchema = createMessageBodySchema.partial()
