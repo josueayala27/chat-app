@@ -80,24 +80,28 @@ function groupAndTransform(messages: ChatMessage[]): {
   )
 }
 
-const { data } = await useAsyncData(`channel:${route.params.chat}`, () =>
-  $fetch<ChatMessage[]>(`/api/chats/${route.params.chat}/messages`, { method: 'GET', headers }), {
-  /**
-   * Fetches raw messages then sorts & groups them for the UI.
-   *
-   * @returns structured array by date and sender
-   */
-  transform: groupAndTransform,
+// const { data } = await useAsyncData(`channel:${route.params.chat}`, () =>
+//   $fetch<ChatMessage[]>(`/api/chats/${route.params.chat}/messages`, { method: 'GET', headers }), {
+//   /**
+//    * Fetches raw messages then sorts & groups them for the UI.
+//    *
+//    * @returns structured array by date and sender
+//    */
+//   transform: groupAndTransform,
+// })
+
+useQuery({
+  key: () => ['channel', route.params.chat as string],
+  query: () => $fetch<ChatMessage[]>(`/api/chats/${route.params.chat}/messages`, { method: 'GET', headers }),
 })
 
-const el = ref()
 </script>
 
 <template>
   <div class="flex flex-col divide-y divide-slate-200 flex-1 overflow-hidden">
     <WindowHeader />
 
-    <WindowMain :id="`channel-${route.params.chat}-window`" ref="el">
+    <WindowMain :id="`channel-${route.params.chat}-window`">
       <template v-for="(group, i) in data" :key="i">
         <div class="flex justify-center">
           <BaseFont class="text-xs bg-slate-100 px-2 py-1 rounded-full font-medium select-none">

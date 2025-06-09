@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     '@nuxt/test-utils/module',
     '@pinia/colada-nuxt',
     '@pinia/nuxt',
+    '@vue-macros/nuxt',
   ],
   components: [
     { path: '@/components/chat/window', prefix: 'Window' },
@@ -38,6 +39,9 @@ export default defineNuxtConfig({
   },
   future: {
     compatibilityVersion: 4,
+  },
+  experimental: {
+    renderJsonPayloads: true,
   },
   compatibilityDate: '2024-11-01',
   nitro: {
