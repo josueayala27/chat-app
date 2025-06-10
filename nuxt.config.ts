@@ -9,8 +9,6 @@ export default defineNuxtConfig({
     '@vee-validate/nuxt',
     '@nuxt/eslint',
     '@nuxt/test-utils/module',
-    '@pinia/colada-nuxt',
-    '@pinia/nuxt',
     '@vue-macros/nuxt',
   ],
   components: [
@@ -41,6 +39,7 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
   experimental: {
+    typedPages: true,
     renderJsonPayloads: true,
   },
   compatibilityDate: '2024-11-01',
