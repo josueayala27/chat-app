@@ -38,15 +38,15 @@ async function onSubmit() {
 
 <template>
   <BaseFormField name="first_name" label="First name">
-    <BaseInput placeholder="Enter email" />
+    <BaseInput placeholder="Enter first name" />
   </BaseFormField>
 
   <BaseFormField name="last_name" label="Last name">
-    <BaseInput placeholder="Enter email" />
+    <BaseInput placeholder="Enter last name" />
   </BaseFormField>
 
   <BaseFormField :ui="{ base: 'col-span-2' }" name="username" label="User">
-    <BaseInput placeholder="Enter email" />
+    <BaseInput placeholder="Enter username" />
   </BaseFormField>
 
   <BaseFormField :ui="{ base: 'col-span-2' }" name="email" label="Email">
