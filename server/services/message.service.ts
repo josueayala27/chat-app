@@ -8,7 +8,7 @@ import Message from '../models/Message'
 /**
  * Maximum number of messages to fetch per request.
  */
-const MESSAGE_FETCH_LIMIT = 10
+const MESSAGE_FETCH_LIMIT = 50
 
 export type CreateMessageInput = z.infer<typeof createMessageBodySchema> & {
   chat_id: string
