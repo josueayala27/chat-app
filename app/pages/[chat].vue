@@ -1,13 +1,12 @@
 <script lang="ts">
 import type { ChatMessage } from '~/types/message'
 import type { User } from '~/types/user'
-import { useQuery } from '@tanstack/vue-query'
 import { entries, groupBy, mapValues, pipe, sortBy } from 'remeda'
 </script>
 
 <script setup lang="ts">
 useHead({ title: 'Charlie' })
-definePageMeta({ middleware: ['auth', 'chat'], key: route => route.fullPath, keepalive: true })
+definePageMeta({ middleware: ['auth'], key: route => route.fullPath, keepalive: true })
 
 const _headers = useRequestHeaders(['cookie'])
 const route = useRoute('chat')
@@ -75,32 +74,36 @@ function _groupAndTransform(messages: ChatMessage[]): {
   )
 }
 
-async function fetcher() {
-  const response = await $fetch<ChatMessage[]>(`/api/chats/${route.params.chat}/messages`, { headers: _headers })
+async function fetcher({ pageParam }: any) {
+  console.log(pageParam)
+
+  const response = await $fetch<ChatMessage[]>(`/api/chats/${route.params.chat}/messages`, {
+    headers: _headers,
+    query: {
+      [pageParam]: 'uuid',
+    },
+  })
+
   return _groupAndTransform(response)
 }
 
-const { data, suspense } = useQuery({
-  queryKey: ['chat', route.params.chat],
-  queryFn: fetcher,
-})
-
-await suspense()
+const el = ref()
+// const { arrivedState } = useScroll(el)
 </script>
 
 <template>
   <div class="flex flex-col divide-y divide-slate-200 flex-1 overflow-hidden">
     <WindowHeader />
 
-    <WindowMain :id="`channel-${route.params.chat}-window`">
-      <template v-for="(group, i) in data" :key="i">
+    <WindowMain ref="el">
+      <template v-for="(group, j) in []" :key="j">
         <div class="flex justify-center">
           <BaseFont class="text-xs bg-slate-100 px-2 py-1 rounded-full font-medium select-none">
             <NuxtTime :datetime="group.date" />
           </BaseFont>
         </div>
 
-        <WindowMessagesGroup v-for="({ sender_id, messages: _messages }, j) in group.senders" :key="j" :messages="_messages" :sender="sender_id" />
+        <WindowMessagesGroup v-for="({ sender_id, messages: _messages }, k) in group.senders" :key="k" :messages="_messages" :sender="sender_id" />
       </template>
     </WindowMain>
 

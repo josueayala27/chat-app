@@ -1,9 +1,11 @@
+type _ChatState = Record<string, string>
+
 export function useChat() {
   const route = useRoute('chat')
   const headers = useRequestHeaders(['cookie'])
 
-  const chat = useState(route.params.chat, () => ({}))
-  const chats = useState<any>('chats', () => [])
+  const chat = useState('chats', () => ({}))
+  const chats = useState('chats', () => [])
 
   const getAsyncConversation = useAsync(() => $fetch(`/api/chats/${route.params.chat as string}/messages`, {
     method: 'GET',
