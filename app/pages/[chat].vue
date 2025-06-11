@@ -9,7 +9,9 @@ useHead({ title: 'Charlie' })
 definePageMeta({ middleware: ['auth'], key: route => route.fullPath, keepalive: true })
 
 const _headers = useRequestHeaders(['cookie'])
-const route = useRoute('chat')
+const chats = useState<ChatState>('chats')
+
+const { getConversation, getBeforeConversation, cursors } = useChat()
 
 function formatDateLocal(iso: Date) {
   return new Intl.DateTimeFormat('sv-SE', {
@@ -74,21 +76,25 @@ function _groupAndTransform(messages: ChatMessage[]): {
   )
 }
 
-async function fetcher({ pageParam }: any) {
-  console.log(pageParam)
-
-  const response = await $fetch<ChatMessage[]>(`/api/chats/${route.params.chat}/messages`, {
-    headers: _headers,
-    query: {
-      [pageParam]: 'uuid',
-    },
-  })
-
-  return _groupAndTransform(response)
-}
-
 const el = ref()
-// const { arrivedState } = useScroll(el)
+
+const computedChat = computed(() => {
+  return _groupAndTransform(chats.value[`channel:${useRoute('chat').params.chat}`]!)
+})
+
+const { arrivedState } = useScroll(el, { offset: { top: 200 } })
+
+watch(() => [arrivedState.top, arrivedState.bottom], async ([top, bottom]) => {
+  if (top) {
+    const before = cursors.value[`channel:${useRoute('chat').params.chat}`]
+    await getBeforeConversation(before)
+  }
+  else if (bottom) {
+    console.log('Bottom Arrived')
+  }
+})
+
+await getConversation()
 </script>
 
 <template>
@@ -96,7 +102,7 @@ const el = ref()
     <WindowHeader />
 
     <WindowMain ref="el">
-      <template v-for="(group, j) in []" :key="j">
+      <template v-for="(group, j) in computedChat" :key="j">
         <div class="flex justify-center">
           <BaseFont class="text-xs bg-slate-100 px-2 py-1 rounded-full font-medium select-none">
             <NuxtTime :datetime="group.date" />
