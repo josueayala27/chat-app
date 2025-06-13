@@ -1,14 +1,11 @@
 <script lang="ts" setup>
-import { gsap } from 'gsap'
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
-
-gsap.registerPlugin(ScrollToPlugin)
+const { $gsap } = useNuxtApp()
 
 const main = ref<HTMLElement>()
 
 onMounted(() => {
   if (main.value) {
-    gsap.to(main.value, {
+    $gsap.to(main.value, {
       scrollTo: { y: 'max' },
       duration: 0,
     })
