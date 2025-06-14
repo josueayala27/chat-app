@@ -55,9 +55,7 @@ provide('isOwn', isOwn.value)
       <div class="flex flex-col gap-0.5 w-full">
         <template v-for="(msg, i) in messages" :key="i">
           <WindowMessagesRoot>
-            <WindowMessagesTypeText>
-              {{ msg.content }}
-            </WindowMessagesTypeText>
+            <WindowMessagesTypeText :content="msg.content" />
           </WindowMessagesRoot>
         </template>
       </div>
