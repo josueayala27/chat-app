@@ -1,9 +1,5 @@
 <script lang="ts" setup>
-/**
- * Emits a `load:before` event allowing the parent to run a callback
- * before scroll position is adjusted on top arrival.
- */
-const emit = defineEmits<{ (e: 'load:before', callback: () => void): void }>()
+const props = defineProps<{ fetchOlder: () => Promise<void> }>()
 
 const { $gsap } = useNuxtApp()
 const main = ref<HTMLElement>()
@@ -26,16 +22,16 @@ const { arrivedState } = useScroll(main, { offset: { top: 300 } })
  */
 watch(() => [arrivedState.top, arrivedState.bottom], async ([top, bottom]) => {
   if (top) {
-    const oldScrollHeight = main.value?.scrollHeight ?? 0
+    if (main.value) {
+      const oldScrollHeight = main.value.scrollHeight ?? 0
 
-    emit('load:before', async () => {
+      await props.fetchOlder()
+
       await nextTick()
 
       const newScrollHeight = main.value?.scrollHeight ?? 0
-
-      if (main.value)
-        main.value.scrollTop += newScrollHeight - oldScrollHeight
-    })
+      main.value.scrollTop += newScrollHeight - oldScrollHeight
+    }
   }
   else if (bottom) {
     console.log('Bottom Arrived')

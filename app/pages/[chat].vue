@@ -11,9 +11,8 @@ export type WindowMainInstance = InstanceType<typeof WindowMain>
 useHead({ title: 'Charlie' })
 definePageMeta({ middleware: ['auth'], key: route => route.fullPath, keepalive: true })
 
-const _headers = useRequestHeaders(['cookie'])
+const route = useRoute('chat')
 const chats = useState<ChatState>('chats')
-
 const { getConversation, getBeforeConversation, cursors } = useChat()
 
 function formatDateLocal(iso: Date) {
@@ -40,7 +39,7 @@ function formatDateLocal(iso: Date) {
  *   }[]
  * }[]} Array grouped by date and sender, ready for UI rendering.
  */
-function _groupAndTransform(messages: ChatMessage[]): {
+function groupAndTransform(messages: ChatMessage[]): {
   date: string
   senders: {
     sender_id: Pick<User, '_id' | 'first_name' | 'last_name'>
@@ -82,14 +81,12 @@ function _groupAndTransform(messages: ChatMessage[]): {
 const windowMain = ref<WindowMainInstance | null>(null)
 
 const computedChat = computed(() => {
-  return _groupAndTransform(chats.value[`channel:${useRoute('chat').params.chat}`]!)
+  return groupAndTransform(chats.value[`channel:${route.params.chat}`]!)
 })
 
-async function onLoadBefore(callback?: () => void) {
-  const before = cursors.value[`channel:${useRoute('chat').params.chat}`]
+async function loadOlderMessages() {
+  const before = cursors.value[`channel:${route.params.chat}`]
   await getBeforeConversation(before)
-
-  callback?.()
 }
 
 await getConversation()
@@ -99,7 +96,7 @@ await getConversation()
   <div class="flex flex-col divide-y divide-slate-200 flex-1 overflow-hidden">
     <WindowHeader />
 
-    <WindowMain ref="windowMain" @load:before="onLoadBefore">
+    <WindowMain ref="windowMain" :fetch-older="loadOlderMessages">
       <template v-for="(group, j) in computedChat" :key="j">
         <div class="flex justify-center">
           <BaseFont class="text-xs bg-slate-100 px-2 py-1 rounded-full font-medium select-none">
