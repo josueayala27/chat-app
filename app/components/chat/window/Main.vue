@@ -15,6 +15,14 @@ onMounted(() => {
 
 const { arrivedState } = useScroll(main, { offset: { top: 300 } })
 
+function getScrollHeight(): number {
+  if (main.value) {
+    return main.value.scrollHeight
+  }
+
+  return 0
+}
+
 /**
  * Watches scroll position.
  * If at top: triggers parent to load older content and compensates scroll position.
@@ -23,13 +31,13 @@ const { arrivedState } = useScroll(main, { offset: { top: 300 } })
 watch(() => [arrivedState.top, arrivedState.bottom], async ([top, bottom]) => {
   if (top) {
     if (main.value) {
-      const oldScrollHeight = main.value.scrollHeight ?? 0
+      const oldScrollHeight = getScrollHeight()
 
       await props.fetchOlder()
 
       await nextTick()
 
-      const newScrollHeight = main.value?.scrollHeight ?? 0
+      const newScrollHeight = getScrollHeight()
       main.value.scrollTop += newScrollHeight - oldScrollHeight
     }
   }
@@ -42,7 +50,7 @@ defineExpose({ main })
 </script>
 
 <template>
-  <div ref="main" class="p-2 overflow-auto flex-1 flex flex-col gap-2">
+  <div ref="main" class="p-2 overflow-auto scrollbar-hidden flex-1 flex flex-col gap-2">
     <slot />
   </div>
 </template>

@@ -84,6 +84,7 @@ const computedChat = computed(() => {
   return groupAndTransform(chats.value[`channel:${route.params.chat}`]!)
 })
 
+// TODO: Validate the last cursor 🚩
 async function loadOlderMessages() {
   const before = cursors.value[`channel:${route.params.chat}`]
   await getBeforeConversation(before)
