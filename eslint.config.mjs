@@ -8,6 +8,7 @@ export default withNuxt(
       'no-console': 'off',
       'vue/no-v-text-v-html-on-component': 'off',
       'vue/no-multiple-template-root': 'off',
+      'vue/custom-event-name-casing': 'off',
     },
   }),
 )

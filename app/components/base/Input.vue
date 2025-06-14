@@ -2,7 +2,7 @@
 import type { InputTypeHTMLAttribute } from 'vue'
 import theme from '@/theme/input'
 
-interface BaseInputProps {
+export interface BaseInputProps {
   icon?: string
   size?: keyof typeof theme.variants.size
   ui?: Partial<typeof theme.slots>
