@@ -2,7 +2,7 @@
 import type { RealtimeChannel } from 'ably'
 
 const { $ably } = useNuxtApp()
-const route = useRoute()
+const route = useRoute('chat')
 
 /**
  * Retrieves the authenticated user information.
@@ -101,6 +101,7 @@ function onInput() {
 }
 
 const media = ref<HTMLInputElement>()
+const files = ref<FileList | null | undefined>()
 
 /**
  * Handles file input changes by uploading each selected file in parallel.
@@ -113,13 +114,13 @@ const media = ref<HTMLInputElement>()
  * @returns {Promise<string[]|undefined>} Array of uploaded file IDs, or undefined if no files.
  */
 async function onInputChange(): Promise<void> {
-  const files = media.value?.files
+  files.value = media.value?.files
 
-  if (files) {
+  if (files.value) {
     /**
      * Create an array of upload promises for parallel processing.
      */
-    const uploadPromises = Array.from(files).map(async (file) => {
+    const uploadPromises = Array.from(files.value).map(async (file) => {
       const { name, size, type } = file
 
       /**
@@ -156,6 +157,10 @@ async function onInputChange(): Promise<void> {
 
 <template>
   <input ref="media" multiple type="file" class="hidden" @change="onInputChange">
+
+  <div v-if="files && files.length > 0" class="w-full p-3 border-b flex items-center gap-2 overflow-auto scrollbar-hidden">
+    <WindowFooterTypePreview v-for="(file, index) in files" :key="index" :file />
+  </div>
 
   <div class="p-2 flex items-center gap-2">
     <BasePopover>

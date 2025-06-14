@@ -6,6 +6,7 @@ export const messageParamSchema = z.object({
 
 export const getMessagesQuerySchema = z.object({
   before: z.string().length(24).optional(),
+  after: z.string().length(24).optional(),
 })
 
 export const createMessageBodySchema = z.object({

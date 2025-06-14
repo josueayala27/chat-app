@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     '@vee-validate/nuxt',
     '@nuxt/eslint',
     '@nuxt/test-utils/module',
+    '@vue-macros/nuxt',
   ],
   components: [
     { path: '@/components/chat/window', prefix: 'Window' },
@@ -36,6 +37,10 @@ export default defineNuxtConfig({
   },
   future: {
     compatibilityVersion: 4,
+  },
+  experimental: {
+    typedPages: true,
+    renderJsonPayloads: true,
   },
   compatibilityDate: '2024-11-01',
   nitro: {

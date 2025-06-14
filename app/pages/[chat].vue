@@ -1,21 +1,19 @@
 <script lang="ts">
+import type { WindowMain } from '#components'
 import type { ChatMessage } from '~/types/message'
 import type { User } from '~/types/user'
 import { entries, groupBy, mapValues, pipe, sortBy } from 'remeda'
+
+export type WindowMainInstance = InstanceType<typeof WindowMain>
 </script>
 
 <script setup lang="ts">
 useHead({ title: 'Charlie' })
-definePageMeta({ middleware: ['auth'] })
+definePageMeta({ middleware: ['auth'], key: route => route.fullPath, keepalive: true })
 
-const route = useRoute()
-const isSelectMessagesActive = useState<boolean>(`select-messages-${route.params.chat}`, () => false)
-
-onUnmounted(() => {
-  isSelectMessagesActive.value = false
-})
-
-const headers = useRequestHeaders(['cookie'])
+const route = useRoute('chat')
+const chats = useState<ChatState>('chats')
+const { getConversation, getBeforeConversation, cursors } = useChat()
 
 function formatDateLocal(iso: Date) {
   return new Intl.DateTimeFormat('sv-SE', {
@@ -80,32 +78,34 @@ function groupAndTransform(messages: ChatMessage[]): {
   )
 }
 
-const { data } = await useAsyncData(`channel:${route.params.chat}`, () =>
-  $fetch<ChatMessage[]>(`/api/chats/${route.params.chat}/messages`, { method: 'GET', headers }), {
-  /**
-   * Fetches raw messages then sorts & groups them for the UI.
-   *
-   * @returns structured array by date and sender
-   */
-  transform: groupAndTransform,
+const windowMain = ref<WindowMainInstance | null>(null)
+
+const computedChat = computed(() => {
+  return groupAndTransform(chats.value[`channel:${route.params.chat}`]!)
 })
 
-const el = ref()
+// TODO: Validate the last cursor 🚩
+async function loadOlderMessages() {
+  const before = cursors.value[`channel:${route.params.chat}`]
+  await getBeforeConversation(before)
+}
+
+await getConversation()
 </script>
 
 <template>
-  <div class="flex flex-col divide-y divide-slate-200 flex-1">
+  <div class="flex flex-col divide-y divide-slate-200 flex-1 overflow-hidden">
     <WindowHeader />
 
-    <WindowMain :id="`channel-${route.params.chat}-window`" ref="el">
-      <template v-for="(group, i) in data" :key="i">
+    <WindowMain ref="windowMain" :fetch-older="loadOlderMessages">
+      <template v-for="(group, j) in computedChat" :key="j">
         <div class="flex justify-center">
           <BaseFont class="text-xs bg-slate-100 px-2 py-1 rounded-full font-medium select-none">
             <NuxtTime :datetime="group.date" />
           </BaseFont>
         </div>
 
-        <WindowMessagesGroup v-for="({ sender_id, messages }, j) in group.senders" :key="j" :messages :sender="sender_id" />
+        <WindowMessagesGroup v-for="({ sender_id, messages: _messages }, k) in group.senders" :key="k" :messages="_messages" :sender="sender_id" />
       </template>
     </WindowMain>
 

@@ -39,11 +39,12 @@ export async function createMessage(data: CreateMessageInput): Promise<MessageDo
  * @param {GetMessagesInput} params - Query parameters including chat ID and optional cursor.
  * @returns {Promise<MessageDocument[]>} An array of message documents.
  */
-export async function getMessages({ chat_id, before }: GetMessagesInput): Promise<MessageDocument[]> {
+export async function getMessages({ chat_id, before, after }: GetMessagesInput): Promise<MessageDocument[]> {
   return Message
     .find({
       chat_id: new mongoose.Types.ObjectId(chat_id),
       ...(before && { _id: { $lt: new mongoose.Types.ObjectId(before) } }),
+      ...(after && { _id: { $gt: new mongoose.Types.ObjectId(after) } }),
     })
     .sort({ created_at: -1 })
     .limit(MESSAGE_FETCH_LIMIT)

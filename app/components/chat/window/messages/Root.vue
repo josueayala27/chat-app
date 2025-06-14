@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants'
 
 const isOwn = inject<boolean>('isOwn')
 
-const route = useRoute()
+const route = useRoute('chat')
 const isSelectMessagesActive = useState<boolean>(`select-messages-${route.params.chat}`, () => false)
 
 const ui = tv({
