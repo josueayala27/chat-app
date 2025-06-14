@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+/**
+ * Emits a `load:before` event allowing the parent to run a callback
+ * before scroll position is adjusted on top arrival.
+ */
 const emit = defineEmits<{ (e: 'load:before', callback: () => void): void }>()
 
 const { $gsap } = useNuxtApp()
@@ -13,16 +17,16 @@ onMounted(() => {
   }
 })
 
-const { arrivedState } = useScroll(main, { offset: { top: 200 } })
+const { arrivedState } = useScroll(main, { offset: { top: 300 } })
 
+/**
+ * Watches scroll position.
+ * If at top: triggers parent to load older content and compensates scroll position.
+ * If at bottom: logs presence (placeholder for future logic).
+ */
 watch(() => [arrivedState.top, arrivedState.bottom], async ([top, bottom]) => {
   if (top) {
-    const container = main.value
-
-    if (!container)
-      return
-
-    const oldScrollHeight = container.scrollHeight
+    const oldScrollHeight = main.value?.scrollHeight ?? 0
 
     emit('load:before', async () => {
       await nextTick()
