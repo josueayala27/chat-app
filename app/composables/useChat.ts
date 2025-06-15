@@ -53,5 +53,12 @@ export function useChat() {
     }
   }
 
-  return { chats, cursors, getChats, getConversation, getBeforeConversation }
+  function concatRecentMessage(message: ChatMessage) {
+    const channel = `channel:${route.params.chat}`
+    chats.value[channel] = concat(chats.value[channel] || [], [message])
+
+    console.log(chats.value[channel])
+  }
+
+  return { chats, cursors, getChats, getConversation, getBeforeConversation, concatRecentMessage }
 }

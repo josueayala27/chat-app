@@ -1,5 +1,6 @@
 <script lang="ts">
 import type { WindowMain } from '#components'
+import type { Message as AblyMessage, RealtimeChannel } from 'ably'
 import type { ChatMessage } from '~/types/message'
 import type { User } from '~/types/user'
 import { entries, groupBy, mapValues, pipe, sortBy } from 'remeda'
@@ -11,9 +12,10 @@ export type WindowMainInstance = InstanceType<typeof WindowMain>
 useHead({ title: 'Charlie' })
 definePageMeta({ middleware: ['auth'], key: route => route.fullPath, keepalive: true })
 
+const { $ably } = useNuxtApp()
 const route = useRoute('chat')
 const chats = useState<ChatState>('chats')
-const { getConversation, getBeforeConversation, cursors } = useChat()
+const { getConversation, getBeforeConversation, cursors, concatRecentMessage } = useChat()
 
 function formatDateLocal(iso: Date) {
   return new Intl.DateTimeFormat('sv-SE', {
@@ -90,6 +92,27 @@ async function loadOlderMessages() {
   await getBeforeConversation(before)
 }
 
+onMounted(() => {
+  /**
+   * Retrieves the Ably channel corresponding to the chat item.
+   * @type {RealtimeChannel}
+   */
+  const channel: RealtimeChannel = $ably.channels.get(`channel:${route.params.chat}`)
+
+  /**
+   * Subscribes to the 'message' event on the Ably channel.
+   * Processes incoming messages and logs them if they are from other users.
+   * @param {Ably.Types.Message} message - The incoming message from the channel.
+   */
+  channel.subscribe('event:new-message', (message: AblyMessage) => {
+    const data = message.data as ChatMessage
+    concatRecentMessage(data)
+    // if (data.sender_id !== user.value._id) {
+    //   console.log(message)
+    // }
+  })
+})
+
 await getConversation()
 </script>
 
@@ -98,6 +121,8 @@ await getConversation()
     <WindowHeader />
 
     <WindowMain ref="windowMain" :fetch-older="loadOlderMessages">
+      {{ chats }}
+
       <template v-for="(group, j) in computedChat" :key="j">
         <div class="flex justify-center">
           <BaseFont class="text-xs bg-slate-100 px-2 py-1 rounded-full font-medium select-none">

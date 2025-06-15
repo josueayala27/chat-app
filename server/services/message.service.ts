@@ -24,13 +24,15 @@ type GetMessagesInput = z.infer<typeof getMessagesQuerySchema> & { chat_id: stri
  * @returns {Promise<MessageDocument>} The created message document.
  */
 export async function createMessage(data: CreateMessageInput): Promise<MessageDocument> {
-  return Message.create({
+  const message = await Message.create({
     chat_id: new mongoose.Types.ObjectId(data.chat_id),
     sender_id: data.user._id,
     content: data.content,
     type: data.type,
     read_by: [{ user_id: data.user._id, read_at: new Date() }],
   })
+
+  return message.populate('sender_id', 'first_name last_name')
 }
 
 /**

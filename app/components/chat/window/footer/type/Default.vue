@@ -10,7 +10,7 @@ const route = useRoute('chat')
  * @property {Ref<User>} user - The current authenticated user.
  */
 const { user } = useAuth()
-
+const { reference, closePopover } = usePopover()
 const { values, validate, resetForm } = useForm<{ content: string }>({
   name: 'chat-footer',
 })
@@ -114,6 +114,8 @@ const files = ref<FileList | null | undefined>()
  * @returns {Promise<string[]|undefined>} Array of uploaded file IDs, or undefined if no files.
  */
 async function onInputChange(): Promise<void> {
+  closePopover()
+
   files.value = media.value?.files
 
   if (files.value) {
@@ -126,8 +128,8 @@ async function onInputChange(): Promise<void> {
       /**
        * Request a presigned upload URL from your backend.
        */
-      const { _id, upload_url } = await $fetch<{ _id: string, upload_url: string }>(
-        `/api/chats/${route.params.chat}/attachments`,
+      const { upload_url } = await $fetch<{ _id: string, upload_url: string }>(
+        `/api/chats/${route.params.chat}/attachments/sign`,
         {
           method: 'POST',
           body: { filename: name, size, content_type: type },
@@ -135,22 +137,13 @@ async function onInputChange(): Promise<void> {
       )
 
       /**
-       * Upload the file directly to the storage endpoint.
-       */
-      await $fetch(upload_url, {
-        method: 'PUT',
-        body: file,
-        headers: { 'Content-Type': type },
-      })
-
-      /**
        * Return the file ID for further processing if needed.
        */
-      return _id
+      return { upload_url, file }
     })
 
-    const ids = await Promise.all(uploadPromises)
-    console.log(ids)
+    const _files = await Promise.all(uploadPromises)
+    console.log(_files)
   }
 }
 </script>
@@ -159,11 +152,11 @@ async function onInputChange(): Promise<void> {
   <input ref="media" multiple type="file" class="hidden" @change="onInputChange">
 
   <div v-if="files && files.length > 0" class="w-full p-3 border-b flex items-center gap-2 overflow-auto scrollbar-hidden">
-    <WindowFooterTypePreview v-for="(file, index) in files" :key="index" :file />
+    <WindowFooterTypeDefaultPreview v-for="(file, index) in files" :key="index" :file />
   </div>
 
   <div class="p-2 flex items-center gap-2">
-    <BasePopover>
+    <BasePopover ref="reference">
       <template #default="{ isOpen }">
         <div :class="[{ 'bg-slate-100': isOpen }]" class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer">
           <Icon size="20px" name="carbon:add-large" :class="[{ 'rotate-135': isOpen }]" class="flex shrink-0 duration-300" />
@@ -192,8 +185,8 @@ async function onInputChange(): Promise<void> {
     <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer" @click="sendMessage">
       <Icon
         size="20px"
-        :name="values.content ? 'carbon:send-filled' : 'carbon:microphone'"
-        :class="{ 'text-sky-500': values.content }"
+        :name="values.content || files?.length ? 'carbon:send-filled' : 'carbon:microphone'"
+        :class="{ 'text-sky-500': values.content || files?.length }"
         class="flex shrink-0"
       />
     </div>
