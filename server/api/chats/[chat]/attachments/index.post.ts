@@ -1,39 +1,25 @@
-import type StorageFileApi from '@supabase/storage-js/dist/module/packages/StorageFileApi'
-import { nanoid } from 'nanoid'
-import { createAttachment } from '~~/server/services/attachment.service'
-import { attachmentCreateSchema } from '~~/server/validators/attachment.validator'
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
-const BUCKET_NAME = 'messages'
+export default defineEventHandler(async () => {
+  const config = useRuntimeConfig()
 
-/**
- * Event handler for creating a signed upload URL and registering an attachment.
- *
- * - Validates the incoming request body using `attachmentCreateSchema`.
- * - Generates a signed upload URL for Supabase Storage.
- * - Retrieves the public URL for the uploaded file.
- * - Persists attachment metadata in the database.
- *
- * @param {import('h3').EventHandlerRequest} event - The incoming request event.
- * @returns {Promise<{ _id: string, upload_url: string }>} Attachment ID and signed upload URL.
- */
-export default defineEventHandler(async (event) => {
-  const supabase = useSupabaseStorage()
+  const client = new S3Client({
+    region: 'us-east-1',
+    credentials: {
+      accessKeyId: config.AWS_ACCESS_KEY_ID,
+      secretAccessKey: config.AWS_SECRET_ACCESS_KEY,
+    },
+  })
 
-  const chat = getRouterParam(event, 'chat')
+  const command = new PutObjectCommand({
+    Bucket: 'nimble-cloud-assets-7421',
+    Key: 'Customizable Font Scheme.png',
+  })
 
-  const body = await readValidatedBody(event, attachmentCreateSchema.parse)
-
-  const FILENAME = `files/${chat}/${nanoid(32)}.${body.filename.split('.')[1]}`
-
-  const storage: StorageFileApi = supabase.from(BUCKET_NAME)
-
-  const { data } = await storage.createSignedUploadUrl(FILENAME)
-  const { data: { publicUrl: url } } = storage.getPublicUrl(FILENAME)
-
-  const attachment = await createAttachment({ ...body, system_filename: FILENAME, url })
+  const url = await getSignedUrl(client, command, { expiresIn: 3600 })
 
   return {
-    _id: attachment._id,
-    upload_url: data?.signedUrl,
+    message: url,
   }
 })

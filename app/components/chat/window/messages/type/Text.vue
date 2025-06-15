@@ -17,8 +17,6 @@ const { root } = ui()
 <template>
   <!-- rounded-r-lg last:rounded-bl-lg -->
   <div :class="root()">
-    <BaseFont class="text-sm text-inherit">
-      <slot />
-    </BaseFont>
+    <BaseFont class="text-sm text-inherit" :content />
   </div>
 </template>

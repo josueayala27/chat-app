@@ -34,6 +34,8 @@ export default defineNuxtConfig({
     MONGODB_PORT: process.env.MONGODB_PORT,
     SUPABASE_URL: process.env.SUPABASE_URL,
     SUPABASE_SERVICE_ROLE: process.env.SUPABASE_SERVICE_ROLE,
+    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
   },
   future: {
     compatibilityVersion: 4,
