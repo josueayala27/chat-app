@@ -1,13 +1,10 @@
 <script lang="ts" setup>
 defineProps<{ file: File }>()
+const emit = defineEmits<{ (e: 'remove'): void }>()
 
 function fileToURL(file: File) {
   return URL.createObjectURL(file)
 }
-
-onMounted(() => {
-  console.log('Upload file...')
-})
 </script>
 
 <template>
@@ -21,7 +18,7 @@ onMounted(() => {
 
     <img v-else class="h-full w-full object-cover" :src="fileToURL(file)">
 
-    <div class="absolute top-0 left-0 bg-slate-900/70 w-full h-full group-hover:visible invisible grid place-items-center">
+    <div class="absolute top-0 left-0 bg-slate-900/70 w-full h-full group-hover:visible invisible grid place-items-center" @click="emit('remove')">
       <Icon size="24px" class="text-neutral-50" name="carbon:trash-can" />
     </div>
   </div>

@@ -143,7 +143,17 @@ async function onInputChange(): Promise<void> {
     })
 
     const _files = await Promise.all(uploadPromises)
-    console.log(_files)
+  }
+}
+
+function onRemove(index: number) {
+  if (files.value) {
+    const fileArray = Array.from(files.value)
+    fileArray.splice(index, 1)
+
+    const dataTransfer = new DataTransfer()
+    fileArray.forEach(file => dataTransfer.items.add(file))
+    files.value = dataTransfer.files
   }
 }
 </script>
@@ -152,7 +162,7 @@ async function onInputChange(): Promise<void> {
   <input ref="media" multiple type="file" class="hidden" @change="onInputChange">
 
   <div v-if="files && files.length > 0" class="w-full p-3 border-b flex items-center gap-2 overflow-auto scrollbar-hidden">
-    <WindowFooterTypeDefaultPreview v-for="(file, index) in files" :key="index" :file />
+    <WindowFooterTypeDefaultPreview v-for="(file, index) in files" :key="index" :file @remove="onRemove(index)" />
   </div>
 
   <div class="p-2 flex items-center gap-2">
