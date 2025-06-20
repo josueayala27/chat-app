@@ -53,9 +53,10 @@ provide('isOwn', isOwn.value)
       <BaseFont :class="[title()]" :content="isOwn ? 'You' : [sender.first_name, sender.last_name].join(' ')" />
 
       <div class="flex flex-col gap-0.5 w-full">
-        <template v-for="(msg, i) in messages" :key="i">
+        <template v-for="msg in messages" :key="msg._id">
           <WindowMessagesRoot>
-            <WindowMessagesTypeText :content="msg.content" />
+            <WindowMessagesTypeText v-if="msg.type === 'text'" :content="msg.content" />
+            <WindowMessagesTypeMedia v-else-if="msg.type === 'media'" />
           </WindowMessagesRoot>
         </template>
       </div>

@@ -13,7 +13,7 @@ const isOwn = inject<boolean>('isOwn')
 
 const ui = tv({
   slots: {
-    root: 'rounded-lg overflow-hidden py-2 px-3 max-w-[32rem] text-sm [&>ul]:list-inside [&>ol]:list-inside [&>ul]:list-disc [&>ol]:list-decimal overflow-hidden',
+    root: 'max-w-[32rem] rounded-lg overflow-hidden py-2 px-3 text-sm [&>ul]:list-inside [&>ol]:list-inside [&>ul]:list-disc [&>ol]:list-decimal overflow-hidden',
   },
   variants: {
     isOwn: {
@@ -32,6 +32,6 @@ const { root } = ui({ isOwn })
 
 <template>
   <div :class="root()">
-    <BaseFont :content />
+    {{ content }}
   </div>
 </template>

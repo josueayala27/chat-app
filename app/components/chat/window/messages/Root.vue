@@ -32,7 +32,9 @@ const { root } = ui({ isOwn })
     </div>
 
     <!-- Message -->
-    <slot />
+    <div>
+      <slot />
+    </div>
 
     <!-- Actions -->
     <div v-if="!isSelectMessagesActive">
