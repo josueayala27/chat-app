@@ -30,9 +30,7 @@ export function useAws() {
    */
   async function createSignedUploadURL(client: S3Client, key: string): Promise<string> {
     const command = new PutObjectCommand({ Bucket: config.AWS_BUCKET_NAME, Key: key })
-    const url = await getSignedUrl(client, command, { expiresIn: 3600 })
-
-    return url
+    return getSignedUrl(client, command, { expiresIn: 300 })
   }
 
   return { createClient, createSignedUploadURL }

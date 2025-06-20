@@ -50,7 +50,7 @@ provide('isOwn', isOwn.value)
     <BaseAvatar :ui="{ base: avatar() }" />
 
     <div :class="content()">
-      <BaseFont :class="[title()]" :content="isOwn ? 'Tú' : `${sender.first_name} ${sender.last_name}`" />
+      <BaseFont :class="[title()]" :content="isOwn ? 'You' : [sender.first_name, sender.last_name].join(' ')" />
 
       <div class="flex flex-col gap-0.5 w-full">
         <template v-for="(msg, i) in messages" :key="i">
