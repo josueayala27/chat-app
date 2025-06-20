@@ -11,6 +11,7 @@ const route = useRoute('chat')
  */
 const { user } = useAuth()
 const { reference, closePopover } = usePopover()
+const { getUploadUrl } = useAttachmentUploader(route.params.chat)
 const { values, validate, resetForm } = useForm<{ content: string }>({
   name: 'chat-footer',
 })
@@ -123,18 +124,10 @@ async function onInputChange(): Promise<void> {
      * Create an array of upload promises for parallel processing.
      */
     const uploadPromises = Array.from(files.value).map(async (file) => {
-      const { name, size, type } = file
-
       /**
-       * Request a presigned upload URL from your backend.
+       * Request a presigned upload URL.
        */
-      const { upload_url } = await $fetch<{ _id: string, upload_url: string }>(
-        `/api/chats/${route.params.chat}/attachments/sign`,
-        {
-          method: 'POST',
-          body: { filename: name, size, content_type: type },
-        },
-      )
+      const upload_url = await getUploadUrl(file)
 
       /**
        * Return the file ID for further processing if needed.
