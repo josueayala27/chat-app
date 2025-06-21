@@ -13,6 +13,14 @@ const text = tv({
         root: 'bg-slate-100',
       },
     },
+    isTemp: {
+      true: {
+        root: 'bg-sky-500/70',
+      },
+      false: {
+        root: '',
+      },
+    },
   },
 })
 

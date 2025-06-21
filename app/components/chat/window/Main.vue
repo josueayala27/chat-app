@@ -4,16 +4,16 @@ const props = defineProps<{ fetchOlder: () => Promise<void> }>()
 const { $gsap } = useNuxtApp()
 const main = ref<HTMLElement>()
 
-onMounted(() => {
+const { arrivedState } = useScroll(main, { offset: { top: 300 } })
+
+function scrollToBottom(duration: number = 0): void {
   if (main.value) {
     $gsap.to(main.value, {
       scrollTo: { y: 'max' },
-      duration: 0,
+      duration,
     })
   }
-})
-
-const { arrivedState } = useScroll(main, { offset: { top: 300 } })
+}
 
 function getScrollHeight(): number {
   if (main.value) {
@@ -46,7 +46,11 @@ watch(() => [arrivedState.top, arrivedState.bottom], async ([top, bottom]) => {
   }
 })
 
-defineExpose({ main })
+onMounted(() => {
+  scrollToBottom()
+})
+
+defineExpose({ main, scrollToBottom })
 </script>
 
 <template>
