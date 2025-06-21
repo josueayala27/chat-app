@@ -129,6 +129,9 @@ async function onInputChange(): Promise<void> {
 
   files.value = media.value?.files
 
+  await nextTick()
+  _window?.value?.scrollToBottom()
+
   if (files.value) {
     /**
      * Create an array of upload promises for parallel processing.
