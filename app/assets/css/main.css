@@ -2,6 +2,7 @@
 
 @theme {
   --font-sans: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono";
 }
 
 @utility scrollbar-hidden {

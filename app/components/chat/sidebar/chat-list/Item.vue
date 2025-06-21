@@ -40,7 +40,7 @@ onMounted(async () => {
     const data = message.data as ChatMessage
 
     if (data.sender_id !== user.value._id) {
-      console.log(message)
+      // console.log(message)
     }
   })
 

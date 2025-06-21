@@ -10,7 +10,8 @@ const route = useRoute('chat')
  * @property {Ref<User>} user - The current authenticated user.
  */
 const { user } = useAuth()
-
+const { reference, closePopover } = usePopover()
+const { getUploadUrl } = useAttachmentUploader(route.params.chat)
 const { values, validate, resetForm } = useForm<{ content: string }>({
   name: 'chat-footer',
 })
@@ -41,6 +42,8 @@ async function sendMessage() {
     const content = values.content.trim()
     resetForm()
 
+    console.log('Create temporal message')
+
     enqueueTask(async () => {
       await $fetch(`/api/chats/${route.params.chat}/messages`, {
         method: 'POST',
@@ -49,6 +52,8 @@ async function sendMessage() {
           content,
         },
       })
+
+      console.log('Update temporal message')
     })
   }
 }
@@ -114,6 +119,8 @@ const files = ref<FileList | null | undefined>()
  * @returns {Promise<string[]|undefined>} Array of uploaded file IDs, or undefined if no files.
  */
 async function onInputChange(): Promise<void> {
+  closePopover()
+
   files.value = media.value?.files
 
   if (files.value) {
@@ -121,36 +128,29 @@ async function onInputChange(): Promise<void> {
      * Create an array of upload promises for parallel processing.
      */
     const uploadPromises = Array.from(files.value).map(async (file) => {
-      const { name, size, type } = file
-
       /**
-       * Request a presigned upload URL from your backend.
+       * Request a presigned upload URL.
        */
-      const { _id, upload_url } = await $fetch<{ _id: string, upload_url: string }>(
-        `/api/chats/${route.params.chat}/attachments`,
-        {
-          method: 'POST',
-          body: { filename: name, size, content_type: type },
-        },
-      )
-
-      /**
-       * Upload the file directly to the storage endpoint.
-       */
-      await $fetch(upload_url, {
-        method: 'PUT',
-        body: file,
-        headers: { 'Content-Type': type },
-      })
+      const upload_url = await getUploadUrl(file)
 
       /**
        * Return the file ID for further processing if needed.
        */
-      return _id
+      return { upload_url, file }
     })
 
-    const ids = await Promise.all(uploadPromises)
-    console.log(ids)
+    const _files = await Promise.all(uploadPromises)
+  }
+}
+
+function onRemove(index: number) {
+  if (files.value) {
+    const fileArray = Array.from(files.value)
+    fileArray.splice(index, 1)
+
+    const dataTransfer = new DataTransfer()
+    fileArray.forEach(file => dataTransfer.items.add(file))
+    files.value = dataTransfer.files
   }
 }
 </script>
@@ -159,11 +159,11 @@ async function onInputChange(): Promise<void> {
   <input ref="media" multiple type="file" class="hidden" @change="onInputChange">
 
   <div v-if="files && files.length > 0" class="w-full p-3 border-b flex items-center gap-2 overflow-auto scrollbar-hidden">
-    <WindowFooterTypePreview v-for="(file, index) in files" :key="index" :file />
+    <WindowFooterTypeDefaultPreview v-for="(file, index) in files" :key="index" :file @remove="onRemove(index)" />
   </div>
 
   <div class="p-2 flex items-center gap-2">
-    <BasePopover>
+    <BasePopover ref="reference">
       <template #default="{ isOpen }">
         <div :class="[{ 'bg-slate-100': isOpen }]" class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer">
           <Icon size="20px" name="carbon:add-large" :class="[{ 'rotate-135': isOpen }]" class="flex shrink-0 duration-300" />
@@ -192,8 +192,8 @@ async function onInputChange(): Promise<void> {
     <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer" @click="sendMessage">
       <Icon
         size="20px"
-        :name="values.content ? 'carbon:send-filled' : 'carbon:microphone'"
-        :class="{ 'text-sky-500': values.content }"
+        :name="values.content || files?.length ? 'carbon:send-filled' : 'carbon:microphone'"
+        :class="{ 'text-sky-500': values.content || files?.length }"
         class="flex shrink-0"
       />
     </div>

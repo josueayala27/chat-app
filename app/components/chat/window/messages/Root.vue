@@ -9,35 +9,30 @@ const isSelectMessagesActive = useState<boolean>(`select-messages-${route.params
 const ui = tv({
   slots: {
     root: 'relative group flex items-center gap-2 w-full',
-    base: 'rounded-lg',
   },
   variants: {
     isOwn: {
       true: {
         root: 'pr-[calc(48px+8px)] flex-row-reverse',
-        base: 'bg-sky-500 text-white',
       },
       false: {
         root: 'pl-[calc(48px+8px)]',
-        base: 'bg-slate-100',
       },
     },
   },
 })
 
-const { root, base } = ui({ isOwn })
-
-// const selectedMessages = reactive(new Set<string[]>([]))
+const { root } = ui({ isOwn })
 </script>
 
 <template>
   <div :class="[root()]">
-    <div class="absolute left-0 bottom-0 w-[calc(48px+8px)] flex justify-end pr-3">
-      <BaseRadio v-if="isSelectMessagesActive" @click.stop />
+    <div v-if="isSelectMessagesActive" class="absolute left-0 bottom-0 w-[calc(48px+8px)] flex justify-end pr-3">
+      <BaseRadio @click.stop />
     </div>
 
     <!-- Message -->
-    <div :class="[base()]">
+    <div>
       <slot />
     </div>
 

@@ -10,7 +10,7 @@ export interface Message {
   chat_id: string
   sender_id: string
   content: string
-  type: 'text' | 'image' | 'video' | 'audio' | 'file'
+  type: 'text' | 'media' | 'audio' | 'file'
   attachments?: string[]
   read_by: MessageReadBy[]
   created_at: Date

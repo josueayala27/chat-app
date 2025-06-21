@@ -1,5 +1,7 @@
 <template>
-  <div class="rounded-r-lg last:rounded-bl-lg inline-flex overflow-hidden max-w-[40%] h-auto cursor-pointer">
-    <img src="https://images.unsplash.com/photo-1728588266992-a50e7adc55c2?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="">
+  <div class="flex flex-col items-end">
+    <div class="h-[20rem] w-[20rem] rounded-t-lg bg-slate-100" />
+
+    <WindowMessagesTypeText :ui="{ root: 'rounded-t-none w-full' }" content="24. Look my photos haha 😂" />
   </div>
 </template>
