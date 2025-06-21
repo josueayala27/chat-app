@@ -91,5 +91,12 @@ export function useChat() {
     ]
   }
 
-  return { chats, cursors, getChats, getConversation, getBeforeConversation, addLastMessage }
+  return {
+    chats,
+    cursors,
+    getChats,
+    getConversation,
+    getBeforeConversation,
+    addLastMessage,
+  }
 }
