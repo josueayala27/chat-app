@@ -12,9 +12,8 @@ const route = useRoute('chat')
 const { user } = useAuth()
 const { reference, closePopover } = usePopover()
 const { getUploadUrl } = useAttachmentUploader(route.params.chat)
-const { values, validate, resetForm } = useForm<{ content: string }>({
-  name: 'chat-footer',
-})
+const { values, validate, resetForm } = useForm<{ content: string }>({ name: 'chat-footer' })
+const { createTempMessage } = useChat()
 
 /**
  * A reactive reference to a Promise used to queue asynchronous tasks.
@@ -42,7 +41,7 @@ async function sendMessage() {
     const content = values.content.trim()
     resetForm()
 
-    console.log('Create temporal message')
+    console.log(createTempMessage({ chat_id: route.params.chat, content }))
 
     enqueueTask(async () => {
       await $fetch(`/api/chats/${route.params.chat}/messages`, {

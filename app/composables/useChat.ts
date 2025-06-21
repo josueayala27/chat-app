@@ -1,4 +1,5 @@
-import type { ChatMessage } from '~/types/message'
+import type { ChatMessage, Message } from '~/types/message'
+import { nanoid } from 'nanoid'
 import { concat } from 'remeda'
 
 export type ChatState = Record<string, ChatMessage[]>
@@ -91,6 +92,22 @@ export function useChat() {
     ]
   }
 
+  function createTempMessage({ chat_id, content }: { chat_id: string, content: string }): Message {
+    const tempo: Message = {
+      _id: nanoid(32),
+      attachments: [],
+      chat_id,
+      content,
+      created_at: new Date().toISOString(),
+      read_by: [],
+      sender_id: useAuth().user.value?._id || '',
+      type: 'text',
+      updated_at: new Date().toISOString(),
+    }
+
+    return tempo
+  }
+
   return {
     chats,
     cursors,
@@ -98,5 +115,6 @@ export function useChat() {
     getConversation,
     getBeforeConversation,
     addLastMessage,
+    createTempMessage,
   }
 }
