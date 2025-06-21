@@ -1,37 +1,22 @@
 <script lang="ts">
-import { tv } from 'tailwind-variants'
+import theme from '@/theme/window/messages/type/text'
 
 interface WindowMessagesTypeTextProps {
   content: string
+  ui?: Partial<typeof theme.slots>
 }
 </script>
 
 <script lang="ts" setup>
-defineProps<WindowMessagesTypeTextProps>()
+const props = defineProps<WindowMessagesTypeTextProps>()
 
 const isOwn = inject<boolean>('isOwn')
 
-const ui = tv({
-  slots: {
-    root: 'max-w-[32rem] rounded-lg overflow-hidden py-2 px-3 text-sm [&>ul]:list-inside [&>ol]:list-inside [&>ul]:list-disc [&>ol]:list-decimal overflow-hidden',
-  },
-  variants: {
-    isOwn: {
-      true: {
-        root: 'bg-sky-500 text-white',
-      },
-      false: {
-        root: 'bg-slate-100',
-      },
-    },
-  },
-})
-
-const { root } = ui({ isOwn })
+const ui = computed(() => theme({ isOwn }))
 </script>
 
 <template>
-  <div :class="root()">
+  <div :class="ui.root({ class: props.ui?.root })">
     {{ content }}
   </div>
 </template>
