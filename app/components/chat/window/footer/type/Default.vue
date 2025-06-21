@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { RealtimeChannel } from 'ably'
+import type { ChatMessage } from '~/types/message'
 
 const { $ably } = useNuxtApp()
 const route = useRoute('chat')
@@ -13,7 +14,7 @@ const { user } = useAuth()
 const { reference, closePopover } = usePopover()
 const { getUploadUrl } = useAttachmentUploader(route.params.chat)
 const { values, validate, resetForm } = useForm<{ content: string }>({ name: 'chat-footer' })
-const { createTempMessage } = useChat()
+const { createTempMessage, updateTempMessage } = useChat()
 
 /**
  * A reactive reference to a Promise used to queue asynchronous tasks.
@@ -41,10 +42,10 @@ async function sendMessage() {
     const content = values.content.trim()
     resetForm()
 
-    console.log(createTempMessage({ chat_id: route.params.chat, content }))
+    const { _id } = createTempMessage({ chat_id: route.params.chat, content })
 
     enqueueTask(async () => {
-      await $fetch(`/api/chats/${route.params.chat}/messages`, {
+      const message = await $fetch(`/api/chats/${route.params.chat}/messages`, {
         method: 'POST',
         body: {
           type: 'text',
@@ -52,7 +53,7 @@ async function sendMessage() {
         },
       })
 
-      console.log('Update temporal message')
+      updateTempMessage(_id, message as ChatMessage)
     })
   }
 }

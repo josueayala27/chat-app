@@ -80,7 +80,7 @@ onMounted(() => {
    */
   channel.subscribe('event:new-message', (message: AblyMessage) => {
     const data = message.data as ChatMessage
-    addLastMessage(data)
+    // addLastMessage(data)
     // if (data.sender_id !== user.value._id) {
     //   console.log(message)
     // }
