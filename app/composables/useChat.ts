@@ -17,14 +17,29 @@ export function useChat() {
     headers,
   }))
 
-  async function getChats() {
+  /**
+   * Fetches all chat channels for the user.
+   *
+   * @async
+   * @function getChats
+   * @returns {Promise<ChatState>} Resolves with a map of channel IDs to message arrays.
+   */
+  async function getChats(): Promise<ChatState> {
     const _chats = await $fetch<any>('/api/chats', { headers })
     chats.value = _chats
 
     return _chats
   }
 
-  async function getBeforeConversation(before?: string) {
+  /**
+   * Fetches messages before a given cursor and prepends them to existing messages.
+   *
+   * @async
+   * @function getBeforeConversation
+   * @param {string} [before] - The cursor ID to fetch messages before.
+   * @returns {Promise<void>} Resolves when prepended or if no new data.
+   */
+  async function getBeforeConversation(before?: string): Promise<void> {
     const channel = `channel:${route.params.chat}`
 
     const response = await getAsyncConversation.execute({ before })
@@ -37,7 +52,14 @@ export function useChat() {
     chats.value[channel] = concat(response, chats.value[channel] || [])
   }
 
-  async function getConversation() {
+  /**
+   * Loads the initial set of messages for the current channel if not already loaded.
+   *
+   * @async
+   * @function getConversation
+   * @returns {Promise<void>} Resolves when messages are loaded or if already present.
+   */
+  async function getConversation(): Promise<void> {
     const channel = `channel:${route.params.chat}`
 
     if (!chats.value[channel]) {
@@ -53,7 +75,14 @@ export function useChat() {
     }
   }
 
-  function addLastMessage(message: ChatMessage) {
+  /**
+   * Appends a new message to the end of the current channel's message list.
+   *
+   * @function addLastMessage
+   * @param {ChatMessage} message - The chat message to append.
+   * @returns {void}
+   */
+  function addLastMessage(message: ChatMessage): void {
     const channel = `channel:${route.params.chat}`
 
     chats.value[channel] = [

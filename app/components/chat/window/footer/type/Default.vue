@@ -42,6 +42,8 @@ async function sendMessage() {
     const content = values.content.trim()
     resetForm()
 
+    console.log('Create temporal message')
+
     enqueueTask(async () => {
       await $fetch(`/api/chats/${route.params.chat}/messages`, {
         method: 'POST',
@@ -50,6 +52,8 @@ async function sendMessage() {
           content,
         },
       })
+
+      console.log('Update temporal message')
     })
   }
 }
