@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { RealtimeChannel } from 'ably'
+import type { WindowMainInstance } from '~/pages/[chat].vue'
 import type { ChatMessage } from '~/types/message'
 
 const { $ably } = useNuxtApp()
@@ -15,6 +16,8 @@ const { reference, closePopover } = usePopover()
 const { getUploadUrl } = useAttachmentUploader(route.params.chat)
 const { values, validate, resetForm } = useForm<{ content: string }>({ name: 'chat-footer' })
 const { createTempMessage, updateTempMessage } = useChat()
+
+const _window = inject<Ref<WindowMainInstance | undefined>>('window')
 
 /**
  * A reactive reference to a Promise used to queue asynchronous tasks.
@@ -43,6 +46,9 @@ async function sendMessage() {
     resetForm()
 
     const { _id } = createTempMessage({ chat_id: route.params.chat, content })
+
+    await nextTick()
+    _window?.value?.scrollToBottom(0.3)
 
     enqueueTask(async () => {
       const message = await $fetch(`/api/chats/${route.params.chat}/messages`, {

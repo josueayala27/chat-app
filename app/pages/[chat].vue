@@ -1,6 +1,7 @@
 <script lang="ts">
 import type { WindowMain } from '#components'
 import type { Message as AblyMessage, RealtimeChannel } from 'ably'
+import type { InjectionKey } from 'vue'
 import type { ChatMessage } from '~/types/message'
 import type { User } from '~/types/user'
 import { entries, groupBy, map, mapValues, pipe, reduce, sortBy } from 'remeda'
@@ -15,7 +16,7 @@ definePageMeta({ middleware: ['auth'], key: route => route.fullPath, keepalive: 
 const { $ably } = useNuxtApp()
 const route = useRoute('chat')
 const chats = useState<ChatState>('chats')
-const { getConversation, getBeforeConversation, cursors, addLastMessage } = useChat()
+const { getConversation, getBeforeConversation, cursors } = useChat()
 
 /**
  * Groups chat messages by date (UTC) and consecutive sender messages,
@@ -54,8 +55,6 @@ function groupAndTransform(messages: ChatMessage[]) {
   )
 }
 
-const windowMain = ref<WindowMainInstance | null>(null)
-
 const computedChat = computed(() => {
   return groupAndTransform(chats.value[`channel:${route.params.chat}`]!)
 })
@@ -88,13 +87,16 @@ onMounted(() => {
 })
 
 await getConversation()
+
+const _window = ref<WindowMainInstance | undefined>()
+provide<Ref<WindowMainInstance | undefined>>('window', _window)
 </script>
 
 <template>
   <div class="flex flex-col divide-y divide-slate-200 flex-1 overflow-hidden">
     <WindowHeader />
 
-    <WindowMain ref="windowMain" :fetch-older="loadOlderMessages">
+    <WindowMain ref="_window" :fetch-older="loadOlderMessages">
       <template v-for="(group, j) in computedChat" :key="j">
         <div class="flex justify-center">
           <BaseFont class="text-xs bg-slate-100 px-2 py-1 rounded-full font-medium select-none">

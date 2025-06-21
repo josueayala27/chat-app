@@ -1,6 +1,6 @@
 <script setup lang="ts">
-const route = useRoute()
-const isSelectMessagesActive = useState<boolean>(`select-messages-${route.params.chat}`, () => false)
+const route = useRoute('chat')
+const isSelectMessagesActive = useState<boolean>(`select-messages-${route.params.chat}`)
 </script>
 
 <template>
