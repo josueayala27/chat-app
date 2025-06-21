@@ -1,10 +1,8 @@
 <script lang="ts">
-import type { Component } from 'vue'
+import type { ConcreteComponent } from 'vue'
 import type { ChatMessage } from '~/types/message'
 import type { User } from '~/types/user'
 import { tv } from 'tailwind-variants'
-
-export interface Message { type: string, component: Component }
 </script>
 
 <script lang="ts" setup>
@@ -43,6 +41,11 @@ const isOwn = ref<boolean>(props.sender._id === user.value._id)
 const { root, content, avatar, title } = ui({ isOwn: isOwn.value })
 
 provide('isOwn', isOwn.value)
+
+const components: Record<string, string | ConcreteComponent> = {
+  text: toRaw(resolveComponent('WindowMessagesTypeText')),
+  media: toRaw(resolveComponent('WindowMessagesTypeMedia')),
+}
 </script>
 
 <template>
@@ -55,8 +58,7 @@ provide('isOwn', isOwn.value)
       <div class="flex flex-col gap-0.5 w-full">
         <template v-for="msg in messages" :key="msg._id">
           <WindowMessagesRoot>
-            <WindowMessagesTypeText v-if="msg.type === 'text'" :content="msg.content" />
-            <WindowMessagesTypeMedia v-else-if="msg.type === 'media'" />
+            <component :is="components[msg.type]" :key="msg._id" v-bind="msg" />
           </WindowMessagesRoot>
         </template>
       </div>

@@ -1,8 +1,8 @@
 <script lang="ts">
+import type { ChatMessage } from '~/types/message'
 import theme from '@/theme/window/messages/type/text'
 
-interface WindowMessagesTypeTextProps {
-  content: string
+interface WindowMessagesTypeTextProps extends ChatMessage {
   ui?: Partial<typeof theme.slots>
 }
 </script>
@@ -12,7 +12,7 @@ const props = defineProps<WindowMessagesTypeTextProps>()
 
 const isOwn = inject<boolean>('isOwn')
 
-const ui = computed(() => theme({ isOwn }))
+const ui = computed(() => theme({ isOwn, isTemp: props._id.startsWith('temp') }))
 </script>
 
 <template>
