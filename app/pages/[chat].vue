@@ -1,7 +1,6 @@
 <script lang="ts">
 import type { WindowMain } from '#components'
 import type { Message as AblyMessage, RealtimeChannel } from 'ably'
-import type { InjectionKey } from 'vue'
 import type { ChatMessage } from '~/types/message'
 import type { User } from '~/types/user'
 import { entries, groupBy, map, mapValues, pipe, reduce, sortBy } from 'remeda'
