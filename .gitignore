@@ -25,3 +25,5 @@ logs
 
 mongo-data
 .eslintcache
+
+*.pem

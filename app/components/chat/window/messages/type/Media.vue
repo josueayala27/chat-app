@@ -7,33 +7,31 @@ interface WindowMessagesTypeTextProps extends ChatMessage {}
 <script lang="ts" setup>
 const props = defineProps<WindowMessagesTypeTextProps>()
 
-const url = ref<string>('')
-
 const MAX_WIDTH = 480
 // const MAX_HEIGHT = 432
 
-const height = ref<number>(0)
+const height = ref<number>(400)
 
-async function fetchImage(): Promise<void> {
-  const response = await $fetch('https://images.unsplash.com/photo-1748164685747-0e5107e84cf7?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', {
-    responseType: 'blob',
-  })
+// const scale = MAX_WIDTH / bitmap.width
+// height.value = Math.round(bitmap.height * scale)
 
-  const bitmap = await createImageBitmap(response as Blob)
-
-  const scale = MAX_WIDTH / bitmap.width
-  height.value = Math.round(bitmap.height * scale)
-
-  url.value = URL.createObjectURL(response as Blob)
-}
-
-fetchImage()
+// fetchImage()
 </script>
 
 <template>
   <div class="flex flex-col items-end">
-    <div :style="{ height: `${height}px`, width: `${MAX_WIDTH}px` }" class="rounded-t-lg bg-red-500 flex items-center justify-center overflow-hidden cursor-pointer">
-      <img class="w-full h-full object-contain" :src="url">
+    <div
+      :style="{ height: `${height}px`, width: `${MAX_WIDTH}px` }"
+      class="rounded-t-lg bg-red-500 flex items-center justify-center overflow-hidden cursor-pointer relative"
+    >
+      <div class="absolute top-0 left-0 flex items-center justify-center w-full h-full">
+        <div class="bg-white backdrop-blur-md flex items-center justify-center rounded-full size-13.5">
+          <Icon class="text-slate-700" size="20px" name="svg-spinners:3-dots-fade" />
+          <!-- <Icon class="text-slate-700" size="54px" name="svg-spinners:180-ring" /> -->
+        </div>
+      </div>
+
+      <img src="http://localhost:3000/api/attachments/messages/media/matt-hardy-6ArTTluciuA-unsplash.jpg" alt="">
     </div>
 
     <WindowMessagesTypeText v-bind="props" :ui="{ root: 'rounded-t-none w-full' }" />

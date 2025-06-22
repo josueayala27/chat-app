@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/test-utils/module',
     '@vue-macros/nuxt',
+    '@nuxt/image',
   ],
   components: [
     { path: '@/components/chat/window', prefix: 'Window' },
@@ -35,6 +36,9 @@ export default defineNuxtConfig({
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     AWS_BUCKET_NAME: process.env.AWS_BUCKET_NAME,
+    CLOUDFRONT_DOMAIN: process.env.CLOUDFRONT_DOMAIN,
+    CLOUDFRONT_KEY_PAIR_ID: process.env.CLOUDFRONT_KEY_PAIR_ID,
+    CLOUDFRONT_PRIVATE_KEY: process.env.CLOUDFRONT_PRIVATE_KEY,
   },
   future: {
     compatibilityVersion: 4,
