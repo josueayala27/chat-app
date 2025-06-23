@@ -11,13 +11,5 @@ export default defineEventHandler(async (event) => {
     privateKeyString: Buffer.from(config.CLOUDFRONT_PRIVATE_KEY, 'base64').toString('utf-8'),
   })
 
-  const upstream = await fetch(url)
-
-  setHeader(event, 'Content-Type', upstream.headers.get('content-type')!)
-
-  if (!upstream.body) {
-    throw createError({ statusCode: 502, statusMessage: 'Upstream response has no body.' })
-  }
-
-  return sendStream(event, upstream.body)
+  return { url }
 })

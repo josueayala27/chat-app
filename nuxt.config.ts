@@ -49,6 +49,10 @@ export default defineNuxtConfig({
   },
   compatibilityDate: '2024-11-01',
   nitro: {
+    compressPublicAssets: {
+      gzip: true,
+      brotli: true,
+    },
     experimental: {
       websocket: true,
     },
