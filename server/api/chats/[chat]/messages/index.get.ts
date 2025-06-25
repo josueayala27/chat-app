@@ -5,5 +5,5 @@ export default defineEventHandler(async (event) => {
   const params = await getValidatedRouterParams(event, messageParamSchema.parse)
   const query = await getValidatedQuery(event, getMessagesQuerySchema.parse)
 
-  return await getMessages({ chat_id: params.chat, before: query.before })
+  return getMessages({ chat_id: params.chat, before: query.before, after: query.after })
 })

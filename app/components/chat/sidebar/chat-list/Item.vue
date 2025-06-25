@@ -40,7 +40,7 @@ onMounted(async () => {
     const data = message.data as ChatMessage
 
     if (data.sender_id !== user.value._id) {
-      console.log(message)
+      // console.log(message)
     }
   })
 
@@ -111,7 +111,7 @@ onMounted(async () => {
 
       <BaseFont class="text-xs text-slate-500 font-normal">
         <!-- relative -->
-        <NuxtTime :datetime="item.last_message.created_at" hour="2-digit" minute="2-digit" time-zone="America/El_Salvador" />
+        <!-- <NuxtTime :datetime="item.last_message.created_at" hour="2-digit" minute="2-digit" time-zone="America/El_Salvador" /> -->
       </BaseFont>
     </template>
 

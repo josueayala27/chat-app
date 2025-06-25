@@ -24,13 +24,15 @@ type GetMessagesInput = z.infer<typeof getMessagesQuerySchema> & { chat_id: stri
  * @returns {Promise<MessageDocument>} The created message document.
  */
 export async function createMessage(data: CreateMessageInput): Promise<MessageDocument> {
-  return Message.create({
+  const message = await Message.create({
     chat_id: new mongoose.Types.ObjectId(data.chat_id),
     sender_id: data.user._id,
     content: data.content,
     type: data.type,
     read_by: [{ user_id: data.user._id, read_at: new Date() }],
   })
+
+  return message.populate('sender_id', 'first_name last_name')
 }
 
 /**
@@ -39,11 +41,12 @@ export async function createMessage(data: CreateMessageInput): Promise<MessageDo
  * @param {GetMessagesInput} params - Query parameters including chat ID and optional cursor.
  * @returns {Promise<MessageDocument[]>} An array of message documents.
  */
-export async function getMessages({ chat_id, before }: GetMessagesInput): Promise<MessageDocument[]> {
+export async function getMessages({ chat_id, before, after }: GetMessagesInput): Promise<MessageDocument[]> {
   return Message
     .find({
       chat_id: new mongoose.Types.ObjectId(chat_id),
       ...(before && { _id: { $lt: new mongoose.Types.ObjectId(before) } }),
+      ...(after && { _id: { $gt: new mongoose.Types.ObjectId(after) } }),
     })
     .sort({ created_at: -1 })
     .limit(MESSAGE_FETCH_LIMIT)

@@ -6,6 +6,7 @@ export const messageParamSchema = z.object({
 
 export const getMessagesQuerySchema = z.object({
   before: z.string().length(24).optional(),
+  after: z.string().length(24).optional(),
 })
 
 export const createMessageBodySchema = z.object({
@@ -13,4 +14,5 @@ export const createMessageBodySchema = z.object({
   content: z.string(),
 })
 
-export const userUpdateSchema = createMessageBodySchema.partial()
+// Schema for updating an existing message
+export const messageUpdateSchema = createMessageBodySchema.partial()

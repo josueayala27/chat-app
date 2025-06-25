@@ -10,11 +10,11 @@ export interface Message {
   chat_id: string
   sender_id: string
   content: string
-  type: 'text' | 'image' | 'video' | 'audio' | 'file'
+  type: 'text' | 'media' | 'audio' | 'file'
   attachments?: string[]
   read_by: MessageReadBy[]
-  created_at: Date
-  updated_at: Date
+  created_at: string
+  updated_at: string
 }
 
 export interface ChatMessage extends Pick<Message, '_id' | 'chat_id' | 'content' | 'type' | 'attachments' | 'read_by' | 'created_at' | 'updated_at'> {
