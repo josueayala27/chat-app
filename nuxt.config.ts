@@ -63,7 +63,21 @@ export default defineNuxtConfig({
       },
     },
   },
-  vite: { plugins: [tailwindcss()] },
+  vite: {
+    server: {
+      allowedHosts: ['dev.parly.chat'],
+      https: {
+        cert: process.env.HTTPS_CERT_PATH,
+        key: process.env.HTTPS_KEY_PATH,
+      },
+      hmr: {
+        clientPort: 3000,
+        host: 'dev.parly.chat',
+        protocol: 'wss',
+      },
+    },
+    plugins: [tailwindcss()],
+  },
   eslint: {
     checker: true,
     config: {
