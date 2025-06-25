@@ -14,6 +14,7 @@ export default function useAuth() {
 
   const signInAsync = useAsync((body: SignInInput) =>
     $fetch<{ success: boolean, message: string }>('/api/auth/login', { method: 'POST', body }))
+  const cloudFrontAuthAsync = useAsync(() => $fetch('/api/auth/cf-auth', { credentials: 'include' }))
 
   async function getUser() {
     const data = await getUserAsync.execute()
@@ -22,6 +23,7 @@ export default function useAuth() {
 
   async function signIn(body: SignInInput) {
     await signInAsync.execute(body)
+    await cloudFrontAuthAsync.execute()
   }
 
   return {

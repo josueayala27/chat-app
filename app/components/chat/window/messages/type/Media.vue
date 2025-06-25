@@ -31,7 +31,7 @@ const height = ref<number>(400)
         </div>
       </div>
 
-      <img src="http://localhost:3000/api/attachments/messages/media/matt-hardy-6ArTTluciuA-unsplash.jpg" alt="">
+      <img src="https://cdn.parly.chat/messages/media/matt-hardy-6ArTTluciuA-unsplash.jpg" alt="">
     </div>
 
     <WindowMessagesTypeText v-bind="props" :ui="{ root: 'rounded-t-none w-full' }" />

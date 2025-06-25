@@ -1,5 +1,6 @@
 import process from 'node:process'
 import tailwindcss from '@tailwindcss/vite'
+import mkcert from 'vite-plugin-mkcert'
 
 export default defineNuxtConfig({
   modules: [
@@ -63,7 +64,7 @@ export default defineNuxtConfig({
       },
     },
   },
-  vite: { plugins: [tailwindcss()] },
+  vite: { plugins: [tailwindcss(), mkcert()] },
   eslint: {
     checker: true,
     config: {

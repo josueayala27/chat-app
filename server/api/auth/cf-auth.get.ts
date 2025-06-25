@@ -2,6 +2,8 @@ import { Buffer } from 'node:buffer'
 import process from 'node:process'
 import { getSignedCookies } from 'aws-cloudfront-sign'
 
+const IN_HOUR_IN_SECONDS = 60 * 60
+
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
 
@@ -14,9 +16,10 @@ export default defineEventHandler(async (event) => {
     setCookie(event, name, value, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'lax',
       path: '/',
-      maxAge: 60 * 60,
+      domain: '.parly.chat',
+      maxAge: IN_HOUR_IN_SECONDS,
     })
   }
 
