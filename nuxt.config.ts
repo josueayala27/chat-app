@@ -1,6 +1,5 @@
 import process from 'node:process'
 import tailwindcss from '@tailwindcss/vite'
-import mkcert from 'vite-plugin-mkcert'
 
 export default defineNuxtConfig({
   modules: [
@@ -48,7 +47,7 @@ export default defineNuxtConfig({
     typedPages: true,
     renderJsonPayloads: true,
   },
-  compatibilityDate: '2024-11-01',
+  compatibilityDate: '2025-06-25',
   nitro: {
     compressPublicAssets: {
       gzip: true,
@@ -64,7 +63,7 @@ export default defineNuxtConfig({
       },
     },
   },
-  vite: { plugins: [tailwindcss(), mkcert()] },
+  vite: { plugins: [tailwindcss()] },
   eslint: {
     checker: true,
     config: {

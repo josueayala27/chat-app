@@ -18,7 +18,6 @@ export default defineEventHandler(async (event) => {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
-      domain: '.parly.chat',
       maxAge: IN_HOUR_IN_SECONDS,
     })
   }
