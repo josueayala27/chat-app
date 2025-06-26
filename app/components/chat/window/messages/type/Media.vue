@@ -17,7 +17,7 @@ const height = ref<number>(400)
 
 const json = {
   bucket: config.public.AWS_BUCKET,
-  key: 'messages/media/matt-hardy-6ArTTluciuA-unsplash.jpg',
+  key: 'messages/media/photo-1728443814449-7a2ad4d86ec3.png',
   edits: {
     resize: {
       width: 960,
@@ -43,7 +43,7 @@ const url = btoa(JSON.stringify(json))
         </div>
       </div>
 
-      <NuxtImg :src="`https://cdn.parly.chat/${url}`" class="object-cover w-full h-full" />
+      <img :src="`https://cdn.parly.chat/${url}`" class="object-cover w-full h-full" :placeholder="[50, 25]">
     </div>
 
     <WindowMessagesTypeText v-bind="props" :ui="{ root: 'rounded-t-none w-full' }" />
