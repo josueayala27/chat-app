@@ -43,7 +43,7 @@ const url = btoa(JSON.stringify(json))
         </div>
       </div>
 
-      <img :src="`https://d3f8pow7mi78c7.cloudfront.net/${url}`" class="object-cover w-full h-full">
+      <NuxtImg :src="`https://cdn.parly.chat/${url}`" class="object-cover w-full h-full" />
     </div>
 
     <WindowMessagesTypeText v-bind="props" :ui="{ root: 'rounded-t-none w-full' }" />

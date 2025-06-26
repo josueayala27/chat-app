@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/test-utils/module',
     '@vue-macros/nuxt',
+    '@nuxt/image',
   ],
   components: [
     { path: '@/components/chat/window', prefix: 'Window' },
