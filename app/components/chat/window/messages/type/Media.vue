@@ -6,7 +6,7 @@ interface WindowMessagesTypeTextProps extends ChatMessage {}
 
 <script lang="ts" setup>
 const props = defineProps<WindowMessagesTypeTextProps>()
-
+const config = useRuntimeConfig()
 const MAX_WIDTH = 480
 // const MAX_HEIGHT = 432
 
@@ -15,7 +15,19 @@ const height = ref<number>(400)
 // const scale = MAX_WIDTH / bitmap.width
 // height.value = Math.round(bitmap.height * scale)
 
-// fetchImage()
+const json = {
+  bucket: config.public.AWS_BUCKET,
+  key: 'messages/media/matt-hardy-6ArTTluciuA-unsplash.jpg',
+  edits: {
+    resize: {
+      width: 960,
+      height: 800,
+      fit: 'cover',
+    },
+  },
+}
+
+const url = btoa(JSON.stringify(json))
 </script>
 
 <template>
@@ -31,8 +43,7 @@ const height = ref<number>(400)
         </div>
       </div>
 
-      <img src="https://cdn.parly.chat/fit-in/400x400/messages/media/matt-hardy-6ArTTluciuA-unsplash.jpg">
-      <img src="https://cdn.parly.chat/messages/media/matt-hardy-6ArTTluciuA-unsplash.jpg">
+      <img :src="`https://d3f8pow7mi78c7.cloudfront.net/${url}`" class="object-cover w-full h-full">
     </div>
 
     <WindowMessagesTypeText v-bind="props" :ui="{ root: 'rounded-t-none w-full' }" />

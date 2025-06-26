@@ -6,6 +6,8 @@ const IN_HOUR_IN_SECONDS = 60 * 60
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
 
+  console.log(config.CLOUDFRONT_DOMAIN)
+
   const cookies = getSignedCookies(`${config.CLOUDFRONT_DOMAIN}/*`, {
     keypairId: config.CLOUDFRONT_KEY_PAIR_ID,
     privateKeyString: Buffer.from(config.CLOUDFRONT_PRIVATE_KEY, 'base64').toString('utf-8'),
