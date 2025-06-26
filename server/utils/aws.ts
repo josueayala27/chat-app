@@ -29,7 +29,7 @@ export function useAws() {
    * @returns {Promise<string>} A pre-signed URL valid for the configured expiration period.
    */
   async function createSignedUploadURL(client: S3Client, key: string): Promise<string> {
-    const command = new PutObjectCommand({ Bucket: config.AWS_BUCKET_NAME, Key: key })
+    const command = new PutObjectCommand({ Bucket: config.AWS_BUCKET, Key: key })
     return getSignedUrl(client, command, { expiresIn: 300 })
   }
 

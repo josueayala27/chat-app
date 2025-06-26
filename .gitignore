@@ -27,3 +27,4 @@ mongo-data
 .eslintcache
 
 *.pem
+certs

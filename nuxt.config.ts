@@ -35,7 +35,7 @@ export default defineNuxtConfig({
     MONGODB_PORT: process.env.MONGODB_PORT,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
-    AWS_BUCKET_NAME: process.env.AWS_BUCKET_NAME,
+    AWS_BUCKET: process.env.AWS_BUCKET,
     CLOUDFRONT_DOMAIN: process.env.CLOUDFRONT_DOMAIN,
     CLOUDFRONT_KEY_PAIR_ID: process.env.CLOUDFRONT_KEY_PAIR_ID,
     CLOUDFRONT_PRIVATE_KEY: process.env.CLOUDFRONT_PRIVATE_KEY,
@@ -99,5 +99,14 @@ export default defineNuxtConfig({
     clientBundle: {
       scan: true,
     },
+  },
+  image: {
+    inject: true,
+    format: ['webp'],
+    provider: 'ipx',
+    alias: {
+      ipx: 'https://cdn.parly.chat',
+    },
+    domains: ['cdn.parly.chat'],
   },
 })
