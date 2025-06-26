@@ -20,10 +20,11 @@ const json = {
   key: 'messages/media/photo-1728443814449-7a2ad4d86ec3.png',
   edits: {
     resize: {
-      width: 960,
+      width: MAX_WIDTH * 2,
       height: 800,
       fit: 'cover',
     },
+    // blur: 100,
   },
 }
 
@@ -36,14 +37,13 @@ const url = btoa(JSON.stringify(json))
       :style="{ height: `${height}px`, width: `${MAX_WIDTH}px` }"
       class="rounded-t-lg flex items-center justify-center overflow-hidden cursor-pointer relative"
     >
-      <div class="absolute top-0 left-0 flex items-center justify-center w-full h-full">
+      <!-- <div class="absolute top-0 left-0 flex items-center justify-center w-full h-full">
         <div class="bg-white backdrop-blur-md flex items-center justify-center rounded-full size-13.5">
           <Icon class="text-slate-700" size="20px" name="svg-spinners:3-dots-fade" />
-          <!-- <Icon class="text-slate-700" size="54px" name="svg-spinners:180-ring" /> -->
         </div>
-      </div>
+      </div> -->
 
-      <img :src="`https://cdn.parly.chat/${url}`" class="object-cover w-full h-full" :placeholder="[50, 25]">
+      <img :src="`https://cdn.parly.chat/${url}`" class="object-cover w-full h-full">
     </div>
 
     <WindowMessagesTypeText v-bind="props" :ui="{ root: 'rounded-t-none w-full' }" />
