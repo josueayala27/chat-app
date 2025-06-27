@@ -2,9 +2,9 @@
 import type { RealtimeChannel } from 'ably'
 import type { WindowMainInstance } from '~/pages/[chat].vue'
 import type { ChatMessage } from '~/types/message'
-// import pLimit from 'p-limit'
+import pLimit from 'p-limit'
 
-// const limit = pLimit(3)
+const limit = pLimit(3)
 
 const { $ably } = useNuxtApp()
 const route = useRoute('chat')
@@ -168,6 +168,8 @@ async function onInputChange(): Promise<void> {
   if (_files) {
     closePopover()
 
+    const uploadPromises: Promise<void>[] = []
+
     for (const file of _files) {
       files.value.push({
         file,
@@ -176,7 +178,7 @@ async function onInputChange(): Promise<void> {
         type: file.type,
       })
 
-      startUpload(file)
+      uploadPromises.push(limit(() => startUpload(file)))
     }
 
     await nextTick()
