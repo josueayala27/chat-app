@@ -37,12 +37,6 @@ const url = btoa(JSON.stringify(json))
       :style="{ height: `${height}px`, width: `${MAX_WIDTH}px` }"
       class="rounded-t-lg flex items-center justify-center overflow-hidden cursor-pointer relative"
     >
-      <!-- <div class="absolute top-0 left-0 flex items-center justify-center w-full h-full">
-        <div class="bg-white backdrop-blur-md flex items-center justify-center rounded-full size-13.5">
-          <Icon class="text-slate-700" size="20px" name="svg-spinners:3-dots-fade" />
-        </div>
-      </div> -->
-
       <img :src="`https://cdn.parly.chat/${url}`" class="object-cover w-full h-full">
     </div>
 

@@ -32,7 +32,7 @@ export function useAws() {
     const command = new PutObjectCommand({ Bucket: config.public.AWS_BUCKET, Key: key })
 
     return getSignedUrl(client, command, {
-      expiresIn: 60,
+      expiresIn: 60 * 5,
     })
   }
 
