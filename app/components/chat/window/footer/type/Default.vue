@@ -124,11 +124,32 @@ function setStatus(file: File, status: 'idle' | 'uploading' | 'done' | 'error') 
     item.status = status
 }
 
-async function createThumb(file: File, size = 84 * 3) {
+/**
+ * Create a lightweight JPEG thumbnail as a base-64 data URL.
+ *
+ * @param {File} file - Image file selected by the user.
+ * @param {number} [maxEdge] - Longest edge of the thumbnail in pixels.
+ * @param {number} [quality] - JPEG compression quality (0-1).
+ * @return {Promise<string>} - Data-URL ready for <img src=""> bindings.
+ */
+async function createThumb(
+  file: File,
+  maxEdge: number = 84 * 3,
+  quality: number = 0.7,
+): Promise<string> {
   const img = await createImageBitmap(file)
-  const canvas = Object.assign(document.createElement('canvas'), { width: size, height: size * (img.height / img.width) })
-  canvas.getContext('2d')!.drawImage(img, 0, 0, canvas.width, canvas.height)
-  return canvas.toDataURL('image/jpeg', 0.7)
+  const ratio = img.height / img.width
+
+  const Canvas = (globalThis as any).OffscreenCanvas || HTMLCanvasElement
+  const canvas: HTMLCanvasElement | OffscreenCanvas = new Canvas(maxEdge, maxEdge * ratio) as any
+
+  const ctx = canvas.getContext('2d')!
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+  img.close() // free GPU mem
+
+  return (canvas as any).convertToBlob
+    ? URL.createObjectURL(await (canvas as any).convertToBlob({ type: 'image/jpeg', quality }))
+    : (canvas as HTMLCanvasElement).toDataURL('image/jpeg', quality)
 }
 
 async function startUpload(file: File) {
