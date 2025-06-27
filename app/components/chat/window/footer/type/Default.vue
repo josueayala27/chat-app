@@ -124,7 +124,7 @@ function setStatus(file: File, status: 'idle' | 'uploading' | 'done' | 'error') 
     item.status = status
 }
 
-async function createThumb(file: File, size = 320) {
+async function createThumb(file: File, size = 84 * 3) {
   const img = await createImageBitmap(file)
   const canvas = Object.assign(document.createElement('canvas'), { width: size, height: size * (img.height / img.width) })
   canvas.getContext('2d')!.drawImage(img, 0, 0, canvas.width, canvas.height)
@@ -171,7 +171,7 @@ async function onInputChange(): Promise<void> {
     for (const file of _files) {
       files.value.push({
         file,
-        status: 'idle',
+        status: 'uploading',
         source: await createThumb(file),
         type: file.type,
       })
