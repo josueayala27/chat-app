@@ -9,7 +9,7 @@ export type WindowMainInstance = InstanceType<typeof WindowMain>
 </script>
 
 <script setup lang="ts">
-useHead({ title: 'Charlie' })
+useHead({ title: 'Amazing Group' })
 definePageMeta({ middleware: ['auth'], key: route => route.fullPath, keepalive: true })
 
 const { $ably } = useNuxtApp()
