@@ -11,17 +11,12 @@ const limit = pLimit(MAX_PARALLEL_UPLOADS)
 const { $ably } = useNuxtApp()
 const route = useRoute('chat')
 
-/**
- * Retrieves the authenticated user information.
- * @type {object}
- * @property {Ref<User>} user - The current authenticated user.
- */
 const { user } = useAuth()
 const { reference, closePopover } = usePopover()
 const { create: createAttachment } = useAttachment(route.params.chat)
 const { values, validate, resetForm } = useForm<{ content: string }>({ name: 'chat-footer' })
 const { createTempMessage, updateTempMessage } = useChat()
-// const tempImages = useLocalStorage(`temp-images-${route.params.chat}`, {}, { mergeDefaults: true })
+const config = useRuntimeConfig()
 
 const _window = inject<Ref<WindowMainInstance | undefined>>('window')
 
@@ -127,6 +122,13 @@ function setStatus(file: File, status: 'idle' | 'uploading' | 'done' | 'error') 
     item.status = status
 }
 
+function setSource(file: File, source: string) {
+  const item = files.value.find(f => f.file === file)
+
+  if (item)
+    item.source = source
+}
+
 /**
  * Creates a square thumbnail (default 252 × 252 px) from an image file.
  *
@@ -173,10 +175,34 @@ async function createThumb(
     : (canvas as HTMLCanvasElement).toDataURL('image/jpeg', quality)
 }
 
-async function startUpload(file: File) {
-  const url = await createAttachment(file)
+function buildURL(key: string) {
+  const url = {
+    bucket: config.public.AWS_BUCKET,
+    key,
+    edits: {
+      resize: {
+        width: 84 * 3,
+        height: 84 * 3,
+      },
+    },
+  }
 
-  if (!url) {
+  return `https://cdn.parly.chat/${btoa(JSON.stringify(url))}`
+}
+
+function preload(src: string) {
+  return new Promise<void>((res, rej) => {
+    const img = new Image()
+    img.onload = () => res()
+    img.onerror = rej
+    img.src = src
+  })
+}
+
+async function startUpload(file: File) {
+  const { upload_url, key } = await createAttachment(file)
+
+  if (!upload_url) {
     console.error(`🚨 [Uploader] Failed to get upload URL for “${file.name}”`)
   }
 
@@ -184,19 +210,19 @@ async function startUpload(file: File) {
     console.log(`🚀 [Uploader] Starting upload for “${file.name}” — ${Math.round(file.size / 1024)} KB on deck…`)
     setStatus(file, 'uploading')
 
-    await $fetch(url, {
+    await $fetch(upload_url, {
       method: 'PUT',
       body: file,
-      headers: {
-        'Content-Type': file.type,
-      },
+      headers: { 'Content-Type': file.type },
     })
 
     console.log(`✅ [Uploader] Successfully uploaded “${file.name}”`)
-    setStatus(file, 'done')
-    // URL.revokeObjectURL(file)
 
-    // tempImages.value.push({ name: 'Hello!' })
+    const cdnURL = buildURL(key)
+
+    await preload(cdnURL)
+    setSource(file, cdnURL)
+    setStatus(file, 'done')
   }
   catch (error) {
     console.error(`🚨 [Uploader] Upload failed for “${file.name}”`, error)

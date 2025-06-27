@@ -10,9 +10,10 @@ export default defineEventHandler(async (event) => {
 
   const attachment = await createAttachment(body)
 
+  const key = ['attachments', params.chat, attachment._id, body.file_name].join('/')
   const client = createClient()
 
-  const url = await createSignedUploadURL(client, ['attachments', params.chat, attachment._id, body.file_name].join('/'))
+  const url = await createSignedUploadURL(client, key)
 
-  return { upload_url: url }
+  return { key, upload_url: url }
 })
