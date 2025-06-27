@@ -4,7 +4,9 @@ import type { WindowMainInstance } from '~/pages/[chat].vue'
 import type { ChatMessage } from '~/types/message'
 import pLimit from 'p-limit'
 
-const limit = pLimit(3)
+const MAX_PARALLEL_UPLOADS = 3
+
+const limit = pLimit(MAX_PARALLEL_UPLOADS)
 
 const { $ably } = useNuxtApp()
 const route = useRoute('chat')
@@ -99,7 +101,7 @@ function typing(event: string, _isTyping: boolean) {
 const debouncedFn = useDebounceFn(() => {
   isTyping.value = false
   typing('event:stop-typing', isTyping.value)
-}, 1000)
+}, 1500)
 
 /**
  * Handle input events:
@@ -145,7 +147,7 @@ async function createThumb(
 
   const ctx = canvas.getContext('2d')!
   ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-  img.close() // free GPU mem
+  img.close()
 
   return (canvas as any).convertToBlob
     ? URL.createObjectURL(await (canvas as any).convertToBlob({ type: 'image/jpeg', quality }))
@@ -159,19 +161,25 @@ async function startUpload(file: File) {
     console.error(`🚨 [Uploader] Failed to get upload URL for “${file.name}”`)
   }
 
-  console.log(`🚀 [Uploader] Starting upload for “${file.name}” — ${Math.round(file.size / 1024)} KB on deck…`)
-  setStatus(file, 'uploading')
+  try {
+    console.log(`🚀 [Uploader] Starting upload for “${file.name}” — ${Math.round(file.size / 1024)} KB on deck…`)
+    setStatus(file, 'uploading')
 
-  await $fetch(url, {
-    method: 'PUT',
-    body: file,
-    headers: {
-      'Content-Type': file.type,
-    },
-  })
-
-  console.log(`✅ [Uploader] Successfully uploaded “${file.name}”`)
-  setStatus(file, 'done')
+    await $fetch(url, {
+      method: 'PUT',
+      body: file,
+      headers: {
+        'Content-Type': file.type,
+      },
+    })
+    console.log(`✅ [Uploader] Successfully uploaded “${file.name}”`)
+    setStatus(file, 'done')
+  // URL.revokeObjectURL(file)
+  }
+  catch (error) {
+    console.error(`🚨 [Uploader] Upload failed for “${file.name}”`, error)
+    setStatus(file, 'error')
+  }
 }
 
 /**
@@ -218,7 +226,14 @@ const _allDone = computed(() => files.value.every(f => f.status === 'done'))
   <input ref="media" multiple type="file" class="hidden" @change="onInputChange">
 
   <div v-if="files && files.length > 0" class="w-full p-3 border-b flex items-center gap-2 overflow-auto scrollbar-hidden">
-    <WindowFooterTypeDefaultPreview v-for="(file, index) in files" :key="index" :status="file.status" :source="file.source" :type="file.type" @remove="onRemove(index)" />
+    <WindowFooterTypeDefaultPreview
+      v-for="(file, index) in files" :key="`${file.file.name} ${file.status}`"
+      v-memo="[file.status]"
+      :status="file.status"
+      :source="file.source"
+      :type="file.type"
+      @remove="onRemove(index)"
+    />
   </div>
 
   <div class="p-2 flex items-center gap-2">
@@ -246,6 +261,7 @@ const _allDone = computed(() => files.value.every(f => f.status === 'done'))
       placeholder="Write something"
       type="text"
       @input="onInput"
+      @keydown.enter.prevent="sendMessage"
     />
 
     <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer" @click="sendMessage">
