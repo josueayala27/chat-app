@@ -21,6 +21,7 @@ const { reference, closePopover } = usePopover()
 const { getUploadUrl } = useAttachmentUploader(route.params.chat)
 const { values, validate, resetForm } = useForm<{ content: string }>({ name: 'chat-footer' })
 const { createTempMessage, updateTempMessage } = useChat()
+const tempImages = useLocalStorage(`temp-images-${route.params.chat}`, {}, { mergeDefaults: true })
 
 const _window = inject<Ref<WindowMainInstance | undefined>>('window')
 
@@ -172,9 +173,12 @@ async function startUpload(file: File) {
         'Content-Type': file.type,
       },
     })
+
     console.log(`✅ [Uploader] Successfully uploaded “${file.name}”`)
     setStatus(file, 'done')
-  // URL.revokeObjectURL(file)
+    // URL.revokeObjectURL(file)
+
+    tempImages.value.push({ name: 'Hello!' })
   }
   catch (error) {
     console.error(`🚨 [Uploader] Upload failed for “${file.name}”`, error)
@@ -225,6 +229,7 @@ const _allDone = computed(() => files.value.every(f => f.status === 'done'))
 <template>
   <input ref="media" multiple type="file" class="hidden" @change="onInputChange">
 
+  {{ tempImages }}
   <div v-if="files && files.length > 0" class="w-full p-3 border-b flex items-center gap-2 overflow-auto scrollbar-hidden">
     <WindowFooterTypeDefaultPreview
       v-for="(file, index) in files" :key="`${file.file.name} ${file.status}`"
