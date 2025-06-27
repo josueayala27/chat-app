@@ -1,6 +1,5 @@
 import type { z } from 'zod'
 import type { AttachmentDocument } from '../models/Attachment'
-import type { Attachment as IAttachment } from '../types/attachment'
 import type { attachmentCreateSchema } from '../validators/attachment.validator'
 import Attachment from '../models/Attachment'
 
@@ -8,7 +7,7 @@ import Attachment from '../models/Attachment'
  * Input type for creating an attachment.
  * Combines validated schema fields with the attachment's URL.
  */
-export type CreateAttachmentInput = z.infer<typeof attachmentCreateSchema> & Pick<IAttachment, 'url' | 'system_filename'>
+export type CreateAttachmentInput = z.infer<typeof attachmentCreateSchema>
 
 /**
  * Persists a new attachment in the database.

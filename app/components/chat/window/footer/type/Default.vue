@@ -18,10 +18,10 @@ const route = useRoute('chat')
  */
 const { user } = useAuth()
 const { reference, closePopover } = usePopover()
-const { getUploadUrl } = useAttachmentUploader(route.params.chat)
+const { create: createAttachment } = useAttachment(route.params.chat)
 const { values, validate, resetForm } = useForm<{ content: string }>({ name: 'chat-footer' })
 const { createTempMessage, updateTempMessage } = useChat()
-const tempImages = useLocalStorage(`temp-images-${route.params.chat}`, {}, { mergeDefaults: true })
+// const tempImages = useLocalStorage(`temp-images-${route.params.chat}`, {}, { mergeDefaults: true })
 
 const _window = inject<Ref<WindowMainInstance | undefined>>('window')
 
@@ -156,7 +156,7 @@ async function createThumb(
 }
 
 async function startUpload(file: File) {
-  const url = await getUploadUrl(file)
+  const url = await createAttachment(file)
 
   if (!url) {
     console.error(`🚨 [Uploader] Failed to get upload URL for “${file.name}”`)
@@ -178,7 +178,7 @@ async function startUpload(file: File) {
     setStatus(file, 'done')
     // URL.revokeObjectURL(file)
 
-    tempImages.value.push({ name: 'Hello!' })
+    // tempImages.value.push({ name: 'Hello!' })
   }
   catch (error) {
     console.error(`🚨 [Uploader] Upload failed for “${file.name}”`, error)
@@ -229,7 +229,6 @@ const _allDone = computed(() => files.value.every(f => f.status === 'done'))
 <template>
   <input ref="media" multiple type="file" class="hidden" @change="onInputChange">
 
-  {{ tempImages }}
   <div v-if="files && files.length > 0" class="w-full p-3 border-b flex items-center gap-2 overflow-auto scrollbar-hidden">
     <WindowFooterTypeDefaultPreview
       v-for="(file, index) in files" :key="`${file.file.name} ${file.status}`"

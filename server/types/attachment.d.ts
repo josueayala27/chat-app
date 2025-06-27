@@ -1,9 +1,7 @@
 export interface Attachment {
   content_type: string
-  filename: string
-  system_filename: string
+  file_name: string
   size: number
-  url: string
 
   // Photo
   height?: number
