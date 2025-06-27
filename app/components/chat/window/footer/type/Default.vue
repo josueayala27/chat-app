@@ -216,11 +216,10 @@ async function startUpload(file: File) {
       headers: { 'Content-Type': file.type },
     })
 
-    console.log(`✅ [Uploader] Successfully uploaded “${file.name}”`)
-
     const cdnURL = buildURL(key)
-
     await preload(cdnURL)
+
+    console.log(`✅ [Uploader] Successfully uploaded “${file.name}”`)
     setSource(file, cdnURL)
     setStatus(file, 'done')
   }
