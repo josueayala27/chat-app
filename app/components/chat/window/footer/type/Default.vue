@@ -13,7 +13,7 @@ const route = useRoute('chat')
  */
 const { user } = useAuth()
 const { reference, closePopover } = usePopover()
-const { getUploadUrl } = useAttachmentUploader(route.params.chat)
+// const { getUploadUrl } = useAttachmentUploader(route.params.chat)
 const { values, validate, resetForm } = useForm<{ content: string }>({ name: 'chat-footer' })
 const { createTempMessage, updateTempMessage } = useChat()
 
@@ -112,7 +112,11 @@ function onInput() {
 }
 
 const media = ref<HTMLInputElement>()
-const files = ref<FileList | null | undefined>()
+const files = ref<{ file: File, status: 'idle' | 'uploading' | 'done' | 'error', source: string, type: string }[]>([])
+
+async function startUpload(file: File) {
+  console.log(`🚀 [Uploader] Starting upload for “${file.name}” — ${Math.round(file.size / 1024)} KB on deck…`)
+}
 
 /**
  * Handles file input changes by uploading each selected file in parallel.
@@ -125,42 +129,28 @@ const files = ref<FileList | null | undefined>()
  * @returns {Promise<string[]|undefined>} Array of uploaded file IDs, or undefined if no files.
  */
 async function onInputChange(): Promise<void> {
-  closePopover()
+  const _files = media.value?.files
+  if (_files) {
+    closePopover()
 
-  files.value = media.value?.files
+    for (const file of _files) {
+      files.value.push({
+        file,
+        status: 'idle',
+        source: URL.createObjectURL(file),
+        type: file.type,
+      })
 
-  await nextTick()
-  _window?.value?.scrollToBottom()
+      startUpload(file)
+    }
 
-  if (files.value) {
-    /**
-     * Create an array of upload promises for parallel processing.
-     */
-    const uploadPromises = Array.from(files.value).map(async (file) => {
-      /**
-       * Request a presigned upload URL.
-       */
-      const upload_url = await getUploadUrl(file)
-
-      /**
-       * Return the file ID for further processing if needed.
-       */
-      return { upload_url, file }
-    })
-
-    const _files = await Promise.all(uploadPromises)
+    await nextTick()
+    _window?.value?.scrollToBottom()
   }
 }
 
-function onRemove(index: number) {
-  if (files.value) {
-    const fileArray = Array.from(files.value)
-    fileArray.splice(index, 1)
+function onRemove(_index: number) {
 
-    const dataTransfer = new DataTransfer()
-    fileArray.forEach(file => dataTransfer.items.add(file))
-    files.value = dataTransfer.files
-  }
 }
 </script>
 
@@ -168,7 +158,7 @@ function onRemove(index: number) {
   <input ref="media" multiple type="file" class="hidden" @change="onInputChange">
 
   <div v-if="files && files.length > 0" class="w-full p-3 border-b flex items-center gap-2 overflow-auto scrollbar-hidden">
-    <WindowFooterTypeDefaultPreview v-for="(file, index) in files" :key="index" :file @remove="onRemove(index)" />
+    <WindowFooterTypeDefaultPreview v-for="(file, index) in files" :key="index" :source="file.source" :type="file.type" @remove="onRemove(index)" />
   </div>
 
   <div class="p-2 flex items-center gap-2">

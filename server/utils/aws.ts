@@ -11,7 +11,7 @@ export function useAws() {
    */
   function createClient(): S3Client {
     const client = new S3Client({
-      region: 'us-east-1',
+      region: config.AWS_DEFAULT_REGION,
       credentials: {
         accessKeyId: config.AWS_ACCESS_KEY_ID,
         secretAccessKey: config.AWS_SECRET_ACCESS_KEY,
@@ -30,7 +30,10 @@ export function useAws() {
    */
   async function createSignedUploadURL(client: S3Client, key: string): Promise<string> {
     const command = new PutObjectCommand({ Bucket: config.public.AWS_BUCKET, Key: key })
-    return getSignedUrl(client, command, { expiresIn: 300 })
+
+    return getSignedUrl(client, command, {
+      expiresIn: 60,
+    })
   }
 
   return { createClient, createSignedUploadURL }
