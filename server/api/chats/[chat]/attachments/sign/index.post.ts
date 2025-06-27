@@ -5,6 +5,8 @@ export default defineEventHandler(async (event) => {
   const { createClient, createSignedUploadURL } = useAws()
 
   const client = createClient()
+
+  // TODO: Change upload path
   const url = await createSignedUploadURL(client, body.filename)
 
   return { upload_url: url }

@@ -2,6 +2,9 @@
 import type { RealtimeChannel } from 'ably'
 import type { WindowMainInstance } from '~/pages/[chat].vue'
 import type { ChatMessage } from '~/types/message'
+// import pLimit from 'p-limit'
+
+// const limit = pLimit(3)
 
 const { $ably } = useNuxtApp()
 const route = useRoute('chat')
@@ -114,6 +117,20 @@ function onInput() {
 const media = ref<HTMLInputElement>()
 const files = ref<{ file: File, status: 'idle' | 'uploading' | 'done' | 'error', source: string, type: string }[]>([])
 
+function setStatus(file: File, status: 'idle' | 'uploading' | 'done' | 'error') {
+  const item = files.value.find(f => f.file === file)
+
+  if (item)
+    item.status = status
+}
+
+async function createThumb(file: File, size = 320) {
+  const img = await createImageBitmap(file)
+  const canvas = Object.assign(document.createElement('canvas'), { width: size, height: size * (img.height / img.width) })
+  canvas.getContext('2d')!.drawImage(img, 0, 0, canvas.width, canvas.height)
+  return canvas.toDataURL('image/jpeg', 0.7)
+}
+
 async function startUpload(file: File) {
   const url = await getUploadUrl(file)
 
@@ -122,8 +139,7 @@ async function startUpload(file: File) {
   }
 
   console.log(`🚀 [Uploader] Starting upload for “${file.name}” — ${Math.round(file.size / 1024)} KB on deck…`)
-
-  files.value = files.value.map(f => f.file === file ? { ...f, status: 'uploading' } : f)
+  setStatus(file, 'uploading')
 
   await $fetch(url, {
     method: 'PUT',
@@ -131,15 +147,10 @@ async function startUpload(file: File) {
     headers: {
       'Content-Type': file.type,
     },
-    async onResponse() {
-      console.log(`✅ [Uploader] Successfully uploaded “${file.name}”`)
-      files.value = files.value.map(f => f.file === file ? { ...f, status: 'done' } : f)
-    },
-    async onRequestError({ error }) {
-      console.error(`❌ [Uploader] Error uploading “${file.name}”:`, error)
-      files.value = files.value.map(f => f.file === file ? { ...f, status: 'error' } : f)
-    },
   })
+
+  console.log(`✅ [Uploader] Successfully uploaded “${file.name}”`)
+  setStatus(file, 'done')
 }
 
 /**
@@ -161,7 +172,7 @@ async function onInputChange(): Promise<void> {
       files.value.push({
         file,
         status: 'idle',
-        source: URL.createObjectURL(file),
+        source: await createThumb(file),
         type: file.type,
       })
 
@@ -176,6 +187,8 @@ async function onInputChange(): Promise<void> {
 function onRemove(_index: number) {
 
 }
+
+const _allDone = computed(() => files.value.every(f => f.status === 'done'))
 </script>
 
 <template>
