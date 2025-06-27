@@ -13,7 +13,7 @@ const route = useRoute('chat')
  */
 const { user } = useAuth()
 const { reference, closePopover } = usePopover()
-// const { getUploadUrl } = useAttachmentUploader(route.params.chat)
+const { getUploadUrl } = useAttachmentUploader(route.params.chat)
 const { values, validate, resetForm } = useForm<{ content: string }>({ name: 'chat-footer' })
 const { createTempMessage, updateTempMessage } = useChat()
 
@@ -115,7 +115,31 @@ const media = ref<HTMLInputElement>()
 const files = ref<{ file: File, status: 'idle' | 'uploading' | 'done' | 'error', source: string, type: string }[]>([])
 
 async function startUpload(file: File) {
+  const url = await getUploadUrl(file)
+
+  if (!url) {
+    console.error(`🚨 [Uploader] Failed to get upload URL for “${file.name}”`)
+  }
+
   console.log(`🚀 [Uploader] Starting upload for “${file.name}” — ${Math.round(file.size / 1024)} KB on deck…`)
+
+  files.value = files.value.map(f => f.file === file ? { ...f, status: 'uploading' } : f)
+
+  await $fetch(url, {
+    method: 'PUT',
+    body: file,
+    headers: {
+      'Content-Type': file.type,
+    },
+    async onResponse() {
+      console.log(`✅ [Uploader] Successfully uploaded “${file.name}”`)
+      files.value = files.value.map(f => f.file === file ? { ...f, status: 'done' } : f)
+    },
+    async onRequestError({ error }) {
+      console.error(`❌ [Uploader] Error uploading “${file.name}”:`, error)
+      files.value = files.value.map(f => f.file === file ? { ...f, status: 'error' } : f)
+    },
+  })
 }
 
 /**
@@ -158,7 +182,7 @@ function onRemove(_index: number) {
   <input ref="media" multiple type="file" class="hidden" @change="onInputChange">
 
   <div v-if="files && files.length > 0" class="w-full p-3 border-b flex items-center gap-2 overflow-auto scrollbar-hidden">
-    <WindowFooterTypeDefaultPreview v-for="(file, index) in files" :key="index" :source="file.source" :type="file.type" @remove="onRemove(index)" />
+    <WindowFooterTypeDefaultPreview v-for="(file, index) in files" :key="index" :status="file.status" :source="file.source" :type="file.type" @remove="onRemove(index)" />
   </div>
 
   <div class="p-2 flex items-center gap-2">
