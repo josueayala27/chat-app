@@ -17,7 +17,7 @@ const height = ref<number>(400)
 
 const json = {
   bucket: config.public.AWS_BUCKET,
-  key: 'messages/media/photo-1728443814449-7a2ad4d86ec3.png',
+  key: 'zhenyu-luo-n4XeCKwwrk0-unsplash.jpg',
   edits: {
     resize: {
       width: MAX_WIDTH * 2,
