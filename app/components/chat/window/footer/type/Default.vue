@@ -187,15 +187,15 @@ function buildURL(key: string) {
     },
   }
 
-  return `https://cdn.parly.chat/${btoa(JSON.stringify(url))}`
+  return `${config.public.CLOUDFRONT_DOMAIN}/${btoa(JSON.stringify(url))}`
 }
 
-function preload(src: string) {
-  return new Promise<void>((res, rej) => {
+function preload(url: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
     const img = new Image()
-    img.onload = () => res()
-    img.onerror = rej
-    img.src = src
+    img.onload = () => resolve(img)
+    img.onerror = reject
+    img.src = url
   })
 }
 
