@@ -7,7 +7,6 @@ const sidebarComponents: Record<LayoutKeys, string | ConcreteComponent> = {
   'chat-list': resolveComponent('SidebarChatList'),
   'new-friend': resolveComponent('SidebarNewFriend'),
   'new-message': resolveComponent('SidebarNewMessage'),
-  'starred-messages': '',
 }
 </script>
 
