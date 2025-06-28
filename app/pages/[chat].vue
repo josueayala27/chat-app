@@ -27,21 +27,35 @@ const { getConversation, getBeforeConversation, cursors } = useChat()
 function groupAndTransform(messages: ChatMessage[]) {
   return pipe(
     messages,
-    sortBy(msg => new Date(msg.created_at).getTime()),
-    groupBy(msg => new Date(msg.created_at).toISOString().split('T')[0]),
-    mapValues((msgs) => {
-      return reduce(
-        msgs,
-        (acc, msg) => {
-          const lastGroup = acc[acc.length - 1]
+    /**
+     * 1️⃣ Sort oldest → newest.
+     */
+    sortBy(({ created_at }) => new Date(created_at).getTime()),
 
-          if (lastGroup?.sender_id._id === msg.sender_id._id) {
-            lastGroup.messages.push(msg)
+    /**
+     * 2️⃣ Bucket into { 'YYYY-MM-DD': ChatMessage[] }.
+     */
+    groupBy(({ created_at }) => new Date(created_at).toISOString().split('T')[0]),
+
+    /**
+     * 3️⃣ For each day, merge consecutive messages from identical sender.
+     */
+    mapValues((messagesOfDay) => {
+      return reduce(
+        messagesOfDay,
+        (batches, currentMessage) => {
+          const lastBatch = batches.at(-1)
+
+          if (lastBatch?.sender_id._id === currentMessage.sender_id._id) {
+            lastBatch.messages.push(currentMessage)
           }
           else {
-            acc.push({ sender_id: msg.sender_id, messages: [msg] })
+            batches.push({
+              sender_id: currentMessage.sender_id,
+              messages: [currentMessage],
+            })
           }
-          return acc
+          return batches
         },
         [] as Array<{
           sender_id: Pick<User, '_id' | 'first_name' | 'last_name'>
@@ -49,6 +63,10 @@ function groupAndTransform(messages: ChatMessage[]) {
         }>,
       )
     }),
+
+    /**
+     * 4️⃣ Convert the { date: batches } object back to an array.
+     */
     entries(),
     map(([date, groups]) => ({ date, groups })),
   )
