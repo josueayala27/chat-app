@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import type { RealtimeChannel } from 'ably'
 import type { WindowMainInstance } from '~/pages/[chat].vue'
-import type { ChatMessage } from '~/types/message'
 import pLimit from 'p-limit'
 
 const MAX_PARALLEL_UPLOADS = 3
@@ -14,55 +13,40 @@ const route = useRoute('chat')
 const { user } = useAuth()
 const { reference, closePopover } = usePopover()
 const { create: createAttachment } = useAttachment(route.params.chat)
-const { values, validate, resetForm } = useForm<{ content: string }>({ name: 'chat-footer' })
-const { createTempMessage, updateTempMessage } = useChat()
+const { send } = useMessage(route.params.chat)
+// const { createTempMessage, updateTempMessage } = useChat()
 
 const _window = inject<Ref<WindowMainInstance | undefined>>('window')
-
-/**
- * A reactive reference to a Promise used to queue asynchronous tasks.
- * Ensures that tasks are executed sequentially.
- * @type {import('vue').Ref<Promise<void>>}
- */
-const taskQueue: Ref<Promise<void>> = ref<Promise<void>>(Promise.resolve())
-
-/**
- * Enqueues an asynchronous task to be executed after the current queue.
- * @param {() => Promise<void>} task - The asynchronous function to enqueue.
- */
-function enqueueTask(task: () => Promise<void>) {
-  taskQueue.value = taskQueue.value.then(() => task())
-}
 
 /**
  * Validates the form and, if valid, enqueues a task to send the message.
  * Sends a POST request to the appropriate chat endpoint with the message content.
  */
-async function sendMessage() {
-  const { valid } = await validate()
+// async function sendMessage() {
+//   const { valid } = await validate()
 
-  if (valid) {
-    const content = values.content.trim()
-    resetForm()
+//   if (valid) {
+//     const content = values.content.trim()
+//     resetForm()
 
-    const { _id } = createTempMessage({ chat_id: route.params.chat, content })
+//     const { _id } = createTempMessage({ chat_id: route.params.chat, content })
 
-    await nextTick()
-    _window?.value?.scrollToBottom(0.3)
+//     await nextTick()
+//     _window?.value?.scrollToBottom(0.3)
 
-    enqueueTask(async () => {
-      const message = await $fetch(`/api/chats/${route.params.chat}/messages`, {
-        method: 'POST',
-        body: {
-          type: 'text',
-          content,
-        },
-      })
+//     enqueueTask(async () => {
+//       const message = await $fetch(`/api/chats/${route.params.chat}/messages`, {
+//         method: 'POST',
+//         body: {
+//           type: 'text',
+//           content,
+//         },
+//       })
 
-      updateTempMessage(_id, message as ChatMessage)
-    })
-  }
-}
+//       updateTempMessage(_id, message as ChatMessage)
+//     })
+//   }
+// }
 
 const channel: Ref<RealtimeChannel | undefined> = ref<RealtimeChannel>()
 onMounted(() => {
@@ -263,16 +247,16 @@ const _allDone = computed(() => files.value.every(f => f.status === 'done'))
       placeholder="Write something"
       type="text"
       @input="onInput"
-      @keydown.enter.prevent="sendMessage"
+      @keydown.enter.prevent="send"
     />
 
-    <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer" @click="sendMessage">
-      <Icon
+    <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer" @click="send">
+      <!-- <Icon
         size="20px"
         :name="values.content || files?.length ? 'carbon:send-filled' : 'carbon:microphone'"
         :class="{ 'text-sky-500': values.content || files?.length }"
         class="flex shrink-0"
-      />
+      /> -->
     </div>
   </div>
 </template>
