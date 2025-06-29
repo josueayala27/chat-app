@@ -35,18 +35,11 @@ async function onSubmit() {
 
 <template>
   <BaseFormField name="email" label="Email">
-    <BaseInput
-      icon="carbon:user-avatar"
-      placeholder="Enter email"
-    />
+    <BaseInput icon="carbon:user-avatar" placeholder="Enter email" />
   </BaseFormField>
 
   <BaseFormField name="password" label="Password">
-    <BaseInput
-      icon="carbon:password"
-      type="password"
-      placeholder="Enter password"
-    />
+    <BaseInput icon="carbon:password" type="password" placeholder="Enter password" />
 
     <template #hint>
       <NuxtLink tabindex="-1" to="/reset-password" class="text-sm text-sky-500 font-medium">

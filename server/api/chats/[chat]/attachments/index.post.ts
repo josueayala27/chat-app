@@ -1,25 +1,19 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
+import { createAttachment } from '~~/server/services/attachment.service'
+import { createS3Client, createS3SignedUploadURL } from '~~/server/services/s3.service'
+import { attachmentCreateSchema } from '~~/server/validators/attachment.validator'
+import { messageParamSchema } from '~~/server/validators/message.validator'
 
-export default defineEventHandler(async () => {
-  const config = useRuntimeConfig()
+export default defineEventHandler(async (event) => {
+  // TODO: Create a new params validator for attachment :)
+  const params = await getValidatedRouterParams(event, messageParamSchema.parse)
+  const body = await readValidatedBody(event, attachmentCreateSchema.parse)
 
-  const client = new S3Client({
-    region: 'us-east-1',
-    credentials: {
-      accessKeyId: config.AWS_ACCESS_KEY_ID,
-      secretAccessKey: config.AWS_SECRET_ACCESS_KEY,
-    },
-  })
+  const attachment = await createAttachment(body)
 
-  const command = new PutObjectCommand({
-    Bucket: 'nimble-cloud-assets-7421',
-    Key: 'Customizable Font Scheme.png',
-  })
+  const key = ['attachments', params.chat, attachment._id, body.file_name].join('/')
 
-  const url = await getSignedUrl(client, command, { expiresIn: 3600 })
+  const client = createS3Client()
+  const url = await createS3SignedUploadURL(client, key)
 
-  return {
-    message: url,
-  }
+  return { _id: attachment._id, key, upload_url: url }
 })

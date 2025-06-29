@@ -1,7 +1,7 @@
 /**
  * List of valid sidebar layout keys.
  */
-export const LAYOUT_KEYS = ['chat-list', 'new-friend', 'new-message', 'starred-messages'] as const
+export const LAYOUT_KEYS = ['chat-list', 'new-friend', 'new-message'] as const
 
 /**
  * Type representing the possible sidebar layout values.
