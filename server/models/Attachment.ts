@@ -6,12 +6,11 @@ export interface AttachmentDocument extends Attachment, Document {}
 
 const attachmentSchema: Schema<AttachmentDocument> = new Schema(
   {
+    sha256: { type: String, required: true, unique: true, index: true },
     content_type: { type: String, required: true },
     file_name: { type: String, required: true },
     size: { type: Number, required: true },
-
-    height: { type: Number },
-    width: { type: Number },
+    sender_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   },
   {
     timestamps: {

@@ -1,9 +1,11 @@
 export interface Attachment {
+  sha256: string
+  key: string
+
   content_type: string
   file_name: string
   size: number
 
-  // Photo
-  height?: number
-  width?: number
+  sender_id: Types.ObjectId
+  ref_count: number
 }

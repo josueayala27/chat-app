@@ -4,6 +4,7 @@ import { attachmentCreateSchema } from '~~/server/validators/attachment.validato
 import { messageParamSchema } from '~~/server/validators/message.validator'
 
 export default defineEventHandler(async (event) => {
+  // TODO: Create a new params validator for attachment :)
   const params = await getValidatedRouterParams(event, messageParamSchema.parse)
   const body = await readValidatedBody(event, attachmentCreateSchema.parse)
 
@@ -14,5 +15,5 @@ export default defineEventHandler(async (event) => {
   const client = createS3Client()
   const url = await createS3SignedUploadURL(client, key)
 
-  return { key, upload_url: url }
+  return { _id: attachment._id, key, upload_url: url }
 })

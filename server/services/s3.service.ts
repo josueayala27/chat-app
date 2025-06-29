@@ -33,7 +33,9 @@ export async function createS3SignedUploadURL(client: S3Client, key: string): Pr
   return getSignedUrl(client, command, { expiresIn: 60 * 5 })
 }
 
-export async function deleteObject(client: S3Client, key: string): Promise<void> {
+export async function deleteS3Object(client: S3Client, key: string): Promise<void> {
+  console.log(key)
+
   const command = new DeleteObjectCommand({ Bucket: config.public.AWS_BUCKET, Key: key })
   await client.send(command)
 }
