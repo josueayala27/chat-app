@@ -202,24 +202,24 @@ function preload(url: string): Promise<HTMLImageElement> {
 async function startUpload(file: File) {
   const { upload_url, key } = await createAttachment(file)
 
-  if (!upload_url) {
-    console.error(`🚨 [Uploader] Failed to get upload URL for “${file.name}”`)
-  }
-
   try {
-    console.log(`🚀 [Uploader] Starting upload for “${file.name}” — ${Math.round(file.size / 1024)} KB on deck…`)
     setStatus(file, 'uploading')
 
-    await $fetch(upload_url, {
-      method: 'PUT',
-      body: file,
-      headers: { 'Content-Type': file.type },
-    })
+    if (upload_url) {
+      console.log(`🚀 [Uploader] Starting upload for “${file.name}” — ${Math.round(file.size / 1024)} KB on deck…`)
+
+      await $fetch(upload_url, {
+        method: 'PUT',
+        body: file,
+        headers: { 'Content-Type': file.type },
+      })
+
+      console.log(`✅ [Uploader] Successfully uploaded “${file.name}”`)
+    }
 
     const cdnURL = buildURL(key)
     await preload(cdnURL)
 
-    console.log(`✅ [Uploader] Successfully uploaded “${file.name}”`)
     setSource(file, cdnURL)
     setStatus(file, 'done')
   }

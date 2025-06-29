@@ -7,10 +7,14 @@ export interface AttachmentDocument extends Attachment, Document {}
 const attachmentSchema: Schema<AttachmentDocument> = new Schema(
   {
     sha256: { type: String, required: true, unique: true, index: true },
+    key: { type: String, required: true },
+
     content_type: { type: String, required: true },
     file_name: { type: String, required: true },
     size: { type: Number, required: true },
+
     sender_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    ref_count: { type: Number, default: 1 },
   },
   {
     timestamps: {

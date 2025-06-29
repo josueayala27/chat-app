@@ -1,19 +1,40 @@
+import type { AttachmentDocument } from '~~/server/models/Attachment'
+import Attachment from '~~/server/models/Attachment'
 import { createAttachment } from '~~/server/services/attachment.service'
 import { createS3Client, createS3SignedUploadURL } from '~~/server/services/s3.service'
 import { attachmentCreateSchema } from '~~/server/validators/attachment.validator'
-import { messageParamSchema } from '~~/server/validators/message.validator'
 
 export default defineEventHandler(async (event) => {
-  // TODO: Create a new params validator for attachment :)
-  const params = await getValidatedRouterParams(event, messageParamSchema.parse)
   const body = await readValidatedBody(event, attachmentCreateSchema.parse)
 
-  const attachment = await createAttachment(body)
+  let attachment: AttachmentDocument | null = await Attachment.findOneAndUpdate(
+    { sha256: body.sha256 },
+    // { $inc: { ref_count: 1 } },
+    // { new: true },
+  )
 
-  const key = ['attachments', params.chat, attachment._id, body.file_name].join('/')
+  if (!attachment) {
+    const key = `attachments/${body.sha256.slice(0, 2)}/${body.sha256}/${body.file_name}`
 
-  const client = createS3Client()
-  const url = await createS3SignedUploadURL(client, key)
+    const client = createS3Client()
+    const upload_url = await createS3SignedUploadURL(client, key)
 
-  return { _id: attachment._id, key, upload_url: url }
+    attachment = await createAttachment({
+      ...body,
+      key,
+      user: event.context.user,
+    })
+
+    return {
+      _id: attachment._id,
+      key: attachment.key,
+      upload_url,
+    }
+  }
+
+  return {
+    _id: attachment._id,
+    key: attachment.key,
+    upload_url: null,
+  }
 })
