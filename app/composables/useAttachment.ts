@@ -12,7 +12,7 @@ export function useAttachment(chatId: string) {
     /**
      * Request a presigned upload URL from your backend.
      */
-    const response = await $fetch<{ key: string, upload_url: string }>(
+    const response = await $fetch<{ _id: string, key: string, upload_url: string }>(
       `/api/chats/${chatId}/attachments`,
       {
         method: 'POST',

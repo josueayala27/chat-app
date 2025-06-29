@@ -113,7 +113,13 @@ function onInput() {
 }
 
 const media = ref<HTMLInputElement>()
-const files = ref<{ file: File, status: 'idle' | 'uploading' | 'done' | 'error', source: string, type: string }[]>([])
+const files = ref<{
+  _id: string
+  file: File
+  status: 'idle' | 'uploading' | 'done' | 'error'
+  source: string
+  type: string
+}[]>([])
 
 function setStatus(file: File, status: 'idle' | 'uploading' | 'done' | 'error') {
   const item = files.value.find(f => f.file === file)
@@ -127,6 +133,13 @@ function setSource(file: File, source: string) {
 
   if (item)
     item.source = source
+}
+
+function setId(file: File, id: string) {
+  const item = files.value.find(f => f.file === file)
+
+  if (item)
+    item._id = id
 }
 
 /**
@@ -200,7 +213,7 @@ function preload(url: string): Promise<HTMLImageElement> {
 }
 
 async function startUpload(file: File) {
-  const { upload_url, key } = await createAttachment(file)
+  const { upload_url, key, _id } = await createAttachment(file)
 
   try {
     setStatus(file, 'uploading')
@@ -219,9 +232,12 @@ async function startUpload(file: File) {
 
     const cdnURL = buildURL(key)
     await preload(cdnURL)
+      .then(() => setSource(file, cdnURL))
+      .catch(() => console.warn('⚠️ [Uploader] Prefetch failed (not fatal)', cdnURL))
 
-    setSource(file, cdnURL)
+    // TODO: Create only one handler
     setStatus(file, 'done')
+    setId(file, _id)
   }
   catch (error) {
     console.error(`🚨 [Uploader] Upload failed for “${file.name}”`, error)
@@ -248,6 +264,7 @@ async function onInputChange(): Promise<void> {
 
     for (const file of _files) {
       files.value.push({
+        _id: '',
         file,
         status: 'uploading',
         source: await createThumb(file),
@@ -262,8 +279,8 @@ async function onInputChange(): Promise<void> {
   }
 }
 
-function onRemove(_index: number) {
-
+async function onRemove(index: number) {
+  $fetch(`/api/attachments/${files.value[index]?._id}`, { method: 'DELETE' })
 }
 
 const _allDone = computed(() => files.value.every(f => f.status === 'done'))
@@ -274,8 +291,8 @@ const _allDone = computed(() => files.value.every(f => f.status === 'done'))
 
   <div v-if="files && files.length > 0" class="w-full p-3 border-b flex items-center gap-2 overflow-auto scrollbar-hidden">
     <WindowFooterTypeDefaultPreview
-      v-for="(file, index) in files" :key="`${file.file.name} ${file.status}`"
-      v-memo="[file.status]"
+      v-for="(file, index) in files"
+      :key="file._id"
       :status="file.status"
       :source="file.source"
       :type="file.type"
