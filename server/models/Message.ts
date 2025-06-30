@@ -22,7 +22,7 @@ const messageSchema: Schema<MessageDocument> = new Schema(
     read_by: { type: [readBySchema] },
 
     content: { type: String, required: true },
-    attachments: [{ type: Schema.Types.ObjectId }],
+    attachments: [{ type: Schema.Types.ObjectId, ref: 'Attachment' }],
   },
   {
     timestamps: {

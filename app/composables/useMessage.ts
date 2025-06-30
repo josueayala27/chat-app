@@ -1,4 +1,4 @@
-import type { ChatMessage } from '~/types/message'
+import type { ChatMessage, Message } from '~/types/message'
 import { customAlphabet } from 'nanoid'
 
 const nano = customAlphabet('abcdefghijklmnopqrstuvwxyz0123456789', 24)
@@ -8,11 +8,12 @@ export default function useMessage(channel: string) {
   const { enqueue } = useTaskQueue()
   const { user } = useAuth()
 
-  const sendAsync = useAsync((content: string) => $fetch<any>(`/api/chats/${String(channel)}/messages`, {
+  const sendAsync = useAsync((content: string) => $fetch<Message>(`/api/chats/${channel}/messages`, {
     method: 'POST',
     body: {
       type: 'text',
       content,
+      attachments: ['686183a0124352b5a998d882', '6861d46abfe9eaeb9ab4ffba'],
     },
   }))
 
