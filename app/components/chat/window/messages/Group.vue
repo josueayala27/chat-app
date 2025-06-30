@@ -42,7 +42,7 @@ const { root, content, avatar, title } = ui({ isOwn: isOwn.value })
 
 provide('isOwn', isOwn.value)
 
-const components: Record<string, string | ConcreteComponent> = {
+const components: Record<string, ConcreteComponent | string> = {
   text: toRaw(resolveComponent('WindowMessagesTypeText')),
   media: toRaw(resolveComponent('WindowMessagesTypeMedia')),
 }
