@@ -16,7 +16,7 @@ const messageSchema: Schema<MessageDocument> = new Schema(
   {
     chat_id: { type: Schema.Types.ObjectId, ref: 'Chat', required: true },
     sender_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    type: { type: String, enum: ['text', 'file', 'audio', 'system'], default: 'text' },
+    type: { type: String, enum: ['text', 'attachments', 'audio', 'system'], default: 'text' },
 
     reply_to: { type: Schema.Types.ObjectId, ref: 'Message' },
     read_by: { type: [readBySchema] },

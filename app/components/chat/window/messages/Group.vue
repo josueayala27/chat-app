@@ -44,7 +44,7 @@ provide('isOwn', isOwn.value)
 
 const components: Record<string, ConcreteComponent | string> = {
   text: toRaw(resolveComponent('WindowMessagesTypeText')),
-  media: toRaw(resolveComponent('WindowMessagesTypeMedia')),
+  attachments: toRaw(resolveComponent('WindowMessagesTypeMedia')),
 }
 </script>
 
