@@ -1,8 +1,14 @@
+import type { ChatMessage } from '~/types/message'
+import { customAlphabet } from 'nanoid'
+
+const nano = customAlphabet('abcdefghijklmnopqrstuvwxyz0123456789', 24)
+
 export default function useMessage(channel: string) {
   const { validate, values, resetField } = useForm<{ content: string }>({ name: 'chat-message' })
   const { enqueue } = useTaskQueue()
+  const { user } = useAuth()
 
-  const sendAsync = useAsync((content: string) => $fetch(`/api/chats/${channel}/messages`, {
+  const sendAsync = useAsync((content: string) => $fetch<any>(`/api/chats/${String(channel)}/messages`, {
     method: 'POST',
     body: {
       type: 'text',
@@ -10,12 +16,31 @@ export default function useMessage(channel: string) {
     },
   }))
 
+  function createTempMessage({ chat_id, content }: Pick<ChatMessage, 'chat_id' | 'content'>): ChatMessage {
+    const message: ChatMessage & { status: 'pending' | 'sent' | 'error' } = {
+      _id: `temp-${nano()}`,
+      attachments: [],
+      chat_id,
+      content,
+      created_at: new Date().toISOString(),
+      read_by: [],
+      sender_id: user.value,
+      type: 'text',
+      updated_at: new Date().toISOString(),
+      status: 'pending',
+    }
+
+    return message
+  }
+
   async function send() {
     const { valid } = await validate()
 
     if (valid) {
       const content = values.content.trim()
       resetField('content')
+
+      console.log(createTempMessage({ chat_id: channel, content }))
 
       enqueue(async () => {
         await sendAsync.execute(content)

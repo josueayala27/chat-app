@@ -14,7 +14,6 @@ const { user } = useAuth()
 const { reference, closePopover } = usePopover()
 const { create: createAttachment } = useAttachment(route.params.chat)
 const { send } = useMessage(route.params.chat)
-// const { createTempMessage, updateTempMessage } = useChat()
 
 const _window = inject<Ref<WindowMainInstance | undefined>>('window')
 
