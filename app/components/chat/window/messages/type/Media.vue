@@ -36,15 +36,20 @@ const images = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col items-end">
-    <div
+  <div class="flex flex-col items-end gap-1">
+    <!-- <div
       :style="{ height: `${height}px`, width: `${MAX_WIDTH}px` }"
       class="rounded-t-lg flex items-center justify-center overflow-hidden cursor-pointer relative"
     >
-      <!-- <img :src="`https://cdn.parly.chat/${url}`" class="object-cover w-full h-full"> -->
+      <img :src="`https://cdn.parly.chat/${url}`" class="object-cover w-full h-full">
+    </div> -->
+
+    <div class="grid grid-cols-2 gap-1 cursor-pointer">
+      <div v-for="(image, index) in images" :key="index" class="size-32 bg-slate-200 rounded-lg overflow-hidden">
+        <img :src="buildURL(image.key, 128 * 3, 128 * 3)">
+      </div>
     </div>
 
-    {{ images }}
-    <WindowMessagesTypeText v-bind="props" :ui="{ root: 'rounded-t-none w-full' }" />
+    <WindowMessagesTypeText v-bind="props" />
   </div>
 </template>
