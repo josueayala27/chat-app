@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-defineProps<{ source: string, type: string, status: 'idle' | 'uploading' | 'done' | 'error' }>()
+defineProps<{ source?: string, type: string, status: 'idle' | 'uploading' | 'done' | 'error' }>()
 const emits = defineEmits<{ (e: 'remove'): void }>()
 </script>
 

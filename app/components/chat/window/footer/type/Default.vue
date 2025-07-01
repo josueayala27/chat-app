@@ -61,29 +61,29 @@ function onInput() {
     isTyping.value = true
     typing('event:start-typing', isTyping.value)
   }
+
   debouncedFn()
 }
 
-const media = ref<HTMLInputElement>()
+const mediaInput = ref<HTMLInputElement>()
 
 async function onInputChange() {
-  const _files = media.value?.files
+  const _files = mediaInput.value?.files
   closePopover()
 
   if (!_files)
     return
 
-  const entries = await Promise.all(
+  files.value = await Promise.all(
     [..._files].map(async file => ({
       file,
-      status: 'uploading' as const,
-      source: await createThumb(file),
+      status: 'uploading',
+      source: file.type.startsWith('image/')
+        ? await createThumb(file)
+        : undefined,
       content_type: file.type,
-      meta: await getImageDimensionsFromFile(file),
     })),
   )
-
-  files.value.push(...entries)
 
   await Promise.all([..._files].map(file => limit(() => uploadSingleFile(file))))
 
@@ -101,14 +101,14 @@ const _allDone = computed(() => files.value.every(f => f.status === 'done'))
 </script>
 
 <template>
-  <input ref="media" multiple type="file" class="hidden" @change="onInputChange">
+  <input ref="mediaInput" multiple type="file" class="hidden" @change="onInputChange">
 
   <div v-if="files && files.length > 0" class="w-full p-3 border-b flex items-center gap-2 overflow-auto scrollbar-hidden">
     <WindowFooterTypeDefaultPreview
       v-for="(file, index) in files"
       :key="file._id"
       :status="file.status"
-      :source="file.source"
+      :source="file.source || ''"
       :type="file.content_type"
       @remove="onRemove(index)"
     />
@@ -125,8 +125,7 @@ const _allDone = computed(() => files.value.every(f => f.status === 'done'))
       <template #content>
         <BaseMenuContainer
           :items="[
-            { icon: 'carbon:document-add', label: 'File' },
-            { icon: 'carbon:image-copy', label: 'Photos & videos', onClick: () => media?.click() },
+            { icon: 'carbon:document-blank', label: 'Media & Files', onClick: () => mediaInput?.click() },
             { icon: 'carbon:text-short-paragraph', label: 'Poll' },
           ]"
         />

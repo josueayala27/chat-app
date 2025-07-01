@@ -3,6 +3,8 @@ import { customAlphabet } from 'nanoid'
 
 const nano = customAlphabet('abcdefghijklmnopqrstuvwxyz0123456789', 24)
 
+type MessageStatus = 'pending' | 'sent' | 'error'
+
 export default function useMessage(channel: string) {
   const { validate, values, resetField } = useForm<{ content: string }>({ name: 'chat-message' })
   const { enqueue } = useTaskQueue()
@@ -17,18 +19,18 @@ export default function useMessage(channel: string) {
     },
   }))
 
-  function createTempMessage({ chat_id, content }: Pick<ChatMessage, 'chat_id' | 'content'>): ChatMessage {
-    const message: ChatMessage & { status: 'pending' | 'sent' | 'error' } = {
+  function createTempMessage({ attachments, chat_id, content }: Pick<ChatMessage, 'chat_id' | 'content' | 'attachments'>): ChatMessage {
+    const message: ChatMessage & { status: MessageStatus } = {
       _id: `temp-${nano()}`,
-      attachments: [],
+      attachments,
       chat_id,
       content,
-      created_at: new Date().toISOString(),
       read_by: [],
       sender_id: user.value,
       type: 'text',
-      updated_at: new Date().toISOString(),
       status: 'pending',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     }
 
     return message

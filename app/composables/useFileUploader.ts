@@ -2,7 +2,9 @@ export interface UploadFileEntry {
   _id?: string
   file: File
   status: 'idle' | 'uploading' | 'done' | 'error'
-  source: string
+
+  // Only for images
+  source?: string
   content_type: string
   meta?: Record<string, any>
 }
@@ -34,25 +36,18 @@ export function useFileUploader(chatId: string) {
     const hashBuf = await crypto.subtle.digest('SHA-256', arrayBuf)
     return [...new Uint8Array(hashBuf)].map(b => b.toString(16).padStart(2, '0')).join('')
   }
+
   async function uploadSingleFile(file: File) {
-    try {
-      updateFileEntry(file, { status: 'uploading' })
+    const input = await prepareAttachmentInput(file)
+    const { upload_url, _id } = await createAttachment(input)
 
-      const input = await prepareAttachmentInput(file)
-      const { upload_url, _id } = await createAttachment(input)
+    updateFileEntry(file, { _id })
 
-      updateFileEntry(file, { _id })
-
-      if (upload_url) {
-        await uploadFile(upload_url, file)
-      }
-
-      updateFileEntry(file, { status: 'done' })
+    if (upload_url) {
+      await uploadFile(upload_url, file)
     }
-    catch (err) {
-      updateFileEntry(file, { status: 'error' })
-      throw err
-    }
+
+    updateFileEntry(file, { status: 'done' })
   }
 
   return { files, uploadSingleFile }
