@@ -11,8 +11,8 @@ const { $ably } = useNuxtApp()
 const route = useRoute('chat')
 
 const { user } = useAuth()
-const { reference, closePopover } = usePopover()
-const { create: createAttachment } = useAttachment(route.params.chat)
+const { files, uploadSingleFile } = useFileUploader(route.params.chat)
+const { reference } = usePopover()
 const { send } = useMessage(route.params.chat)
 
 const _window = inject<Ref<WindowMainInstance | undefined>>('window')
@@ -65,102 +65,30 @@ function onInput() {
 }
 
 const media = ref<HTMLInputElement>()
-const files = ref<{
-  _id: string
-  file: File
-  status: 'idle' | 'uploading' | 'done' | 'error'
-  source: string
-  type: string
-  meta?: Record<string, any>
-}[]>([])
 
-function setStatus(file: File, status: 'idle' | 'uploading' | 'done' | 'error') {
-  const item = files.value.find(f => f.file === file)
-
-  if (item)
-    item.status = status
-}
-
-function setSource(file: File, source: string) {
-  const item = files.value.find(f => f.file === file)
-
-  if (item)
-    item.source = source
-}
-
-function setId(file: File, id: string) {
-  const item = files.value.find(f => f.file === file)
-
-  if (item)
-    item._id = id
-}
-
-async function startUpload(file: File) {
-  const { upload_url, key, _id } = await createAttachment(file)
-
-  try {
-    setStatus(file, 'uploading')
-
-    if (upload_url) {
-      console.log(`🚀 [Uploader] Starting upload for “${file.name}” — ${Math.round(file.size / 1024)} KB on deck…`)
-
-      await $fetch(upload_url, {
-        method: 'PUT',
-        body: file,
-        headers: { 'Content-Type': file.type },
-      })
-
-      console.log(`✅ [Uploader] Successfully uploaded “${file.name}”`)
-    }
-
-    const cdnURL = buildURL(key, 84 * 3, 84 * 3)
-    await preload(cdnURL)
-      .then(() => setSource(file, cdnURL))
-      .catch(() => console.warn('⚠️ [Uploader] Prefetch failed (not fatal)', cdnURL))
-
-    // TODO: Create only one handler
-    setStatus(file, 'done')
-    setId(file, _id)
-  }
-  catch (error) {
-    console.error(`🚨 [Uploader] Upload failed for “${file.name}”`, error)
-    setStatus(file, 'error')
-  }
-}
-
-/**
- * Handles file input changes by uploading each selected file in parallel.
- * - Requests an upload URL for each file from the backend.
- * - Uploads each file directly to the provided storage URL using PUT.
- * - Returns an array of uploaded file IDs.
- *
- * @async
- * @function onInputChange
- * @returns {Promise<string[]|undefined>} Array of uploaded file IDs, or undefined if no files.
- */
-async function onInputChange(): Promise<void> {
+async function onInputChange() {
   const _files = media.value?.files
-  if (_files) {
-    closePopover()
 
-    const uploadPromises: Promise<void>[] = []
+  if (!_files)
+    return
 
-    for (const file of _files) {
-      files.value.push({
-        _id: '',
-        file,
-        status: 'uploading',
-        source: await createThumb(file),
-        type: file.type,
-        meta: await getImageDimensionsFromFile(file),
-      })
-
-      uploadPromises.push(limit(() => startUpload(file)))
-    }
-
-    await nextTick()
-    _window?.value?.scrollToBottom()
+  for (const file of _files) {
+    files.value.push({
+      _id: '',
+      file,
+      status: 'idle',
+      source: '',
+      type: file.type,
+      meta: undefined,
+    })
   }
+
+  await Promise.all(
+    [..._files].map(file => limit(() => uploadSingleFile(file))),
+  )
+
+  await nextTick()
+  _window?.value?.scrollToBottom()
 }
 
 async function onRemove(index: number) {

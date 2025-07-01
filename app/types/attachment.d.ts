@@ -8,4 +8,6 @@ export interface Attachment {
 
   sender_id: Types.ObjectId
   ref_count: number
+
+  meta?: Record<string, any>
 }

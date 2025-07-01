@@ -19,12 +19,9 @@ export default defineEventHandler(async (event) => {
     const client = createS3Client()
     const upload_url = await createS3SignedUploadURL(client, key)
 
-    const contentType = body.content_type.startsWith('image/') ? 'image' : ''
-
     attachment = await createAttachment({
       ...body,
       key,
-      content_type: contentType,
       user: event.context.user,
     })
 

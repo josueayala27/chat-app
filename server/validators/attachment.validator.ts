@@ -9,6 +9,7 @@ export const attachmentCreateSchema = z.object({
   file_name: z.string(),
   size: z.number().positive(),
   sha256: z.string().length(64),
+  meta: z.record(z.any()),
 })
 
 export const attachmentDeleteSchema = attachmentIdSchema
