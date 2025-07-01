@@ -74,7 +74,6 @@ async function onInputChange() {
 
   for (const file of _files) {
     files.value.push({
-      _id: '',
       file,
       status: 'idle',
       source: '',
@@ -83,9 +82,7 @@ async function onInputChange() {
     })
   }
 
-  await Promise.all(
-    [..._files].map(file => limit(() => uploadSingleFile(file))),
-  )
+  await Promise.all([..._files].map(file => limit(() => uploadSingleFile(file))))
 
   await nextTick()
   _window?.value?.scrollToBottom()

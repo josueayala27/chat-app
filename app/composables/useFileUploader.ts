@@ -1,5 +1,5 @@
 interface UploadFileEntry {
-  _id: string
+  _id?: string
   file: File
   status: 'idle' | 'uploading' | 'done' | 'error'
   source: string
@@ -11,20 +11,10 @@ export function useFileUploader(chatId: string) {
   const files = ref<UploadFileEntry[]>([])
   const { create, uploadFile } = useAttachment(chatId)
 
-  function setStatus(file: File, status: UploadFileEntry['status']) {
+  function updateFileEntry(file: File, updates: Partial<UploadFileEntry>) {
     const entry = files.value.find(f => f.file === file)
     if (entry)
-      entry.status = status
-  }
-  function setSource(file: File, source: string) {
-    const entry = files.value.find(f => f.file === file)
-    if (entry)
-      entry.source = source
-  }
-  function setId(file: File, id: string) {
-    const entry = files.value.find(f => f.file === file)
-    if (entry)
-      entry._id = id
+      Object.assign(entry, updates)
   }
 
   async function prepareAttachmentInput(file: File) {
@@ -46,26 +36,27 @@ export function useFileUploader(chatId: string) {
 
   async function uploadSingleFile(file: File) {
     try {
-      setStatus(file, 'uploading')
+      updateFileEntry(file, { status: 'uploading' })
+
       const thumb = await createThumb(file)
-      setSource(file, thumb)
+      updateFileEntry(file, { source: thumb })
 
       const input = await prepareAttachmentInput(file)
       const { upload_url, _id } = await create(input)
 
-      setId(file, _id)
+      updateFileEntry(file, { _id })
 
       if (upload_url) {
         await uploadFile(upload_url, file)
       }
 
-      setStatus(file, 'done')
+      updateFileEntry(file, { status: 'done' })
     }
     catch (err) {
-      setStatus(file, 'error')
+      updateFileEntry(file, { status: 'error' })
       throw err
     }
   }
 
-  return { files, uploadSingleFile, setStatus, setSource, setId }
+  return { files, uploadSingleFile }
 }
