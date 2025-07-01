@@ -9,7 +9,7 @@ interface UploadFileEntry {
 
 export function useFileUploader(chatId: string) {
   const files = ref<UploadFileEntry[]>([])
-  const { create, uploadFile } = useAttachment(chatId)
+  const { create: createAttachment, uploadFile } = useAttachment(chatId)
 
   function updateFileEntry(file: File, updates: Partial<UploadFileEntry>) {
     const entry = files.value.find(f => f.file === file)
@@ -19,6 +19,7 @@ export function useFileUploader(chatId: string) {
 
   async function prepareAttachmentInput(file: File) {
     const sha256 = await computeSHA256(file)
+
     return {
       content_type: file.type,
       file_name: file.name,
@@ -42,7 +43,7 @@ export function useFileUploader(chatId: string) {
       updateFileEntry(file, { source: thumb })
 
       const input = await prepareAttachmentInput(file)
-      const { upload_url, _id } = await create(input)
+      const { upload_url, _id } = await createAttachment(input)
 
       updateFileEntry(file, { _id })
 

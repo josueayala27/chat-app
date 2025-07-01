@@ -12,7 +12,7 @@ const route = useRoute('chat')
 
 const { user } = useAuth()
 const { files, uploadSingleFile } = useFileUploader(route.params.chat)
-const { reference } = usePopover()
+const { reference, closePopover } = usePopover()
 const { send } = useMessage(route.params.chat)
 
 const _window = inject<Ref<WindowMainInstance | undefined>>('window')
@@ -68,6 +68,7 @@ const media = ref<HTMLInputElement>()
 
 async function onInputChange() {
   const _files = media.value?.files
+  closePopover()
 
   if (!_files)
     return

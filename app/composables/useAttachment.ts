@@ -9,12 +9,6 @@ interface AttachmentResponse {
 type CreateAttachmentInput = Pick<Attachment, 'content_type' | 'file_name' | 'sha256' | 'size' | 'meta'>
 
 export function useAttachment(chatId: string) {
-  async function _sha256(file: File) {
-    const arrayBuf = await file.arrayBuffer()
-    const hashBuf = await crypto.subtle.digest('SHA-256', arrayBuf)
-    return [...new Uint8Array(hashBuf)].map(b => b.toString(16).padStart(2, '0')).join('')
-  }
-
   const createAsync = useAsync((body: CreateAttachmentInput) => $fetch<AttachmentResponse>(`/api/chats/${chatId}/attachments`, {
     method: 'POST',
     body,
