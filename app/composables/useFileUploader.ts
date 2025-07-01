@@ -34,13 +34,9 @@ export function useFileUploader(chatId: string) {
     const hashBuf = await crypto.subtle.digest('SHA-256', arrayBuf)
     return [...new Uint8Array(hashBuf)].map(b => b.toString(16).padStart(2, '0')).join('')
   }
-
   async function uploadSingleFile(file: File) {
     try {
       updateFileEntry(file, { status: 'uploading' })
-
-      const thumb = await createThumb(file)
-      updateFileEntry(file, { source: thumb })
 
       const input = await prepareAttachmentInput(file)
       const { upload_url, _id } = await createAttachment(input)

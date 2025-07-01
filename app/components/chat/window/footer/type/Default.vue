@@ -73,15 +73,17 @@ async function onInputChange() {
   if (!_files)
     return
 
-  for (const file of _files) {
-    files.value.push({
+  const entries = await Promise.all(
+    [..._files].map(async file => ({
       file,
-      status: 'idle',
-      source: '',
+      status: 'idle' as const,
+      source: await createThumb(file),
       type: file.type,
-      meta: undefined,
-    })
-  }
+      meta: await getImageDimensionsFromFile(file),
+    })),
+  )
+
+  files.value.push(...entries)
 
   await Promise.all([..._files].map(file => limit(() => uploadSingleFile(file))))
 
