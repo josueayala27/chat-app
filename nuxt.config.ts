@@ -9,7 +9,6 @@ export default defineNuxtConfig({
     '@vee-validate/nuxt',
     '@nuxt/eslint',
     '@nuxt/test-utils/module',
-    '@vue-macros/nuxt',
     '@nuxt/image',
   ],
   components: [
