@@ -76,9 +76,9 @@ async function onInputChange() {
   const entries = await Promise.all(
     [..._files].map(async file => ({
       file,
-      status: 'idle' as const,
+      status: 'uploading' as const,
       source: await createThumb(file),
-      type: file.type,
+      content_type: file.type,
       meta: await getImageDimensionsFromFile(file),
     })),
   )
@@ -95,6 +95,8 @@ async function onRemove(index: number) {
   $fetch(`/api/attachments/${files.value[index]?._id}`, { method: 'DELETE' })
 }
 
+// const ids = computed(() => files.value.map(el => el._id))
+
 const _allDone = computed(() => files.value.every(f => f.status === 'done'))
 </script>
 
@@ -107,7 +109,7 @@ const _allDone = computed(() => files.value.every(f => f.status === 'done'))
       :key="file._id"
       :status="file.status"
       :source="file.source"
-      :type="file.type"
+      :type="file.content_type"
       @remove="onRemove(index)"
     />
   </div>
@@ -137,16 +139,15 @@ const _allDone = computed(() => files.value.every(f => f.status === 'done'))
       placeholder="Write something"
       type="text"
       @input="onInput"
-      @keydown.enter.prevent="send"
+      @keydown.enter.prevent="send()"
     />
 
-    <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer" @click="send">
-      <!-- <Icon
+    <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer" @click="send()">
+      <Icon
         size="20px"
-        :name="values.content || files?.length ? 'carbon:send-filled' : 'carbon:microphone'"
-        :class="{ 'text-sky-500': values.content || files?.length }"
-        class="flex shrink-0"
-      /> -->
+        name="carbon:send-filled"
+        class="flex shrink-0 text-sky-500"
+      />
     </div>
   </div>
 </template>

@@ -1,9 +1,9 @@
-interface UploadFileEntry {
+export interface UploadFileEntry {
   _id?: string
   file: File
   status: 'idle' | 'uploading' | 'done' | 'error'
   source: string
-  type: string
+  content_type: string
   meta?: Record<string, any>
 }
 
