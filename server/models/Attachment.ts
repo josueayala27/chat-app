@@ -16,7 +16,7 @@ const attachmentSchema: Schema<AttachmentDocument> = new Schema(
     sender_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     ref_count: { type: Number, default: 1 },
 
-    meta: { type: Schema.Types.Mixed },
+    meta: { type: Schema.Types.Mixed, required: false },
   },
   {
     timestamps: {

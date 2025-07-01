@@ -1,14 +1,16 @@
 <script lang="ts" setup>
 defineProps<{ source?: string, type: string, status: 'idle' | 'uploading' | 'done' | 'error' }>()
 const emits = defineEmits<{ (e: 'remove'): void }>()
+
+const imageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/bmp', 'image/x-icon', 'image/tiff', 'image/heic', 'image/avif']
 </script>
 
 <template>
   <div class="size-21 bg-slate-100 text-xs text-slate-400 grid place-items-center  cursor-pointer hover:bg-slate-200/60 shrink-0 group items-center justify-center relative">
-    <template v-if="!['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/bmp', 'image/x-icon', 'image/tiff', 'image/heic', 'image/avif'].includes(type)">
+    <template v-if="!imageTypes.includes(type)">
       <div class="flex flex-col items-center gap-1 p-2">
         <icon size="24px" name="carbon:document-blank" />
-        <!-- <BaseFont class="line-clamp-1 break-all" :content="file.name" /> -->
+        <BaseFont class="line-clamp-1 break-all" content="file.name" />
       </div>
     </template>
 
