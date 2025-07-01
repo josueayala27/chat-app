@@ -21,25 +21,44 @@ export async function createThumb(
   side: number = 84 * 3,
   quality: number = 0.7,
 ): Promise<string> {
-  // 1. Decode the image into a bitmap
   const img = await createImageBitmap(file)
 
-  // 2. Determine the crop box: square centered on the shorter edge
   const crop = Math.min(img.width, img.height)
   const sx = (img.width - crop) / 2 // X offset
   const sy = (img.height - crop) / 2 // Y offset
 
-  // 3. Prepare canvas (OffscreenCanvas where available)
   const Canvas = (globalThis as any).OffscreenCanvas || HTMLCanvasElement
   const canvas: HTMLCanvasElement | OffscreenCanvas = new Canvas(side, side) as any
   const ctx = canvas.getContext('2d')!
 
-  // 4. Draw: source (sx, sy, crop, crop) → destination (0, 0, side, side)
   ctx.drawImage(img, sx, sy, crop, crop, 0, 0, side, side)
   img.close()
 
-  // 5. Export and return URL
   return (canvas as any).convertToBlob
     ? URL.createObjectURL(await (canvas as any).convertToBlob({ type: 'image/jpeg', quality }))
     : (canvas as HTMLCanvasElement).toDataURL('image/jpeg', quality)
+}
+
+export function getImageDimensionsFromFile(file: File): Promise<{ width: number, height: number }> {
+  return new Promise((resolve, reject) => {
+    const img = new window.Image()
+    img.onload = () => resolve({ width: img.width, height: img.height })
+    img.onerror = reject
+    img.src = URL.createObjectURL(file)
+  })
+}
+
+/**
+ * Preloads an image by creating an HTMLImageElement and resolving when it's ready.
+ *
+ * @param src - URL of the image to preload.
+ * @returns A promise that resolves with the loaded image element or rejects on error.
+ */
+export function preload(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.onload = () => resolve(img)
+    img.onerror = reject
+    img.src = src
+  })
 }

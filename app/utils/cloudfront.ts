@@ -22,18 +22,3 @@ export function buildURL(key: string, width: number, height: number): string {
   }))
   return `${config.CLOUDFRONT_DOMAIN}/${url}`
 }
-
-/**
- * Preloads an image by creating an HTMLImageElement and resolving when it's ready.
- *
- * @param src - URL of the image to preload.
- * @returns A promise that resolves with the loaded image element or rejects on error.
- */
-export function preload(src: string): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    img.onload = () => resolve(img)
-    img.onerror = reject
-    img.src = src
-  })
-}

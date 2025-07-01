@@ -17,36 +17,6 @@ const { send } = useMessage(route.params.chat)
 
 const _window = inject<Ref<WindowMainInstance | undefined>>('window')
 
-/**
- * Validates the form and, if valid, enqueues a task to send the message.
- * Sends a POST request to the appropriate chat endpoint with the message content.
- */
-// async function sendMessage() {
-//   const { valid } = await validate()
-
-//   if (valid) {
-//     const content = values.content.trim()
-//     resetForm()
-
-//     const { _id } = createTempMessage({ chat_id: route.params.chat, content })
-
-//     await nextTick()
-//     _window?.value?.scrollToBottom(0.3)
-
-//     enqueueTask(async () => {
-//       const message = await $fetch(`/api/chats/${route.params.chat}/messages`, {
-//         method: 'POST',
-//         body: {
-//           type: 'text',
-//           content,
-//         },
-//       })
-
-//       updateTempMessage(_id, message as ChatMessage)
-//     })
-//   }
-// }
-
 const channel: Ref<RealtimeChannel | undefined> = ref<RealtimeChannel>()
 onMounted(() => {
 /**
@@ -101,6 +71,7 @@ const files = ref<{
   status: 'idle' | 'uploading' | 'done' | 'error'
   source: string
   type: string
+  meta?: Record<string, any>
 }[]>([])
 
 function setStatus(file: File, status: 'idle' | 'uploading' | 'done' | 'error') {
@@ -122,15 +93,6 @@ function setId(file: File, id: string) {
 
   if (item)
     item._id = id
-}
-
-function preload(url: string): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    img.onload = () => resolve(img)
-    img.onerror = reject
-    img.src = url
-  })
 }
 
 async function startUpload(file: File) {
@@ -190,6 +152,7 @@ async function onInputChange(): Promise<void> {
         status: 'uploading',
         source: await createThumb(file),
         type: file.type,
+        meta: await getImageDimensionsFromFile(file),
       })
 
       uploadPromises.push(limit(() => startUpload(file)))
