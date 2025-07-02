@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { UploadFileEntry } from '~/composables/useFileUploader'
 
-const props = defineProps<{ entry: UploadFileEntry }>()
+defineProps<{ entry: UploadFileEntry }>()
 const emit = defineEmits<{ (e: 'remove'): void }>()
 </script>
 

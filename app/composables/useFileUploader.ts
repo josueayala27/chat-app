@@ -77,6 +77,7 @@ export function useFileUploader(chatId: string) {
         await uploadFile({ upload_url, file: entry.file })
 
       Object.assign(entry, { status: 'done', _id, key })
+      console.log(entry)
     }
     catch (err) {
       console.error(err)
