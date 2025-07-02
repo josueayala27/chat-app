@@ -9,7 +9,7 @@ const route = useRoute('chat')
 const { user } = useAuth()
 const { files, addFiles } = useFileUploader(route.params.chat)
 const { reference, closePopover } = usePopover()
-const { send } = useMessage(route.params.chat)
+const { send: sendMessage } = useMessage(route.params.chat)
 
 const _window = inject<Ref<WindowMainInstance | undefined>>('window')
 
