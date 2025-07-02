@@ -48,7 +48,7 @@ const files = computed(() => {
           ]"
           class="h-full aspect-square grid place-items-center rounded-lg text-white"
         >
-          <Icon size="24px" :name="String(mime.extension(file.content_type)) === 'pdf' ? 'carbon:document-pdf' : 'carbon:document-blank'" class="shrink-0" />
+          <Icon size="24px" :name="String(mime.extension(file.content_type)) === 'pdf' ? 'carbon:document-pdf' : 'carbon:document'" class="shrink-0" />
         </div>
         <div class="flex flex-col break-all text-slate-400 text-sm">
           <BaseFont class="line-clamp-1 font-semibold text-slate-900" :content="file.file_name.split('.')[0]" />
