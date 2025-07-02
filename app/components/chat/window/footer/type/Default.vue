@@ -11,9 +11,17 @@ const { files, addFiles } = useFileUploader(route.params.chat)
 const { reference, closePopover } = usePopover()
 const { send: sendMessage } = useMessage(route.params.chat)
 
+/**
+ * Injects the main window instance.
+ */
 const _window = inject<Ref<WindowMainInstance | undefined>>('window')
 
+/**
+ * Ably RealtimeChannel for real-time communication.
+ * @type {Ref<RealtimeChannel | undefined>}
+ */
 const channel: Ref<RealtimeChannel | undefined> = ref<RealtimeChannel>()
+
 onMounted(() => {
 /**
  * Retrieves the Ably channel corresponding to the chat item.
@@ -23,14 +31,14 @@ onMounted(() => {
 })
 
 /**
- * Reactive ref tracking whether the current user is typing.
+ * Reactive state indicating if the current user is typing.
  * @type {Ref<boolean>}
  */
 const isTyping: Ref<boolean> = ref<boolean>(false)
 
 /**
- * Publish a typing event to the channel.
- * @param {string} event - Either 'event:start-typing' or 'event:stop-typing'.
+ * Publishes a "typing" event to the Ably channel.
+ * @param {string} event - The event type (e.g., 'event:start-typing', 'event:stop-typing').
  * @param {boolean} _isTyping - The current typing status.
  */
 function typing(event: string, _isTyping: boolean) {
@@ -38,7 +46,7 @@ function typing(event: string, _isTyping: boolean) {
 }
 
 /**
- * Debounced function that stops typing after a delay (1s).
+ * Debounced function that stops typing after a delay (1.5s).
  * Sets `isTyping` to false and publishes the stop-typing event.
  * @see useDebounceFn
  */
@@ -61,24 +69,46 @@ function onInput() {
   debouncedFn()
 }
 
-const mediaInput = ref<HTMLInputElement>()
+/**
+ * Reference to the file input element.
+ * @type {Ref<HTMLInputElement | undefined>}
+ */
+const mediaInput: Ref<HTMLInputElement | undefined> = ref<HTMLInputElement>()
 
+/**
+ * Handles the change event of the file input.
+ * Adds selected files to the list.
+ */
 async function onInputChange() {
   const _files = mediaInput.value?.files
   closePopover()
   if (!_files)
     return
 
+  /**
+   * Clears the list of existing files.
+   */
   files.value.length = 0
   await addFiles(_files)
 }
 
+/**
+ * Removes a file from the list by its index.
+ * @param {number} index - Index of the file to remove.
+ */
 function onRemove(index: number) {
   files.value.splice(index, 1)
 }
 
+/**
+ * Determines if all files have been uploaded.
+ * @type {ComputedRef<boolean>}
+ */
 computed(() => files.value.every(f => f.status === 'done'))
 
+/**
+ * Sends the message, including the IDs of any uploaded attachments.
+ */
 function send() {
   const attachmentIds = files.value
     .filter(f => f.status === 'done' && f._id)

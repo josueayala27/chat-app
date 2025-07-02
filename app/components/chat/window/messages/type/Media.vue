@@ -16,11 +16,19 @@ const props = defineProps<WindowMessagesTypeTextProps>()
 // const scale = MAX_WIDTH / bitmap.width
 // const height = Math.round(bitmap.height * scale)
 
-const images = computed(() => {
+/**
+ * Imágenes adjuntas filtradas.
+ * @type {ComputedRef<Attachment[]>}
+ */
+const images: ComputedRef<Attachment[]> = computed(() => {
   return props.attachments.filter(el => el.content_type.startsWith('image/'))
 })
 
-const files = computed(() => {
+/**
+ * Archivos adjuntos no-imagen filtrados.
+ * @type {ComputedRef<Attachment[]>}
+ */
+const files: ComputedRef<Attachment[]> = computed(() => {
   return props.attachments.filter(el => !el.content_type.startsWith('image/'))
 })
 </script>
@@ -28,14 +36,23 @@ const files = computed(() => {
 <template>
   <div class="flex flex-col items-end gap-1 mt-0.5">
     <div
-      style="direction: rtl" :style="{ '--grid-cols': Math.min(images.length, 3) }"
+      style="direction: rtl"
+      :style="{ '--grid-cols': Math.min(images.length, 3) }"
       class="grid grid-cols-[repeat(var(--grid-cols),_minmax(0,_1fr))] gap-1 cursor-pointer"
     >
       <div v-for="(image, index) in images" :key="index" style="direction: rtl;" class="size-32 bg-slate-200 rounded-lg overflow-hidden relative">
-        <div class="absolute top-0 left-0 grid place-items-center w-full h-full text-white bg-black/30 font-medium text-sm">
+        <div v-if="index === 3" style="direction: rtl" class="absolute top-0 left-0 grid place-items-center w-full h-full text-white bg-black/30 font-medium text-sm">
           8+
         </div>
-        <img :src="buildURL(image.key, 128 * 3, 128 * 3)">
+        <img
+          :src="buildURL(image.key, {
+            resize: {
+              width: 128 * 3,
+              height: 128 * 3,
+            },
+            blur: index === 3 ? 10 : 0,
+          })"
+        >
       </div>
     </div>
 
