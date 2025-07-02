@@ -11,9 +11,9 @@
  *
  * @example
  * ```ts
- * const thumbUrl = await createThumb(file);        // 252 px, 70 % quality
- * const tiny     = await createThumb(file, 96, 0.6); // 96 px, 60 % quality
- * imageElement.src = thumbUrl;                     // Display thumbnail
+ * const thumbUrl = await createThumb(file); // 252 px, 70 % quality
+ * const tiny = await createThumb(file, 96, 0.6); // 96 px, 60 % quality
+ * imageElement.src = thumbUrl; // Display thumbnail
  * ```
  */
 export async function createThumb(
