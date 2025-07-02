@@ -26,9 +26,12 @@ export interface UploadFileEntry {
  * @returns The hex encoded SHA-256 digest.
  */
 async function computeSHA256(file: File): Promise<string> {
+  console.log('🔢 [useFileUploader] computing SHA-256 for', file.name)
   const arrayBuf = await file.arrayBuffer()
   const hashBuf = await crypto.subtle.digest('SHA-256', arrayBuf)
-  return [...new Uint8Array(hashBuf)].map(b => b.toString(16).padStart(2, '0')).join('')
+  const digest = [...new Uint8Array(hashBuf)].map(b => b.toString(16).padStart(2, '0')).join('')
+  console.log('✅ [useFileUploader] SHA-256 computed for', file.name)
+  return digest
 }
 
 /**
@@ -49,8 +52,10 @@ export function useFileUploader(chatId: string) {
    */
   function updateFileEntry(file: File, updates: Partial<UploadFileEntry>) {
     const entry = files.value.find(f => f.file === file)
-    if (entry)
+    if (entry) {
       Object.assign(entry, updates)
+      console.log('✏️ [useFileUploader] updated entry', entry.file_name, updates)
+    }
   }
 
   /**
@@ -59,6 +64,7 @@ export function useFileUploader(chatId: string) {
    * @param entry - The file entry to upload.
    */
   async function upload(entry: UploadFileEntry) {
+    console.log('⬆️ [useFileUploader] starting upload for', entry.file_name)
     updateFileEntry(entry.file, { status: 'uploading' })
 
     try {
@@ -66,6 +72,7 @@ export function useFileUploader(chatId: string) {
       if (entry.file.type.startsWith('image/'))
         meta = await getImageDimensionsFromFile(entry.file)
 
+      console.log('📡 [useFileUploader] creating attachment for', entry.file_name)
       const { upload_url, _id, key } = await createAttachment({
         content_type: entry.file.type,
         file_name: entry.file_name,
@@ -75,13 +82,15 @@ export function useFileUploader(chatId: string) {
       })
 
       if (upload_url) {
+        console.log('🚀 [useFileUploader] uploading file', entry.file_name)
         await uploadFile({ upload_url, file: entry.file })
       }
 
       updateFileEntry(entry.file, { status: 'done', _id, key })
+      console.log('✅ [useFileUploader] upload finished for', entry.file_name)
     }
     catch (err) {
-      console.error(err)
+      console.error('❌ [useFileUploader] upload failed for', entry.file_name, err)
       updateFileEntry(entry.file, { status: 'error' })
     }
   }
@@ -93,6 +102,7 @@ export function useFileUploader(chatId: string) {
    * @returns The prepared entry.
    */
   async function prepareEntry(file: File): Promise<UploadFileEntry> {
+    console.log('🎁 [useFileUploader] preparing entry for', file.name)
     const isImage = file.type.startsWith('image/')
     const entry: UploadFileEntry = {
       _id: ['temp', random(32)].join('-'),
@@ -101,9 +111,12 @@ export function useFileUploader(chatId: string) {
       status: 'pending',
     }
 
-    if (isImage)
+    if (isImage) {
+      console.log('🖼️ [useFileUploader] generating thumbnail for', file.name)
       entry.src = await createThumb(file)
+    }
 
+    console.log('📦 [useFileUploader] entry ready for', file.name)
     return entry
   }
 
@@ -114,10 +127,14 @@ export function useFileUploader(chatId: string) {
    * @returns An array of reactive upload entries.
    */
   async function addFiles(fileList: FileList | File[]): Promise<UploadFileEntry[]> {
+    console.log('➕ [useFileUploader] adding files', fileList)
     const entries = await Promise.all([...fileList].map(file => prepareEntry(file)))
     files.value.push(...entries)
 
-    entries.forEach(entry => enqueue(() => upload(entry)))
+    entries.forEach((entry) => {
+      console.log('📥 [useFileUploader] queued', entry.file_name)
+      enqueue(() => upload(entry))
+    })
 
     return entries
   }
