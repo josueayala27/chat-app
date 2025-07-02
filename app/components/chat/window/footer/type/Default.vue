@@ -1,19 +1,15 @@
 <script lang="ts" setup>
 import type { RealtimeChannel } from 'ably'
 import type { WindowMainInstance } from '~/pages/[chat].vue'
-import pLimit from 'p-limit'
-
-const MAX_PARALLEL_UPLOADS = 3
-const limit = pLimit(MAX_PARALLEL_UPLOADS)
+import { useFileUploader } from '~/composables/useFileUploader'
 
 const { $ably } = useNuxtApp()
 const route = useRoute('chat')
 
 const { user } = useAuth()
-const { files } = useFileUploader()
+const { files, addFiles } = useFileUploader(route.params.chat)
 const { reference, closePopover } = usePopover()
 const { send: sendMessage } = useMessage(route.params.chat)
-const { createAttachment, uploadFile } = useAttachment(route.params.chat)
 
 const _window = inject<Ref<WindowMainInstance | undefined>>('window')
 
@@ -67,68 +63,18 @@ function onInput() {
 
 const mediaInput = ref<HTMLInputElement>()
 
-async function computeSHA256(file: File): Promise<string> {
-  const arrayBuf = await file.arrayBuffer()
-  const hashBuf = await crypto.subtle.digest('SHA-256', arrayBuf)
-  return [...new Uint8Array(hashBuf)].map(b => b.toString(16).padStart(2, '0')).join('')
-}
-
 async function onInputChange() {
   const _files = mediaInput.value?.files
   closePopover()
   if (!_files)
     return
 
-  files.value = await Promise.all([..._files].map(async (file: File) => {
-    const isImage = file.type.startsWith('image/')
-    let src: string | undefined
+  files.value.length = 0
+  await addFiles(_files)
+}
 
-    if (isImage) {
-      src = await createThumb(file)
-    }
-
-    return {
-      file,
-      file_name: file.name,
-      status: 'pending',
-      src,
-    }
-  }))
-
-  // Ahora, paraleliza las subidas con límite:
-  const uploadTasks = files.value.map(entry =>
-    limit(async () => {
-      entry.status = 'uploading'
-      let meta: any
-      if (entry.file.type.startsWith('image/')) {
-        meta = await getImageDimensionsFromFile(entry.file)
-      }
-      try {
-        const { upload_url, _id, key } = await createAttachment({
-          content_type: entry.file.type,
-          file_name: entry.file_name,
-          sha256: await computeSHA256(entry.file),
-          size: entry.file.size,
-          meta,
-        })
-
-        if (upload_url) {
-          await uploadFile({ upload_url, file: entry.file })
-        }
-
-        entry.status = 'done'
-        entry._id = _id
-        entry.key = key
-      }
-      catch (_e: any) {
-        console.log(_e)
-        entry.status = 'error'
-      }
-    }),
-  )
-
-  // Espera a que todas las subidas terminen
-  await Promise.all(uploadTasks)
+function onRemove(index: number) {
+  files.value.splice(index, 1)
 }
 
 computed(() => files.value.every(f => f.status === 'done'))
@@ -145,14 +91,12 @@ function send() {
   <input ref="mediaInput" multiple type="file" class="hidden" @change="onInputChange">
 
   <div v-if="files && files.length > 0" class="w-full p-3 border-b flex items-center gap-2 overflow-auto scrollbar-hidden">
-    <!-- <WindowFooterTypeDefaultPreview
-      v-for="(file, index) in files"
-      :key="file._id"
-      :status="file.status"
-      :source="file.source || ''"
-      :type="file.content_type"
+    <WindowFooterTypeDefaultPreview
+      v-for="(entry, index) in files"
+      :key="index"
+      :entry="entry"
       @remove="onRemove(index)"
-    /> -->
+    />
   </div>
 
   <div class="p-2 flex items-center gap-2">
@@ -172,8 +116,6 @@ function send() {
         />
       </template>
     </BasePopover>
-
-    {{ files }}
 
     <BaseInput
       name="content"
