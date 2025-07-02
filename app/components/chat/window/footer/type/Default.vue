@@ -117,7 +117,6 @@ function send() {
       </template>
     </BasePopover>
 
-
     <BaseInput
       name="content"
       :ui="{ root: 'w-full' }"

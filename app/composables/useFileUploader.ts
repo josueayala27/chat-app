@@ -1,6 +1,4 @@
 import { createThumb, getImageDimensionsFromFile } from '~/utils/image'
-import { useUploadQueue } from '~/composables/useUploadQueue'
-import { useAttachment } from '~/composables/useAttachment'
 
 export type UploadStatus = 'pending' | 'uploading' | 'done' | 'error'
 
@@ -122,4 +120,3 @@ export function useFileUploader(chatId: string) {
 
   return { files, addFiles, updateFileEntry }
 }
-
