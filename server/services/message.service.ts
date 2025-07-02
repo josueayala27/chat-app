@@ -25,10 +25,9 @@ type GetMessagesInput = z.infer<typeof getMessagesQuerySchema> & { chat_id: stri
  */
 export async function createMessage(data: CreateMessageInput): Promise<MessageDocument> {
   const message = await Message.create({
+    ...data,
     chat_id: new mongoose.Types.ObjectId(data.chat_id),
     sender_id: data.user._id,
-    content: data.content,
-    type: data.type,
     read_by: [{ user_id: data.user._id, read_at: new Date() }],
   })
 
@@ -48,7 +47,10 @@ export async function getMessages({ chat_id, before, after }: GetMessagesInput):
       ...(before && { _id: { $lt: new mongoose.Types.ObjectId(before) } }),
       ...(after && { _id: { $gt: new mongoose.Types.ObjectId(after) } }),
     })
+    .populate([
+      { path: 'sender_id', select: 'first_name last_name' },
+      { path: 'attachments', select: '-ref_count -sender_id -sha256 -updated_at' },
+    ])
     .sort({ created_at: -1 })
     .limit(MESSAGE_FETCH_LIMIT)
-    .populate('sender_id', 'first_name last_name')
 }

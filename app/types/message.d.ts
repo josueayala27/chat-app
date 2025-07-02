@@ -1,3 +1,4 @@
+import type { Attachment } from './attachment'
 import type { User } from './user'
 
 export interface MessageReadBy {
@@ -10,8 +11,8 @@ export interface Message {
   chat_id: string
   sender_id: string
   content: string
-  type: 'text' | 'media' | 'audio' | 'file'
-  attachments?: string[]
+  type: 'text' | 'attachments' | 'audio' | 'system'
+  attachments?: Attachment[]
   read_by: MessageReadBy[]
   created_at: string
   updated_at: string

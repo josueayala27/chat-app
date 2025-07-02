@@ -12,6 +12,7 @@ export const getMessagesQuerySchema = z.object({
 export const createMessageBodySchema = z.object({
   type: z.enum(['text', 'image', 'video', 'file', 'audio', 'system']),
   content: z.string(),
+  attachments: z.array(z.string().length(24))
 })
 
 // Schema for updating an existing message

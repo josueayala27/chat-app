@@ -1,68 +1,17 @@
 <script lang="ts" setup>
 import type { RealtimeChannel } from 'ably'
 import type { WindowMainInstance } from '~/pages/[chat].vue'
-import type { ChatMessage } from '~/types/message'
+import { useFileUploader } from '~/composables/useFileUploader'
 
 const { $ably } = useNuxtApp()
 const route = useRoute('chat')
 
-/**
- * Retrieves the authenticated user information.
- * @type {object}
- * @property {Ref<User>} user - The current authenticated user.
- */
 const { user } = useAuth()
+const { files, addFiles } = useFileUploader(route.params.chat)
 const { reference, closePopover } = usePopover()
-const { getUploadUrl } = useAttachmentUploader(route.params.chat)
-const { values, validate, resetForm } = useForm<{ content: string }>({ name: 'chat-footer' })
-const { createTempMessage, updateTempMessage } = useChat()
+const { send: sendMessage } = useMessage(route.params.chat)
 
 const _window = inject<Ref<WindowMainInstance | undefined>>('window')
-
-/**
- * A reactive reference to a Promise used to queue asynchronous tasks.
- * Ensures that tasks are executed sequentially.
- * @type {import('vue').Ref<Promise<void>>}
- */
-const taskQueue: Ref<Promise<void>> = ref<Promise<void>>(Promise.resolve())
-
-/**
- * Enqueues an asynchronous task to be executed after the current queue.
- * @param {() => Promise<void>} task - The asynchronous function to enqueue.
- */
-function enqueueTask(task: () => Promise<void>) {
-  taskQueue.value = taskQueue.value.then(() => task())
-}
-
-/**
- * Validates the form and, if valid, enqueues a task to send the message.
- * Sends a POST request to the appropriate chat endpoint with the message content.
- */
-async function sendMessage() {
-  const { valid } = await validate()
-
-  if (valid) {
-    const content = values.content.trim()
-    resetForm()
-
-    const { _id } = createTempMessage({ chat_id: route.params.chat, content })
-
-    await nextTick()
-    _window?.value?.scrollToBottom(0.3)
-
-    enqueueTask(async () => {
-      const message = await $fetch(`/api/chats/${route.params.chat}/messages`, {
-        method: 'POST',
-        body: {
-          type: 'text',
-          content,
-        },
-      })
-
-      updateTempMessage(_id, message as ChatMessage)
-    })
-  }
-}
 
 const channel: Ref<RealtimeChannel | undefined> = ref<RealtimeChannel>()
 onMounted(() => {
@@ -96,7 +45,7 @@ function typing(event: string, _isTyping: boolean) {
 const debouncedFn = useDebounceFn(() => {
   isTyping.value = false
   typing('event:stop-typing', isTyping.value)
-}, 1000)
+}, 1500)
 
 /**
  * Handle input events:
@@ -108,67 +57,46 @@ function onInput() {
     isTyping.value = true
     typing('event:start-typing', isTyping.value)
   }
+
   debouncedFn()
 }
 
-const media = ref<HTMLInputElement>()
-const files = ref<FileList | null | undefined>()
+const mediaInput = ref<HTMLInputElement>()
 
-/**
- * Handles file input changes by uploading each selected file in parallel.
- * - Requests an upload URL for each file from the backend.
- * - Uploads each file directly to the provided storage URL using PUT.
- * - Returns an array of uploaded file IDs.
- *
- * @async
- * @function onInputChange
- * @returns {Promise<string[]|undefined>} Array of uploaded file IDs, or undefined if no files.
- */
-async function onInputChange(): Promise<void> {
+async function onInputChange() {
+  const _files = mediaInput.value?.files
   closePopover()
+  if (!_files)
+    return
 
-  files.value = media.value?.files
-
-  await nextTick()
-  _window?.value?.scrollToBottom()
-
-  if (files.value) {
-    /**
-     * Create an array of upload promises for parallel processing.
-     */
-    const uploadPromises = Array.from(files.value).map(async (file) => {
-      /**
-       * Request a presigned upload URL.
-       */
-      const upload_url = await getUploadUrl(file)
-
-      /**
-       * Return the file ID for further processing if needed.
-       */
-      return { upload_url, file }
-    })
-
-    const _files = await Promise.all(uploadPromises)
-  }
+  files.value.length = 0
+  await addFiles(_files)
 }
 
 function onRemove(index: number) {
-  if (files.value) {
-    const fileArray = Array.from(files.value)
-    fileArray.splice(index, 1)
+  files.value.splice(index, 1)
+}
 
-    const dataTransfer = new DataTransfer()
-    fileArray.forEach(file => dataTransfer.items.add(file))
-    files.value = dataTransfer.files
-  }
+computed(() => files.value.every(f => f.status === 'done'))
+
+function send() {
+  const attachmentIds = files.value
+    .filter(f => f.status === 'done' && f._id)
+    .map(f => f._id as string)
+  sendMessage(attachmentIds)
 }
 </script>
 
 <template>
-  <input ref="media" multiple type="file" class="hidden" @change="onInputChange">
+  <input ref="mediaInput" multiple type="file" class="hidden" @change="onInputChange">
 
   <div v-if="files && files.length > 0" class="w-full p-3 border-b flex items-center gap-2 overflow-auto scrollbar-hidden">
-    <WindowFooterTypeDefaultPreview v-for="(file, index) in files" :key="index" :file @remove="onRemove(index)" />
+    <WindowFooterTypeDefaultPreview
+      v-for="(entry, index) in files"
+      :key="index"
+      :entry="entry"
+      @remove="onRemove(index)"
+    />
   </div>
 
   <div class="p-2 flex items-center gap-2">
@@ -182,8 +110,7 @@ function onRemove(index: number) {
       <template #content>
         <BaseMenuContainer
           :items="[
-            { icon: 'carbon:document-add', label: 'File' },
-            { icon: 'carbon:image-copy', label: 'Photos & videos', onClick: () => media?.click() },
+            { icon: 'carbon:document-blank', label: 'Media & Files', onClick: () => mediaInput?.click() },
             { icon: 'carbon:text-short-paragraph', label: 'Poll' },
           ]"
         />
@@ -196,14 +123,14 @@ function onRemove(index: number) {
       placeholder="Write something"
       type="text"
       @input="onInput"
+      @keydown.enter.prevent="send()"
     />
 
-    <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer" @click="sendMessage">
+    <div class="p-2 rounded-full hover:bg-slate-100 grid place-items-center cursor-pointer" @click="send()">
       <Icon
         size="20px"
-        :name="values.content || files?.length ? 'carbon:send-filled' : 'carbon:microphone'"
-        :class="{ 'text-sky-500': values.content || files?.length }"
-        class="flex shrink-0"
+        name="carbon:send-filled"
+        class="flex shrink-0 text-sky-500"
       />
     </div>
   </div>

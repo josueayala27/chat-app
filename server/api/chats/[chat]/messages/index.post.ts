@@ -14,7 +14,11 @@ export default defineEventHandler(async (event) => {
   const params = await getValidatedRouterParams(event, messageParamSchema.parse)
   const body = await readValidatedBody(event, createMessageBodySchema.parse)
 
-  const message = await createMessage({ ...body, chat_id: params.chat, user: event.context.user })
+  const message = await createMessage({
+    ...body,
+    chat_id: params.chat,
+    user: event.context.user,
+  })
 
   const channel = ably.channels.get(`channel:${params.chat}`)
   await channel.publish('event:new-message', message)

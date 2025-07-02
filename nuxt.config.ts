@@ -9,7 +9,6 @@ export default defineNuxtConfig({
     '@vee-validate/nuxt',
     '@nuxt/eslint',
     '@nuxt/test-utils/module',
-    '@vue-macros/nuxt',
     '@nuxt/image',
   ],
   components: [
@@ -33,6 +32,7 @@ export default defineNuxtConfig({
     MONGODB_DB: process.env.MONGODB_DB,
     MONGODB_HOST: process.env.MONGODB_HOST,
     MONGODB_PORT: process.env.MONGODB_PORT,
+    AWS_DEFAULT_REGION: process.env.AWS_DEFAULT_REGION,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     CLOUDFRONT_KEY_PAIR_ID: process.env.CLOUDFRONT_KEY_PAIR_ID,

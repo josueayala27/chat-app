@@ -9,7 +9,7 @@ export interface Message {
   chat_id: Types.ObjectId
   sender_id: Types.ObjectId
   content: string
-  type: 'text' | 'image' | 'video' | 'file' | 'audio' | 'system'
+  type: 'text' | 'attachments' | 'audio' | 'system'
   reply_to?: Types.ObjectId
   read_by?: ReadBy[]
   attachments?: Types.ObjectId[]
