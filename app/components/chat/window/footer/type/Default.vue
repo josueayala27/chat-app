@@ -93,7 +93,7 @@ function send() {
   <div v-if="files && files.length > 0" class="w-full p-3 border-b flex items-center gap-2 overflow-auto scrollbar-hidden">
     <WindowFooterTypeDefaultPreview
       v-for="(entry, index) in files"
-      :key="entry.file_name + index"
+      :key="index"
       :entry="entry"
       @remove="onRemove(index)"
     />

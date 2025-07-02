@@ -1,3 +1,4 @@
+import { random } from 'nanoid'
 import { createThumb, getImageDimensionsFromFile } from '~/utils/image'
 
 export type UploadStatus = 'pending' | 'uploading' | 'done' | 'error'
@@ -92,6 +93,7 @@ export function useFileUploader(chatId: string) {
   async function prepareEntry(file: File): Promise<UploadFileEntry> {
     const isImage = file.type.startsWith('image/')
     const entry: UploadFileEntry = {
+      _id: ['temp', random].join('-'),
       file,
       file_name: file.name,
       status: 'pending',
