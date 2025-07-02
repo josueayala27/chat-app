@@ -12,7 +12,7 @@ const route = useRoute('chat')
 const { user } = useAuth()
 const { files } = useFileUploader()
 const { reference, closePopover } = usePopover()
-const { send } = useMessage(route.params.chat)
+const { send: sendMessage } = useMessage(route.params.chat)
 const { createAttachment, uploadFile } = useAttachment(route.params.chat)
 
 const _window = inject<Ref<WindowMainInstance | undefined>>('window')
@@ -132,6 +132,13 @@ async function onInputChange() {
 }
 
 computed(() => files.value.every(f => f.status === 'done'))
+
+function send() {
+  const attachmentIds = files.value
+    .filter(f => f.status === 'done' && f._id)
+    .map(f => f._id as string)
+  sendMessage(attachmentIds)
+}
 </script>
 
 <template>

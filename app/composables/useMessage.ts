@@ -10,16 +10,16 @@ export default function useMessage(channel: string) {
   const { enqueue } = useTaskQueue()
   const { user } = useAuth()
 
-  const sendAsync = useAsync((content: string) => $fetch<Message>(`/api/chats/${channel}/messages`, {
+  const sendAsync = useAsync((body: { content: string; attachments: string[] }) => $fetch<Message>(`/api/chats/${channel}/messages`, {
     method: 'POST',
     body: {
       type: 'text',
-      content,
-      attachments: ['686183a0124352b5a998d882', '6861d46abfe9eaeb9ab4ffba'],
+      content: body.content,
+      attachments: body.attachments,
     },
   }))
 
-  function createTempMessage({ attachments, chat_id, content }: Pick<ChatMessage, 'chat_id' | 'content' | 'attachments'>): ChatMessage {
+  function createTempMessage({ attachments = [], chat_id, content }: Pick<ChatMessage, 'chat_id' | 'content' | 'attachments'>): ChatMessage {
     const message: ChatMessage & { status: MessageStatus } = {
       _id: `temp-${nano()}`,
       attachments,
@@ -36,17 +36,17 @@ export default function useMessage(channel: string) {
     return message
   }
 
-  async function send() {
+  async function send(attachments: string[] = []) {
     const { valid } = await validate()
 
     if (valid) {
       const content = values.content.trim()
       resetField('content')
 
-      console.log(createTempMessage({ chat_id: channel, content }))
+      console.log(createTempMessage({ chat_id: channel, content, attachments }))
 
       enqueue(async () => {
-        await sendAsync.execute(content)
+        await sendAsync.execute({ content, attachments })
       })
     }
   }
