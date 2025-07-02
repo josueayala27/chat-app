@@ -143,7 +143,10 @@ onMounted(async () => {
             <BaseMenuItem icon="carbon:star" label="Add to favorites" />
             <BaseMenuItem icon="carbon:notification-off" label="Mute" />
             <BaseMenuItem icon="carbon:locked" label="Block" />
-            <BaseMenuItem :ui="{ root: 'text-red-500' }" icon="carbon:trash-can" label="Delete chat" />
+
+            <div class="border-t w-full my-2 border-slate-200" />
+
+            <BaseMenuItem :ui="{ root: 'text-red-500 hover:bg-red-50' }" icon="carbon:trash-can" label="Delete chat" />
           </BaseMenuContainer>
         </template>
       </BasePopover>

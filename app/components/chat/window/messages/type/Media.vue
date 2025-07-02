@@ -31,7 +31,10 @@ const files = computed(() => {
       style="direction: rtl" :style="{ '--grid-cols': Math.min(images.length, 3) }"
       class="grid grid-cols-[repeat(var(--grid-cols),_minmax(0,_1fr))] gap-1 cursor-pointer"
     >
-      <div v-for="(image, index) in images" :key="index" style="direction: rtl;" class="size-32 bg-slate-200 rounded-lg overflow-hidden">
+      <div v-for="(image, index) in images" :key="index" style="direction: rtl;" class="size-32 bg-slate-200 rounded-lg overflow-hidden relative">
+        <div class="absolute top-0 left-0 grid place-items-center w-full h-full text-white bg-black/30 font-medium text-sm">
+          8+
+        </div>
         <img :src="buildURL(image.key, 128 * 3, 128 * 3)">
       </div>
     </div>

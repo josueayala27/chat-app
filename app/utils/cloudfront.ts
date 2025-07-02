@@ -18,6 +18,7 @@ export function buildURL(key: string, width: number, height: number): string {
         width,
         height,
       },
+      blur: 10,
     },
   }))
   return `${config.CLOUDFRONT_DOMAIN}/${url}`
