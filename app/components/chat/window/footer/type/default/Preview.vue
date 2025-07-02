@@ -8,7 +8,6 @@ const emit = defineEmits<{ (e: 'remove'): void }>()
 </script>
 
 <template>
-  {{ entry }}
   <component
     :is="entry.file.type.startsWith('image/') ? MediaPreview : FilePreview"
     :entry="entry"

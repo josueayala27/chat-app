@@ -59,7 +59,8 @@ export function useFileUploader(chatId: string) {
    * @param entry - The file entry to upload.
    */
   async function upload(entry: UploadFileEntry) {
-    entry.status = 'uploading'
+    updateFileEntry(entry.file, { status: 'uploading' })
+
     try {
       let meta: any
       if (entry.file.type.startsWith('image/'))
@@ -73,15 +74,15 @@ export function useFileUploader(chatId: string) {
         meta,
       })
 
-      if (upload_url)
+      if (upload_url) {
         await uploadFile({ upload_url, file: entry.file })
+      }
 
-      Object.assign(entry, { status: 'done', _id, key })
-      console.log(entry)
+      updateFileEntry(entry.file, { status: 'done', _id, key })
     }
     catch (err) {
       console.error(err)
-      entry.status = 'error'
+      updateFileEntry(entry.file, { status: 'error' })
     }
   }
 
@@ -94,7 +95,7 @@ export function useFileUploader(chatId: string) {
   async function prepareEntry(file: File): Promise<UploadFileEntry> {
     const isImage = file.type.startsWith('image/')
     const entry: UploadFileEntry = {
-      _id: ['temp', random].join('-'),
+      _id: ['temp', random(32)].join('-'),
       file,
       file_name: file.name,
       status: 'pending',
