@@ -73,6 +73,10 @@ async function onInputChange() {
   await addFiles(_files)
 }
 
+function onRemove(index: number) {
+  files.value.splice(index, 1)
+}
+
 computed(() => files.value.every(f => f.status === 'done'))
 
 function send() {
@@ -87,14 +91,12 @@ function send() {
   <input ref="mediaInput" multiple type="file" class="hidden" @change="onInputChange">
 
   <div v-if="files && files.length > 0" class="w-full p-3 border-b flex items-center gap-2 overflow-auto scrollbar-hidden">
-    <!-- <WindowFooterTypeDefaultPreview
-      v-for="(file, index) in files"
-      :key="file._id"
-      :status="file.status"
-      :source="file.source || ''"
-      :type="file.content_type"
+    <WindowFooterTypeDefaultPreview
+      v-for="(entry, index) in files"
+      :key="entry.file_name + index"
+      :entry="entry"
       @remove="onRemove(index)"
-    /> -->
+    />
   </div>
 
   <div class="p-2 flex items-center gap-2">
@@ -115,7 +117,6 @@ function send() {
       </template>
     </BasePopover>
 
-    {{ files }}
 
     <BaseInput
       name="content"
