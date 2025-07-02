@@ -1,4 +1,6 @@
 export interface Attachment {
+  _id: string
+
   sha256: string
   key: string
 
