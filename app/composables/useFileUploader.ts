@@ -20,6 +20,12 @@ export interface UploadFileEntry {
   src?: string
 }
 
+/**
+ * Compute a SHA-256 hash of the given file and return it as a hex string.
+ *
+ * @param file - The File to hash.
+ * @returns The hex encoded SHA-256 digest.
+ */
 async function computeSHA256(file: File): Promise<string> {
   const arrayBuf = await file.arrayBuffer()
   const hashBuf = await crypto.subtle.digest('SHA-256', arrayBuf)
@@ -36,12 +42,23 @@ export function useFileUploader(chatId: string) {
   const { enqueue } = useUploadQueue()
   const { createAttachment, uploadFile } = useAttachment(chatId)
 
+  /**
+   * Update a stored file entry with new values.
+   *
+   * @param file - The file whose entry should be updated.
+   * @param updates - Partial updates to apply to the entry.
+   */
   function updateFileEntry(file: File, updates: Partial<UploadFileEntry>) {
     const entry = files.value.find(f => f.file === file)
     if (entry)
       Object.assign(entry, updates)
   }
 
+  /**
+   * Upload a single prepared entry and update its status.
+   *
+   * @param entry - The file entry to upload.
+   */
   async function upload(entry: UploadFileEntry) {
     entry.status = 'uploading'
     try {
@@ -68,6 +85,12 @@ export function useFileUploader(chatId: string) {
     }
   }
 
+  /**
+   * Build an upload entry from a raw File, generating a preview if needed.
+   *
+   * @param file - The file to convert to an UploadFileEntry.
+   * @returns The prepared entry.
+   */
   async function prepareEntry(file: File): Promise<UploadFileEntry> {
     const isImage = file.type.startsWith('image/')
     const entry: UploadFileEntry = {
