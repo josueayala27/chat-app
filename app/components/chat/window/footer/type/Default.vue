@@ -117,10 +117,7 @@ async function send() {
     const content = values.content.trim()
     resetField('content')
 
-    await sendContentOrAttachment({
-      content,
-      attachments: files.value.map(el => ({ _id: el._id, key: el.key })),
-    })
+    await sendContentOrAttachment({ content, attachments: files.value.map(el => ({ _id: el._id, key: el.key })) })
 
     windowInstance?.value?.scrollToBottom(0.3)
   }

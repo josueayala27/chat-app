@@ -18,7 +18,7 @@ export default function useMessage(channel: string) {
     }))
 
   function createTempMessage(data: Partial<ChatMessage>) {
-    const message: ChatMessage & { status: boolean } = {
+    const message: ChatMessage & { temp: boolean } = {
       ...data,
       _id: `temp-${nanoid(32)}`,
       read_by: [{ read_at: new Date().toString(), user_id: user.value._id }],
@@ -26,7 +26,7 @@ export default function useMessage(channel: string) {
       chat_id: channel,
       // TODO: This property should be removed
       type: 'text',
-      status: false,
+      temp: true,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
 
@@ -36,9 +36,10 @@ export default function useMessage(channel: string) {
   }
 
   async function sendContentOrAttachment(data: Pick<Message, 'content'> & { attachments: Pick<Attachment, '_id' | 'key'>[] }) {
-    addTempMessage(createTempMessage({ content: data.content, attachments: data.attachments.map(el => ({ ...el } as Attachment)) }))
-
-    console.log(createTempMessage({ content: data.content, attachments: data.attachments.map(el => ({ ...el } as Attachment)) }))
+    addTempMessage(createTempMessage({
+      content: data.content,
+      attachments: data.attachments.map(el => ({ ...el } as Attachment)),
+    }))
 
     enqueue(async () => {
       await sendAsync.execute({
