@@ -18,7 +18,7 @@ export default function useMessage(channel: string) {
     }))
 
   function createTempMessage(data: Partial<ChatMessage>) {
-    const message: ChatMessage & { temp: boolean } = {
+    const message: ChatMessage = {
       ...data,
       _id: `temp-${nanoid(32)}`,
       read_by: [{ read_at: new Date().toString(), user_id: user.value._id }],
@@ -26,7 +26,6 @@ export default function useMessage(channel: string) {
       chat_id: channel,
       // TODO: This property should be removed
       type: 'text',
-      temp: true,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
 
