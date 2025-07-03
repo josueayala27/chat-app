@@ -15,7 +15,7 @@ const { sendContentOrAttachment } = useMessage(route.params.chat)
 /**
  * Injects the main window instance.
  */
-const _window = inject<Ref<WindowMainInstance | undefined>>('window')
+const windowInstance = inject<Ref<WindowMainInstance | undefined>>('window')
 
 /**
  * Ably RealtimeChannel for real-time communication.
@@ -121,6 +121,8 @@ async function send() {
       content,
       attachments: files.value.map(el => ({ _id: el._id, key: el.key })),
     })
+
+    windowInstance?.value?.scrollToBottom(0.3)
   }
 }
 </script>

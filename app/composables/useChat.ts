@@ -1,12 +1,10 @@
 import type { ChatMessage } from '~/types/message'
 import { concat } from 'remeda'
-import { v4 as uuidv4 } from 'uuid'
 
 export type ChatState = Record<string, ChatMessage[]>
 export type CursorState = Record<string, string>
 
 export function useChat() {
-  const { user } = useAuth()
   const route = useRoute('chat')
   const headers = useRequestHeaders(['cookie'])
 
@@ -93,27 +91,9 @@ export function useChat() {
     ]
   }
 
-  function createTempMessage({ chat_id, content }: { chat_id: string, content: string }): ChatMessage {
-    const tempo: ChatMessage = {
-      _id: `temp-${uuidv4()}`,
-      attachments: [],
-      chat_id,
-      content,
-      created_at: new Date().toISOString(),
-      read_by: [],
-      sender_id: user.value,
-      type: 'text',
-      updated_at: new Date().toISOString(),
-    }
-
+  function addTempMessage(message: ChatMessage) {
     const channel = `channel:${route.params.chat}`
-
-    chats.value[channel] = [
-      ...(toRaw(chats.value[channel]) || []),
-      tempo,
-    ]
-
-    return tempo
+    chats.value[channel] = [...(toRaw(chats.value[channel]) || []), message]
   }
 
   function updateTempMessage(tempId: string, message: ChatMessage): void {
@@ -134,7 +114,7 @@ export function useChat() {
     getConversation,
     getBeforeConversation,
     addLastMessage,
-    createTempMessage,
+    addTempMessage,
     updateTempMessage,
   }
 }
