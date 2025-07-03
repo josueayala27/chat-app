@@ -1,18 +1,12 @@
+import type { Attachment } from '~/types/attachment'
 import { random } from 'nanoid'
 import { createThumb, getImageDimensionsFromFile } from '~/utils/image'
 
 export type UploadStatus = 'pending' | 'uploading' | 'done' | 'error'
 
-export interface UploadFileEntry {
+export interface UploadFileEntry extends Pick<Attachment, '_id' | 'key' | 'file_name'> {
   file: File
-  file_name: string
   status: UploadStatus
-
-  _id?: string
-  /**
-   * Used to build the URL once uploaded.
-   */
-  key?: string
   /**
    * Local thumbnail preview for images.
    */
@@ -106,6 +100,7 @@ export function useFileUploader(chatId: string) {
     const isImage = file.type.startsWith('image/')
     const entry: UploadFileEntry = {
       _id: ['temp', random(32)].join('-'),
+      key: ['temp'].join(''),
       file,
       file_name: file.name,
       status: 'pending',

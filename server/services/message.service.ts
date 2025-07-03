@@ -31,7 +31,10 @@ export async function createMessage(data: CreateMessageInput): Promise<MessageDo
     read_by: [{ user_id: data.user._id, read_at: new Date() }],
   })
 
-  return message.populate('sender_id', 'first_name last_name')
+  return message.populate([
+    { path: 'sender_id', select: 'first_name last_name' },
+    { path: 'attachments', select: '-ref_count -sender_id -sha256 -updated_at' },
+  ])
 }
 
 /**

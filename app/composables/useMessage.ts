@@ -1,57 +1,56 @@
+import type { Attachment } from '~/types/attachment'
 import type { ChatMessage, Message } from '~/types/message'
-import { customAlphabet } from 'nanoid'
-
-const nano = customAlphabet('abcdefghijklmnopqrstuvwxyz0123456789', 24)
+import { nanoid } from 'nanoid'
 
 type MessageStatus = 'pending' | 'sent' | 'error'
 
 export default function useMessage(channel: string) {
-  const { validate, values, resetField } = useForm<{ content: string }>({ name: 'chat-message' })
   const { enqueue } = useTaskQueue()
   const { user } = useAuth()
 
-  const sendAsync = useAsync((body: { content: string; attachments: string[] }) => $fetch<Message>(`/api/chats/${channel}/messages`, {
-    method: 'POST',
-    body: {
-      type: 'text',
-      content: body.content,
-      attachments: body.attachments,
-    },
-  }))
+  const sendAsync = useAsync((body: Pick<Message, 'content'> & { attachments: string[] }) =>
+    $fetch<Message>(`/api/chats/${channel}/messages`, {
+      method: 'POST',
+      body: {
+        type: 'text',
+        content: body.content,
+        attachments: body.attachments,
+      },
+    }))
 
-  function createTempMessage({ attachments = [], chat_id, content }: Pick<ChatMessage, 'chat_id' | 'content' | 'attachments'>): ChatMessage {
+  function createTempMessage(data: Partial<ChatMessage>) {
     const message: ChatMessage & { status: MessageStatus } = {
-      _id: `temp-${nano()}`,
-      attachments,
-      chat_id,
-      content,
-      read_by: [],
+      ...data,
+      _id: `temp-${nanoid(32)}`,
+      read_by: [{ read_at: new Date().toString(), user_id: user.value._id }],
       sender_id: user.value,
+      chat_id: channel,
+      // TODO: This property should be removed
       type: 'text',
       status: 'pending',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
+
     }
 
     return message
   }
 
-  async function send(attachments: string[] = []) {
-    const { valid } = await validate()
+  async function sendContentOrAttachment(data: Pick<Message, 'content'> & { attachments: Pick<Attachment, '_id' | 'key'>[] }) {
+    console.log(createTempMessage({
+      content: data.content,
+      attachments: data.attachments.map(el => ({ ...el } as Attachment)),
+    }))
 
-    if (valid) {
-      const content = values.content.trim()
-      resetField('content')
-
-      console.log(createTempMessage({ chat_id: channel, content, attachments }))
-
-      enqueue(async () => {
-        await sendAsync.execute({ content, attachments })
+    enqueue(async () => {
+      await sendAsync.execute({
+        content: data.content,
+        attachments: data.attachments.map(el => el._id),
       })
-    }
+    })
   }
 
   return {
-    send,
+    sendContentOrAttachment,
   }
 }

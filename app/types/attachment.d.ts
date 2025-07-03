@@ -8,7 +8,7 @@ export interface Attachment {
   file_name: string
   size: number
 
-  sender_id: Types.ObjectId
+  // sender_id: Types.ObjectId
   ref_count: number
 
   meta?: Record<string, any>

@@ -3,14 +3,14 @@ import type { User } from './user'
 
 export interface MessageReadBy {
   user_id: string
-  read_at: Date
+  read_at: string
 }
 
 export interface Message {
   _id: string
   chat_id: string
   sender_id: string
-  content: string
+  content?: string
   type: 'text' | 'attachments' | 'audio' | 'system'
   attachments?: Attachment[]
   read_by: MessageReadBy[]

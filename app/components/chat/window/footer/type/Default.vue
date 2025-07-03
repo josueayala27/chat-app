@@ -6,10 +6,11 @@ import { useFileUploader } from '~/composables/useFileUploader'
 const { $ably } = useNuxtApp()
 const route = useRoute('chat')
 
+const { validate, values, resetField } = useForm<{ content: string }>({ name: 'chat-message' })
 const { user } = useAuth()
 const { files, addFiles } = useFileUploader(route.params.chat)
 const { reference, closePopover } = usePopover()
-const { send: sendMessage } = useMessage(route.params.chat)
+const { sendContentOrAttachment } = useMessage(route.params.chat)
 
 /**
  * Injects the main window instance.
@@ -109,11 +110,18 @@ computed(() => files.value.every(f => f.status === 'done'))
 /**
  * Sends the message, including the IDs of any uploaded attachments.
  */
-function send() {
-  const attachmentIds = files.value
-    .filter(f => f.status === 'done' && f._id)
-    .map(f => f._id as string)
-  sendMessage(attachmentIds)
+async function send() {
+  const { valid } = await validate()
+
+  if (valid) {
+    const content = values.content.trim()
+    resetField('content')
+
+    await sendContentOrAttachment({
+      content,
+      attachments: files.value.map(el => ({ _id: el._id, key: el.key })),
+    })
+  }
 }
 </script>
 
