@@ -103,6 +103,7 @@ export function useChat() {
       if (m._id === tempId) {
         return { ...m, ...message }
       }
+
       return m
     })
   }

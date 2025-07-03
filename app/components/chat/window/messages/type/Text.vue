@@ -4,7 +4,6 @@ import theme from '@/theme/window/messages/type/text'
 
 interface WindowMessagesTypeTextProps extends ChatMessage {
   ui?: Partial<typeof theme.slots>
-  temp?: boolean
 }
 </script>
 
@@ -13,7 +12,7 @@ const props = defineProps<WindowMessagesTypeTextProps>()
 
 const isOwn = inject<boolean>('isOwn')
 
-const ui = computed(() => theme({ isOwn, isTemp: props.temp }))
+const ui = computed(() => theme({ isOwn, isTemp: props._id.startsWith('temp-') }))
 </script>
 
 <template>

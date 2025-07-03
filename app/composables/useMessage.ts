@@ -5,10 +5,10 @@ import { nanoid } from 'nanoid'
 export default function useMessage(channel: string) {
   const { enqueue } = useTaskQueue()
   const { user } = useAuth()
-  const { addTempMessage } = useChat()
+  const { addTempMessage, updateTempMessage } = useChat()
 
   const sendAsync = useAsync((body: Pick<Message, 'content'> & { attachments: string[] }) =>
-    $fetch<Message>(`/api/chats/${channel}/messages`, {
+    $fetch<ChatMessage>(`/api/chats/${channel}/messages`, {
       method: 'POST',
       body: {
         type: 'text',
@@ -36,16 +36,22 @@ export default function useMessage(channel: string) {
   }
 
   async function sendContentOrAttachment(data: Pick<Message, 'content'> & { attachments: Pick<Attachment, '_id' | 'key'>[] }) {
-    addTempMessage(createTempMessage({
+    const temp = createTempMessage({
       content: data.content,
       attachments: data.attachments.map(el => ({ ...el } as Attachment)),
-    }))
+    })
+
+    addTempMessage(temp)
 
     enqueue(async () => {
-      await sendAsync.execute({
+      const message = await sendAsync.execute({
         content: data.content,
         attachments: data.attachments.map(el => el._id),
       })
+
+      if (message) {
+        updateTempMessage(temp._id, message)
+      }
     })
   }
 
