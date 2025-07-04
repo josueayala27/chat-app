@@ -2,14 +2,13 @@ import type { Attachment } from '~/types/attachment'
 import type { ChatMessage, Message } from '~/types/message'
 import { nanoid } from 'nanoid'
 
-type MessageStatus = 'pending' | 'sent' | 'error'
-
 export default function useMessage(channel: string) {
   const { enqueue } = useTaskQueue()
   const { user } = useAuth()
+  const { addTempMessage, updateTempMessage } = useChat()
 
   const sendAsync = useAsync((body: Pick<Message, 'content'> & { attachments: string[] }) =>
-    $fetch<Message>(`/api/chats/${channel}/messages`, {
+    $fetch<ChatMessage>(`/api/chats/${channel}/messages`, {
       method: 'POST',
       body: {
         type: 'text',
@@ -19,7 +18,7 @@ export default function useMessage(channel: string) {
     }))
 
   function createTempMessage(data: Partial<ChatMessage>) {
-    const message: ChatMessage & { status: MessageStatus } = {
+    const message: ChatMessage = {
       ...data,
       _id: `temp-${nanoid(32)}`,
       read_by: [{ read_at: new Date().toString(), user_id: user.value._id }],
@@ -27,7 +26,6 @@ export default function useMessage(channel: string) {
       chat_id: channel,
       // TODO: This property should be removed
       type: 'text',
-      status: 'pending',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
 
@@ -37,16 +35,22 @@ export default function useMessage(channel: string) {
   }
 
   async function sendContentOrAttachment(data: Pick<Message, 'content'> & { attachments: Pick<Attachment, '_id' | 'key'>[] }) {
-    console.log(createTempMessage({
+    const temp = createTempMessage({
       content: data.content,
       attachments: data.attachments.map(el => ({ ...el } as Attachment)),
-    }))
+    })
+
+    addTempMessage(temp)
 
     enqueue(async () => {
-      await sendAsync.execute({
+      const message = await sendAsync.execute({
         content: data.content,
         attachments: data.attachments.map(el => el._id),
       })
+
+      if (message) {
+        updateTempMessage(temp._id, message)
+      }
     })
   }
 

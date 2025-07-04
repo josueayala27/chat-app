@@ -12,7 +12,7 @@ const props = defineProps<WindowMessagesTypeTextProps>()
 
 const isOwn = inject<boolean>('isOwn')
 
-const ui = computed(() => theme({ isOwn, isTemp: props._id.startsWith('temp') }))
+const ui = computed(() => theme({ isOwn, isTemp: props._id.startsWith('temp-') }))
 </script>
 
 <template>
