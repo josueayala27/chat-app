@@ -24,7 +24,6 @@ export default function useMessage(channel: string) {
       read_by: [{ read_at: new Date().toString(), user_id: user.value._id }],
       sender_id: user.value,
       chat_id: channel,
-      // TODO: This property should be removed
       type: 'text',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
