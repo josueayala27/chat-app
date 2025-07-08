@@ -22,7 +22,7 @@ export default function useMessage(channel: string) {
     $fetch<ChatMessage>(`/api/chats/${channel}/messages`, {
       method: 'POST',
       body: {
-        type: 'text',
+        type: body.attachments.length >= 1 ? 'attachments' : 'text',
         content: body.content,
         attachments: body.attachments,
       },
