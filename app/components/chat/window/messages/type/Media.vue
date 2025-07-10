@@ -21,7 +21,7 @@ const props = defineProps<WindowMessagesTypeTextProps>()
  * @type {ComputedRef<Attachment[]>}
  */
 const images: ComputedRef<Attachment[]> = computed(() => {
-  return props.attachments.filter(el => el.content_type.startsWith('image/'))
+  return props.attachments.filter(el => el.content_type.startsWith('image/')).slice(0, 6)
 })
 
 /**

@@ -63,6 +63,8 @@ export function useFileUploader(chatId: string) {
 
     try {
       let meta: any
+      let src: string | undefined
+
       if (entry.file.type.startsWith('image/'))
         meta = await getImageDimensionsFromFile(entry.file)
 
@@ -80,11 +82,17 @@ export function useFileUploader(chatId: string) {
         await uploadFile({ upload_url, file: entry.file })
       }
 
-      const url = buildURL(key, { resize: { width: 84 * 3, height: 84 * 3 } })
+      if (entry.file.type.startsWith('image/')) {
+        src = buildURL(key, { resize: { width: 84 * 3, height: 84 * 3 } })
+        await preload(src)
+      }
 
-      await preload(url)
-
-      updateFileEntry(entry.file, { status: 'done', src: url, _id, key })
+      updateFileEntry(entry.file, {
+        status: 'done',
+        _id,
+        key,
+        ...(entry.file.type.startsWith('image/') ? { src } : {}),
+      })
       console.log('✅ [useFileUploader] upload finished for', entry.file_name)
     }
     catch (err) {

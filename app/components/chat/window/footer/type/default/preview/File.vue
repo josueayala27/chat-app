@@ -13,7 +13,7 @@ const emit = defineEmits<{ (e: 'remove'): void }>()
       </div>
       <div class="flex flex-col break-all text-slate-400 text-xs">
         <BaseFont class="line-clamp-1 font-bold text-slate-950" :content="entry.file_name" />
-        <BaseFont content="TEMPLATE" />
+        <BaseFont content="File" />
       </div>
     </div>
 

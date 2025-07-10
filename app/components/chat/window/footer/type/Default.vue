@@ -78,19 +78,27 @@ const mediaInput: Ref<HTMLInputElement | undefined> = ref<HTMLInputElement>()
 
 /**
  * Handles the change event of the file input.
- * Adds selected files to the list.
+ * Adds selected files to the list and resets the input value.
  */
 async function onInputChange() {
-  const _files = mediaInput.value?.files
+  const input = mediaInput.value
+  const _files = input?.files
   closePopover()
-  if (!_files)
+
+  if (!_files || _files.length === 0)
     return
 
-  /**
-   * Clears the list of existing files.
-   */
-  files.value.length = 0
   await addFiles(_files)
+
+  nextTick(() => {
+    windowInstance?.value?.scrollToBottom(0)
+  })
+
+  /**
+   * Reset input value to allow selecting the same file again
+   */
+  if (input)
+    input.value = ''
 }
 
 /**
@@ -118,6 +126,7 @@ async function send() {
     resetField('content')
 
     await sendContentOrAttachment({ content, attachments: files.value.map(el => ({ _id: el._id, key: el.key })) })
+    files.value = []
 
     windowInstance?.value?.scrollToBottom(0.3)
   }
