@@ -60,16 +60,13 @@ const files: ComputedRef<Attachment[]> = computed(() => {
       </div>
     </div>
 
-    <!-- TODO: Use `_id` as key -->
     <div
-      v-for="(file, index) in files" :key="index"
+      v-for="file in files" :key="file._id"
       class="h-21 bg-slate-100 grid place-items-center rounded-lg cursor-pointer hover:bg-slate-200/60 shrink-0 relative overflow-hidden group"
     >
       <div class="flex items-center py-2 pl-2 pr-4 w-full h-full gap-2">
         <div
-          :class="[
-            String(mime.extension(file.content_type)) === 'pdf' ? 'bg-red-400' : 'bg-blue-400',
-          ]"
+          :class="[String(mime.extension(file.content_type)) === 'pdf' ? 'bg-red-400' : 'bg-blue-400']"
           class="h-full aspect-square grid place-items-center rounded-lg text-white"
         >
           <Icon size="24px" :name="String(mime.extension(file.content_type)) === 'pdf' ? 'carbon:document-pdf' : 'carbon:document'" class="shrink-0" />

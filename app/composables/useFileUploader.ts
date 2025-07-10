@@ -80,7 +80,11 @@ export function useFileUploader(chatId: string) {
         await uploadFile({ upload_url, file: entry.file })
       }
 
-      updateFileEntry(entry.file, { status: 'done', _id, key })
+      const url = buildURL(key, { resize: { width: 84 * 3, height: 84 * 3 } })
+
+      await preload(url)
+
+      updateFileEntry(entry.file, { status: 'done', src: url, _id, key })
       console.log('✅ [useFileUploader] upload finished for', entry.file_name)
     }
     catch (err) {
