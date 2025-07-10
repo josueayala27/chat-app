@@ -21,7 +21,7 @@ const props = defineProps<WindowMessagesTypeTextProps>()
  * @type {ComputedRef<Attachment[]>}
  */
 const images: ComputedRef<Attachment[]> = computed(() => {
-  return props.attachments.filter(el => el.content_type.startsWith('image/')).slice(0, 6)
+  return props.attachments.filter(el => el.content_type.startsWith('image/'))
 })
 
 /**
@@ -40,13 +40,15 @@ const files: ComputedRef<Attachment[]> = computed(() => {
       :style="{ '--grid-cols': Math.min(images.length, 3) }"
       class="grid grid-cols-[repeat(var(--grid-cols),_minmax(0,_1fr))] gap-1 cursor-pointer"
     >
-      <div v-for="(image, index) in images" :key="image._id" style="direction: rtl;" class="size-32 bg-slate-200 rounded-lg overflow-hidden relative">
+      <div v-for="(image, index) in images.slice(0, 6)" :key="image._id" style="direction: rtl;" class="size-32 bg-slate-200 rounded-lg overflow-hidden relative ring ring-slate-200">
         <div
           v-if="index === 3"
-          style="direction: rtl"
+          style="direction: ltr"
           class="absolute top-0 left-0 grid place-items-center w-full h-full text-white bg-black/30 font-medium text-sm select-none"
         >
-          8+
+          <template v-if="images.length > 5">
+            +{{ images.length - 5 }}
+          </template>
         </div>
         <img
           :src="buildURL(image.key, {
@@ -54,7 +56,7 @@ const files: ComputedRef<Attachment[]> = computed(() => {
               width: 128 * 3,
               height: 128 * 3,
             },
-            ...(index === 3 ? { blur: 15 } : {}),
+            ...(index === 3 && images.length >= 6 ? { blur: 15 } : {}),
           })"
         >
       </div>

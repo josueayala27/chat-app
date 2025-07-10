@@ -84,7 +84,7 @@ export function useFileUploader(chatId: string) {
 
       if (entry.file.type.startsWith('image/')) {
         src = buildURL(key, { resize: { width: 84 * 3, height: 84 * 3 } })
-        await preload(src)
+        await preload(src).catch(() => {})
       }
 
       updateFileEntry(entry.file, {

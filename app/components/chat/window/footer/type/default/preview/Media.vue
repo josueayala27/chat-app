@@ -6,7 +6,7 @@ const emit = defineEmits<{ (e: 'remove'): void }>()
 </script>
 
 <template>
-  <div class="size-21 bg-slate-100 rounded-lg overflow-hidden shrink-0 relative group cursor-pointer">
+  <div class="size-21 bg-slate-100 rounded-lg overflow-hidden shrink-0 relative group cursor-pointer ring ring-slate-200">
     <img v-if="entry.src" :src="entry.src" class="w-full h-full object-cover">
 
     <div
