@@ -12,8 +12,6 @@ const { $ably } = useNuxtApp()
 
 /**
  * Retrieves the authenticated user information.
- * @type {object}
- * @property {Ref<User>} user - The current authenticated user.
  */
 const { user } = useAuth()
 

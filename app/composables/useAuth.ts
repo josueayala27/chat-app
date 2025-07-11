@@ -22,6 +22,7 @@ export default function useAuth() {
   async function signIn(body: SignInInput) {
     await signInAsync.execute(body)
     await cloudFrontAuthAsync.execute()
+    await getUser()
   }
 
   return {

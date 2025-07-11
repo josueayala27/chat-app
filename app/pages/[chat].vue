@@ -105,23 +105,25 @@ onMounted(() => {
 
 await getConversation()
 
-const _window = ref<WindowMainInstance | undefined>()
-provide<Ref<WindowMainInstance | undefined>>('window', _window)
+const windowMain = ref<WindowMainInstance | undefined>()
+provide<Ref<WindowMainInstance | undefined>>('window', windowMain)
 </script>
 
 <template>
   <div class="flex flex-col divide-y divide-slate-200 flex-1 overflow-hidden">
     <WindowHeader />
 
-    <WindowMain ref="_window" :fetch-older="loadOlderMessages">
-      <template v-for="(group, j) in computedChat" :key="j">
+    <WindowMain ref="windowMain" :fetch-older="loadOlderMessages">
+      <template v-for="chat in computedChat" :key="chat.date">
         <div class="flex justify-center">
           <BaseFont class="text-xs bg-slate-100 px-2 py-1 rounded-full font-medium select-none">
-            <NuxtTime :datetime="group.date" />
+            <NuxtTime :datetime="chat.date" />
           </BaseFont>
         </div>
 
-        <WindowMessagesGroup v-for="({ sender_id, messages: _messages }, k) in group.groups" :key="k" :messages="_messages" :sender="sender_id" />
+        <template v-for="(group, k) in chat.groups" :key="`group-${k}-${group.sender_id}`">
+          <WindowMessagesGroup :messages="group.messages" :sender="group.sender_id" />
+        </template>
       </template>
     </WindowMain>
 
