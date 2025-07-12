@@ -1,10 +1,10 @@
-import * as Ably from 'ably'
+import { Realtime } from 'ably'
 
 export default function useAbly() {
-  const ably = useState<Ably.Realtime>('ably')
+  const ably = useState<Realtime>('ably')
 
   function init() {
-    const _ably = new Ably.Realtime({ authUrl: '/api/auth/ably' })
+    const _ably = new Realtime({ authUrl: '/api/auth/ably' })
     ably.value = _ably
   }
 
