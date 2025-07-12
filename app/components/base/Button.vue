@@ -1,30 +1,26 @@
+<script lang="ts">
+import theme from '@/theme/button'
+
+interface BaseButtonProps { ui?: Partial<typeof theme.slots>, content?: string, icon?: string, loading?: boolean }
+</script>
+
 <script lang="ts" setup>
-import { tv } from 'tailwind-variants'
+const props = defineProps<BaseButtonProps>()
 
-const props = defineProps<{ ui?: Partial<typeof button.slots>, content?: string, loading?: boolean }>()
-
-const button = tv({
-  slots: {
-    base: 'bg-sky-500 hover:bg-sky-600 rounded-lg h-9 px-4 flex items-center justify-center text-white cursor-pointer text-sm duration-200',
-  },
-  variants: {
-    primary: {
-      base: '',
-    },
-    secondary: {
-      base: 'bg-slate-100 hover:bg-slate-200 rounded-lg h-9 px-4 flex items-center justify-center text-slate-700 cursor-pointer text-sm duration-200',
-    },
-  },
+const ui = computed(() => {
+  return theme({ variant: 'primary' })
 })
-
-const { base } = button()
 </script>
 
 <template>
-  <button :class="[base({ class: props.ui?.base })]">
-    <Icon v-if="loading" size="20px" name="svg-spinners:90-ring-with-bg" />
+  <button :disabled="loading" :class="[ui.base({ class: props.ui?.base })]">
+    <span v-if="loading" :class="ui.loading({ class: props.ui?.loading })">
+      <Icon size="20px" name="svg-spinners:3-dots-fade" />
+    </span>
 
-    <slot v-else>
+    <Icon v-if="icon" :name="icon" />
+
+    <slot>
       {{ content }}
     </slot>
   </button>

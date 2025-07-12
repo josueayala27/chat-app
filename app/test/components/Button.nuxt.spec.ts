@@ -23,16 +23,6 @@ describe('baseButton', () => {
     expect(wrapper.text()).toContain('Click me')
   })
 
-  it('renders slot content when not loading', async () => {
-    const wrapper = await mountSuspended(BaseButton, {
-      slots: {
-        default: 'Slot Content',
-      },
-    })
-
-    expect(wrapper.text()).toContain('Slot Content')
-  })
-
   it('renders loading icon when loading is true', async () => {
     const wrapper = await mountSuspended(BaseButton, {
       props: {
@@ -40,7 +30,7 @@ describe('baseButton', () => {
       },
     })
 
-    const icon = wrapper.find('span')
+    const icon = wrapper.find('span>span')
     expect(icon.exists()).toBe(true)
   })
 

@@ -50,7 +50,7 @@ function openSettingsModal() {
 
     <template #footer>
       <BaseButton content="Back" />
-      <BaseButton content="Continue" />
+      <BaseButton loading content="Continue" />
     </template>
   </BaseModal>
 

@@ -15,7 +15,7 @@ const { sendContentOrAttachment } = useMessage(route.params.chat)
 /**
  * Injects the main window instance.
  */
-const _window = inject<Ref<WindowMainInstance | undefined>>('window')
+const windowInstance = inject<Ref<WindowMainInstance | undefined>>('window')
 
 /**
  * Ably RealtimeChannel for real-time communication.
@@ -78,19 +78,27 @@ const mediaInput: Ref<HTMLInputElement | undefined> = ref<HTMLInputElement>()
 
 /**
  * Handles the change event of the file input.
- * Adds selected files to the list.
+ * Adds selected files to the list and resets the input value.
  */
 async function onInputChange() {
-  const _files = mediaInput.value?.files
+  const input = mediaInput.value
+  const _files = input?.files
   closePopover()
-  if (!_files)
+
+  if (!_files || _files.length === 0)
     return
 
-  /**
-   * Clears the list of existing files.
-   */
-  files.value.length = 0
   await addFiles(_files)
+
+  nextTick(() => {
+    windowInstance?.value?.scrollToBottom(0)
+  })
+
+  /**
+   * Reset input value to allow selecting the same file again
+   */
+  if (input)
+    input.value = ''
 }
 
 /**
@@ -117,10 +125,10 @@ async function send() {
     const content = values.content.trim()
     resetField('content')
 
-    await sendContentOrAttachment({
-      content,
-      attachments: files.value.map(el => ({ _id: el._id, key: el.key })),
-    })
+    await sendContentOrAttachment({ content, attachments: files.value.map(el => ({ _id: el._id, key: el.key, content_type: el.file.type })) })
+    files.value = []
+
+    windowInstance?.value?.scrollToBottom(0.3)
   }
 }
 </script>
