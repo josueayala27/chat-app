@@ -3,7 +3,7 @@ import type { RealtimeChannel } from 'ably'
 import type { WindowMainInstance } from '~/pages/[chat].vue'
 import { useFileUploader } from '~/composables/useFileUploader'
 
-const { $ably } = useNuxtApp()
+const { ably } = useAbly()
 const route = useRoute('chat')
 
 const { validate, values, resetField } = useForm<{ content: string }>({ name: 'chat-message' })
@@ -28,7 +28,7 @@ onMounted(() => {
  * Retrieves the Ably channel corresponding to the chat item.
  * @type {RealtimeChannel}
  */
-  channel.value = $ably.channels.get(`channel:${route.params.chat}`)
+  channel.value = ably.value.channels.get(`channel:${route.params.chat}`)
 })
 
 /**

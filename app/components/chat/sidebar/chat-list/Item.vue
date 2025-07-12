@@ -8,7 +8,7 @@ import { NuxtLink } from '#components'
 <script setup lang="ts">
 const props = defineProps<{ item: ChatList }>()
 
-const { $ably } = useNuxtApp()
+const { ably } = useAbly()
 
 /**
  * Retrieves the authenticated user information.
@@ -27,7 +27,7 @@ onMounted(async () => {
    * Retrieves the Ably channel corresponding to the chat item.
    * @type {RealtimeChannel}
    */
-  const channel: RealtimeChannel = $ably.channels.get(`channel:${props.item._id}`)
+  const channel: RealtimeChannel = ably.value.channels.get(`channel:${props.item._id}`)
 
   /**
    * Subscribes to the 'message' event on the Ably channel.
