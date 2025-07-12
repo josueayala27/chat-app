@@ -3,9 +3,9 @@ import type { Message as AblyMessage, RealtimeChannel } from 'ably'
 </script>
 
 <script lang="ts" setup>
-const { $ably } = useNuxtApp()
+const { ably } = useAbly()
 const { reference, closePopover } = usePopover()
-const route = useRoute()
+const route = useRoute('chat')
 
 /**
  * Retrieves the authenticated user information.
@@ -31,7 +31,7 @@ onMounted(() => {
    * Retrieves the Ably channel corresponding to the chat item.
    * @type {RealtimeChannel}
    */
-  const channel: RealtimeChannel = $ably.channels.get(`channel:${route.params.chat}`)
+  const channel: RealtimeChannel = ably.value.channels.get(`channel:${route.params.chat}`)
 
   /**
    * Subscribes to the 'event:start-typing' event on the Ably channel.

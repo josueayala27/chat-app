@@ -10,9 +10,9 @@ export type WindowMainInstance = InstanceType<typeof WindowMain>
 
 <script setup lang="ts">
 useHead({ title: 'Amazing Group' })
-definePageMeta({ middleware: ['auth'], key: route => route.fullPath, keepalive: true })
+definePageMeta({ middleware: ['auth', 'ably'], key: ({ fullPath }) => fullPath, keepalive: true })
 
-const { $ably } = useNuxtApp()
+const { ably } = useAbly()
 const route = useRoute('chat')
 const chats = useState<ChatState>('chats')
 const { getConversation, getBeforeConversation, cursors } = useChat()
@@ -87,7 +87,7 @@ onMounted(() => {
    * Retrieves the Ably channel corresponding to the chat item.
    * @type {RealtimeChannel}
    */
-  const channel: RealtimeChannel = $ably.channels.get(`channel:${route.params.chat}`)
+  const channel: RealtimeChannel = ably.value.channels.get(`channel:${route.params.chat}`)
 
   /**
    * Subscribes to the 'message' event on the Ably channel.

@@ -51,6 +51,7 @@ const files: ComputedRef<Attachment[]> = computed(() => {
           </template>
         </div>
         <img
+          loading="lazy"
           :src="buildURL(image.key, {
             resize: {
               width: 128 * 3,
