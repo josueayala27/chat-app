@@ -1,0 +1,8 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`baseButton > renders the default button correctly (snapshot) 1`] = `
+"<button class="rounded-lg h-9 px-4 flex items-center justify-center text-white text-sm duration-200 gap-2 relative overflow-hidden not-disabled:cursor-pointer bg-sky-500 not-disabled:hover:bg-sky-600">
+  <!--v-if-->
+  <!--v-if-->Click me
+</button>"
+`;

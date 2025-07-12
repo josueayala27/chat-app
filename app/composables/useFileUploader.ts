@@ -83,8 +83,11 @@ export function useFileUploader(chatId: string) {
       }
 
       if (entry.file.type.startsWith('image/')) {
-        src = buildURL(key, { resize: { width: 84 * 3, height: 84 * 3 } })
+        const dynamicObject = (width: number, height: number) => buildURL(key, { resize: { width, height } })
+        src = dynamicObject(84 * 3, 84 * 3)
+
         await preload(src).catch(() => {})
+        await preload(dynamicObject(128 * 3, 128 * 3)).catch(() => {})
       }
 
       updateFileEntry(entry.file, {

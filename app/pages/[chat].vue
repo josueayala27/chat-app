@@ -121,9 +121,12 @@ provide<Ref<WindowMainInstance | undefined>>('window', windowMain)
           </BaseFont>
         </div>
 
-        <template v-for="(group, k) in chat.groups" :key="`group-${k}-${group.sender_id}`">
-          <WindowMessagesGroup :messages="group.messages" :sender="group.sender_id" />
-        </template>
+        <WindowMessagesGroup
+          v-for="(group, k) in chat.groups"
+          :key="`group-${k}-${group.sender_id}`"
+          :messages="group.messages"
+          :sender="group.sender_id"
+        />
       </template>
     </WindowMain>
 

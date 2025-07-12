@@ -41,10 +41,9 @@ export default function useMessage(channel: string) {
       read_by: [{ read_at: new Date().toString(), user_id: user.value._id }],
       sender_id: user.value,
       chat_id: channel,
-      type: 'text',
+      type: 'attachments',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
-
     }
 
     return message
@@ -58,7 +57,7 @@ export default function useMessage(channel: string) {
    * @param {Pick<Message, 'content'> & { attachments: Pick<Attachment, '_id' | 'key'>[] }} data - Message content and attachment metadata.
    * @returns {Promise<void>}
    */
-  async function sendContentOrAttachment(data: Pick<Message, 'content'> & { attachments: Pick<Attachment, '_id' | 'key'>[] }): Promise<void> {
+  async function sendContentOrAttachment(data: Pick<Message, 'content'> & { attachments: Pick<Attachment, '_id' | 'key' | 'content_type'>[] }): Promise<void> {
     const temp = createTempMessage({
       content: data.content,
       attachments: data.attachments.map(el => ({ ...el } as Attachment)),

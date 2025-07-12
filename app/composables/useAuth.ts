@@ -16,9 +16,9 @@ export default function useAuth() {
   const user: Ref<User> = useState<User>('user', () => ({} as User))
   const isAuthenticated = computed(() => Boolean(user.value._id))
 
-  const getUserAsync = useAsync(() => $fetch<User>('/api/auth/me', { headers }))
+  const getUserAsync = useAsync(() => $fetch<User>('/api/auth/me', { headers, credentials: 'include' }))
   const signInAsync = useAsync((body: SignInInput) => $fetch<{ success: boolean, message: string }>('/api/auth/login', { method: 'POST', body }))
-  const cloudFrontAuthAsync = useAsync(() => $fetch<any>('/api/auth/cf-auth', { credentials: 'include' }))
+  const _cloudFrontAuthAsync = useAsync(() => $fetch<any>('/api/auth/cf-auth', { credentials: 'include' }))
 
   /**
    * Fetches the authenticated user from the API and updates the `user` state.
@@ -39,7 +39,6 @@ export default function useAuth() {
    */
   async function signIn(body: SignInInput): Promise<void> {
     await signInAsync.execute(body)
-    await cloudFrontAuthAsync.execute()
     await getUser()
   }
 
