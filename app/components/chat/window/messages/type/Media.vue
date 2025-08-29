@@ -81,6 +81,6 @@ const files: ComputedRef<Attachment[]> = computed(() => {
       </div>
     </div>
 
-    <WindowMessagesTypeText v-bind="props" />
+    <WindowMessagesTypeText v-if="props.content" v-bind="props" />
   </div>
 </template>

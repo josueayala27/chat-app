@@ -16,6 +16,11 @@ export interface Message {
   read_by: MessageReadBy[]
   created_at: string
   updated_at: string
+  /**
+   * Client-side timestamp used to keep optimistic ordering stable
+   * until the server acknowledges the message.
+   */
+  client_ts?: string
 }
 
 export interface ChatMessage extends Pick<Message, '_id' | 'chat_id' | 'content' | 'type' | 'attachments' | 'read_by' | 'created_at' | 'updated_at'> {

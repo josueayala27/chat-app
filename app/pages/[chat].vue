@@ -25,17 +25,18 @@ const { getConversation, getBeforeConversation, cursors } = useChat()
  * @returns Structured array grouped by date and sender message groups
  */
 function groupAndTransform(messages: ChatMessage[]) {
+  const displayTime = (m: ChatMessage) => new Date((m as any).client_ts || m.created_at).getTime()
   return pipe(
     messages,
     /**
-     * 1️⃣ Sort oldest → newest.
+     * 1️⃣ Sort oldest → newest (use client_ts to keep optimistic order stable).
      */
-    sortBy(({ created_at }) => new Date(created_at).getTime()),
+    sortBy(displayTime),
 
     /**
      * 2️⃣ Bucket into { 'YYYY-MM-DD': ChatMessage[] }.
      */
-    groupBy(({ created_at }) => new Date(created_at).toISOString().split('T')[0]),
+    groupBy((m) => new Date((m as any).client_ts || m.created_at).toISOString().split('T')[0]),
 
     /**
      * 3️⃣ For each day, merge consecutive messages from identical sender.

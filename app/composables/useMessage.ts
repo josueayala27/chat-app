@@ -41,9 +41,10 @@ export default function useMessage(channel: string) {
       read_by: [{ read_at: new Date().toString(), user_id: user.value._id }],
       sender_id: user.value,
       chat_id: channel,
-      type: 'attachments',
+      type: (data.attachments && data.attachments.length > 0) ? 'attachments' : 'text',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
+      client_ts: new Date().toISOString(),
     }
 
     return message
