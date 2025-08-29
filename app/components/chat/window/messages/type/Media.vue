@@ -10,11 +10,9 @@ interface WindowMessagesTypeTextProps extends Omit<ChatMessage, 'attachments'> {
 
 <script lang="ts" setup>
 const props = defineProps<WindowMessagesTypeTextProps>()
-// const MAX_WIDTH = 480
-// const MAX_HEIGHT = 432
-
-// const scale = MAX_WIDTH / bitmap.width
-// const height = Math.round(bitmap.height * scale)
+// Display box constraints for a single image
+const SINGLE_MAX_WIDTH = 480
+const SINGLE_MAX_HEIGHT = 432
 
 /**
  * Imágenes adjuntas filtradas.
@@ -31,11 +29,44 @@ const images: ComputedRef<Attachment[]> = computed(() => {
 const files: ComputedRef<Attachment[]> = computed(() => {
   return props.attachments.filter(el => !el.content_type.startsWith('image/'))
 })
+
+/**
+ * Derive optimal CloudFront resize params for a single image preview.
+ * - Use width-only for landscape to preserve aspect ratio
+ * - Use height-only for portrait to preserve aspect ratio
+ * - Multiply by 3 for HiDPI sharpness
+ */
+const singleImage = computed(() => images.value[0])
+const singleImageIsPortrait = computed(() => {
+  const meta = singleImage.value?.meta as any
+  if (meta?.width && meta?.height)
+    return meta.height >= meta.width
+  return false
+})
+const singleImageSrc = computed(() => {
+  const img = singleImage.value
+  if (!img) return ''
+  const params = singleImageIsPortrait.value
+    ? { resize: { height: SINGLE_MAX_HEIGHT * 3 } }
+    : { resize: { width: SINGLE_MAX_WIDTH * 3 } }
+  return buildURL(img.key, params)
+})
 </script>
 
 <template>
   <div class="flex flex-col items-end gap-1 mt-0.5">
-    <div
+    <!-- Single image: show larger preview preserving aspect ratio -->
+    <template v-if="images.length === 1">
+      <div
+        class="bg-slate-200 rounded-lg overflow-hidden relative ring ring-slate-200"
+        :style="{ maxWidth: `${SINGLE_MAX_WIDTH}px`, maxHeight: `${SINGLE_MAX_HEIGHT}px`, width: `${SINGLE_MAX_WIDTH}px`, height: `${SINGLE_MAX_HEIGHT}px` }"
+      >
+        <img :src="singleImageSrc" class="w-full h-full object-contain" loading="lazy">
+      </div>
+    </template>
+
+    <!-- Multiple images grid -->
+    <div v-else
       style="direction: rtl"
       :style="{ '--grid-cols': Math.min(images.length, 3) }"
       class="grid grid-cols-[repeat(var(--grid-cols),_minmax(0,_1fr))] gap-1 cursor-pointer"
@@ -59,6 +90,7 @@ const files: ComputedRef<Attachment[]> = computed(() => {
             },
             ...(index === 3 && images.length >= 6 ? { blur: 15 } : {}),
           })"
+          class="w-full h-full object-cover"
         >
       </div>
     </div>
