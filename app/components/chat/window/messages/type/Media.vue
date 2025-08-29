@@ -10,9 +10,10 @@ interface WindowMessagesTypeTextProps extends Omit<ChatMessage, 'attachments'> {
 
 <script lang="ts" setup>
 const props = defineProps<WindowMessagesTypeTextProps>()
-// Display box constraints for a single image
+// Display box constraints for a single image (max bounds)
 const SINGLE_MAX_WIDTH = 480
 const SINGLE_MAX_HEIGHT = 432
+const SINGLE_DPR = 3
 
 /**
  * Imágenes adjuntas filtradas.
@@ -37,19 +38,32 @@ const files: ComputedRef<Attachment[]> = computed(() => {
  * - Multiply by 3 for HiDPI sharpness
  */
 const singleImage = computed(() => images.value[0])
-const singleImageIsPortrait = computed(() => {
+// Compute display size that fits within max bounds without cropping
+const singleBox = computed(() => {
   const meta = singleImage.value?.meta as any
-  if (meta?.width && meta?.height)
-    return meta.height >= meta.width
-  return false
+  if (meta?.width && meta?.height) {
+    const scale = Math.min(SINGLE_MAX_WIDTH / meta.width, SINGLE_MAX_HEIGHT / meta.height, 1)
+    return { w: Math.round(meta.width * scale), h: Math.round(meta.height * scale) }
+  }
+  return { w: SINGLE_MAX_WIDTH, h: SINGLE_MAX_HEIGHT }
 })
+
+// Request image at HiDPI size (width- or height-constrained to preserve aspect)
+const singleResizeParams = computed(() => {
+  const meta = singleImage.value?.meta as any
+  if (meta?.width && meta?.height) {
+    const widthLimited = SINGLE_MAX_WIDTH / meta.width <= SINGLE_MAX_HEIGHT / meta.height
+    return widthLimited
+      ? { resize: { width: singleBox.value.w * SINGLE_DPR } }
+      : { resize: { height: singleBox.value.h * SINGLE_DPR } }
+  }
+  return { resize: { width: SINGLE_MAX_WIDTH * SINGLE_DPR } }
+})
+
 const singleImageSrc = computed(() => {
   const img = singleImage.value
   if (!img) return ''
-  const params = singleImageIsPortrait.value
-    ? { resize: { height: SINGLE_MAX_HEIGHT * 3 } }
-    : { resize: { width: SINGLE_MAX_WIDTH * 3 } }
-  return buildURL(img.key, params)
+  return buildURL(img.key, singleResizeParams.value)
 })
 </script>
 
@@ -57,12 +71,13 @@ const singleImageSrc = computed(() => {
   <div class="flex flex-col items-end gap-1 mt-0.5">
     <!-- Single image: show larger preview preserving aspect ratio -->
     <template v-if="images.length === 1">
-      <div
-        class="bg-slate-200 rounded-lg overflow-hidden relative ring ring-slate-200"
-        :style="{ maxWidth: `${SINGLE_MAX_WIDTH}px`, maxHeight: `${SINGLE_MAX_HEIGHT}px`, width: `${SINGLE_MAX_WIDTH}px`, height: `${SINGLE_MAX_HEIGHT}px` }"
+      <img
+        :src="singleImageSrc"
+        :width="singleBox.w"
+        :height="singleBox.h"
+        class="block rounded-lg"
+        loading="lazy"
       >
-        <img :src="singleImageSrc" class="w-full h-full object-contain" loading="lazy">
-      </div>
     </template>
 
     <!-- Multiple images grid -->
